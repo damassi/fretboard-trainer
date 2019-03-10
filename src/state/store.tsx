@@ -1,5 +1,5 @@
-import { createStore } from "easy-peasy"
-// import logger from "redux-logger"
+import { createStore, EasyPeasyConfig } from "easy-peasy"
+import { createLogger } from "redux-logger"
 import { settings, SettingsModel } from "./settings"
 import { fretboard, Fretboard } from "./fretboard"
 
@@ -9,7 +9,12 @@ export interface StoreModel {
   fretboard: Fretboard;
 }
 
-export const store = createStore<StoreModel>({
-  settings,
-  fretboard,
-})
+export const store = createStore<StoreModel, EasyPeasyConfig>(
+  {
+    settings,
+    fretboard,
+  },
+  {
+    middleware: [createLogger()],
+  }
+)

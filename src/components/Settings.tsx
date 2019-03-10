@@ -4,12 +4,11 @@ import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { Display } from "src/components/ui/Typography"
-import { useStore, useActions, State, Actions } from "easy-peasy"
-import { StoreModel } from "src/state/store"
+import { useStore, useActions } from "src/hooks"
 
 export const Settings = () => {
-  const state = useStore((state: State<StoreModel>) => state.settings)
-  const actions = useActions((actions: Actions<StoreModel>) => actions.settings)
+  const state = useStore(state => state.settings)
+  const actions = useActions(actions => actions.settings)
 
   return (
     <SettingsContainer>

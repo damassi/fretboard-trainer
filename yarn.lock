@@ -8158,13 +8158,6 @@ proxy-addr@~2.0.4:
     forwarded "~0.1.2"
     ipaddr.js "1.8.0"
 
-proxyequal@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/proxyequal/-/proxyequal-2.0.3.tgz#64fbcf06c9f4585d001488b1ff7e3bd1be727d01"
-  integrity sha512-gGewpWAAV4h5pjmnIkfOAiKEJINxUxol/wJrLv+hR91WmlpM6jlFzInYS6bRu7mskIiLFN+ifNDpnGAMUu0gNg==
-  dependencies:
-    search-trie "^1.1.0"
-
 prr@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
@@ -8370,13 +8363,6 @@ react-error-overlay@^5.1.4:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.4.tgz#88dfb88857c18ceb3b9f95076f850d7121776991"
   integrity sha512-fp+U98OMZcnduQ+NSEiQa4s/XMsbp+5KlydmkbESOw4P69iWZ68ZMFM5a2BuE0FgqPBKApJyRuYHR95jM8lAmg==
 
-react-hooks-easy-redux@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-hooks-easy-redux/-/react-hooks-easy-redux-1.3.0.tgz#6a13ddec26a270e7b1eae0f2688d8a7b20781b36"
-  integrity sha512-/M7P2t5sA8Ly7Ev0ImfcayqF9jr+jC23ioRyFaPCeDskuVPItexCNDqXVs9byO4JxERfNokYy6j4Ztyr86NveA==
-  dependencies:
-    proxyequal "^2.0.3"
-
 react-is@^16.6.0, react-is@^16.8.1:
   version "16.8.4"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
@@ -8452,13 +8438,6 @@ react@^16.8.4:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.4"
-
-reactn@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/reactn/-/reactn-1.0.0.tgz#e521d9bab4cd0de75777cabbe2b327a994783243"
-  integrity sha512-6i0KHxHZsIz3XNOHZe9LErrYMXMrADfAGzgNS3+Hd+BFTocJJb4f8myIZOvXCkrDGW0ALpqPnLjrFFwBUdmimA==
-  dependencies:
-    use-force-update "^1.0.0"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -8561,11 +8540,6 @@ redux-logger@^3.0.6:
   integrity sha1-91VZZvMJjzyIYExEnPC69XeCdL8=
   dependencies:
     deep-diff "^0.3.5"
-
-redux-react-hook@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/redux-react-hook/-/redux-react-hook-3.2.0.tgz#a0793054aa6554007094cd6dc6f47082c089b0b9"
-  integrity sha512-GibqTO/Cgl2nRuhw2wacyfd2Nds8pYAPU/eYuTqXZ9v01CT7s7LSwDfPdtQua7TBqE8XNjrwKZqfDyEtfXt7vQ==
 
 redux-thunk@^2.3.0:
   version "2.3.0"
@@ -8970,11 +8944,6 @@ schema-utils@^1.0.0:
     ajv "^6.1.0"
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
-
-search-trie@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/search-trie/-/search-trie-1.1.0.tgz#0060185cbf44933d979e39f01795b3265a752b2c"
-  integrity sha512-6yOUbl5+j4HdFYLPAq6xZZynNkCUVw55hFz/yl54aFWHOh03PQue8rqbkt2k6gywp3jETcNnncZUfgrF6GS48A==
 
 select-hose@^2.0.0:
   version "2.0.0"
@@ -10112,11 +10081,6 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
-
-use-force-update@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/use-force-update/-/use-force-update-1.0.3.tgz#b4c6251d3b7fe2045a42c745091cd6e63653f430"
-  integrity sha512-9zlcBj7upjtz4Zdk5O3bTnHF8bfywjLpRelyzbHFFRHATVx+gGFWhEGHiGrzdLFa2zPy0FEA1ISrhLfXmmOxHA==
 
 use@^3.1.0:
   version "3.1.1"

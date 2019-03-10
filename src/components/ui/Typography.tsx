@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { Text as TextBase } from "rebass"
-import { theme } from "./Theme"
+import { theme } from "src/Theme"
 import { fontSize } from "styled-system"
 
 // Typography types

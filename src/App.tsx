@@ -1,19 +1,12 @@
 import React from "react"
 import styled from "styled-components"
-import { setGlobal } from "reactn"
-import { Flex } from "rebass"
-import { Fretboard } from "./Fretboard"
-import { Settings } from "./Settings"
-import { Answers } from "./Answers"
-import { Score } from "./Score"
-import { PosterBoard } from "./PosterBoard"
 
-// Set an initial global state directly:
-setGlobal({
-  showSettings: true,
-  showNotes: true,
-  accidentalMode: "flats",
-})
+import { Flex } from "rebass"
+import { Fretboard } from "src/components/Fretboard"
+import { Settings } from "src/components/Settings"
+import { Answers } from "src/components/Answers"
+import { Score } from "src/components/Score"
+import { PosterBoard } from "src/components/PosterBoard"
 
 export const App = () => {
   return (
@@ -29,6 +22,6 @@ export const App = () => {
 
 const AppContainer = styled(Flex)`
   flex-direction: column;
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
 `

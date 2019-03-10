@@ -1,7 +1,7 @@
 import React from "react"
 import { Flex, Box } from "rebass"
 import styled from "styled-components"
-import { Sans, Display } from "./Typography"
+import { Sans, Display } from "src/components/ui/Typography"
 
 export const Score = () => {
   return (

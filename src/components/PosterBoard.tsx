@@ -1,6 +1,6 @@
 import React from "react"
 import { Flex } from "rebass"
-import { Display } from "./Typography"
+import { Display } from "src/components/ui/Typography"
 
 export const PosterBoard = () => {
   return (

@@ -1,12 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { Boot } from "./Boot"
 import { App } from "./App"
-import { Theme } from "./Theme"
 
 ReactDOM.render(
-  <Theme>
+  <Boot>
     <App />
-  </Theme>,
+  </Boot>,
   document.getElementById("root")
 )
 

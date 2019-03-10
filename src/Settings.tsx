@@ -1,8 +1,9 @@
-import React, { useReducer } from "react"
+import React from "react"
 import { Box } from "rebass"
 import styled from "styled-components"
 import { SettingsIcon } from "./SettingsIcon"
-import { Display, Sans } from "./Typography"
+import { Display } from "./Typography"
+import { useGlobal } from "reactn"
 
 const settingsReducer = (state, action) => {
   switch (action.type) {
@@ -28,11 +29,8 @@ const settingsReducer = (state, action) => {
 }
 
 export const Settings = () => {
-  const [state, dispatch] = useReducer(settingsReducer, {
-    showSettings: true,
-    showNotes: true,
-    accidentalMode: "flats",
-  })
+  const [state] = useGlobal() // See https://github.com/CharlesStover/reactn/issues/42#issuecomment-464416714
+  const dispatch = useGlobal(settingsReducer)
 
   return (
     <SettingsContainer>

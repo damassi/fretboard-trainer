@@ -8145,6 +8145,13 @@ react@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.13.4"
 
+reactn@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/reactn/-/reactn-1.0.0.tgz#e521d9bab4cd0de75777cabbe2b327a994783243"
+  integrity sha512-6i0KHxHZsIz3XNOHZe9LErrYMXMrADfAGzgNS3+Hd+BFTocJJb4f8myIZOvXCkrDGW0ALpqPnLjrFFwBUdmimA==
+  dependencies:
+    use-force-update "^1.0.0"
+
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"
@@ -9691,6 +9698,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-force-update@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/use-force-update/-/use-force-update-1.0.3.tgz#b4c6251d3b7fe2045a42c745091cd6e63653f430"
+  integrity sha512-9zlcBj7upjtz4Zdk5O3bTnHF8bfywjLpRelyzbHFFRHATVx+gGFWhEGHiGrzdLFa2zPy0FEA1ISrhLfXmmOxHA==
 
 use@^3.1.0:
   version "3.1.1"

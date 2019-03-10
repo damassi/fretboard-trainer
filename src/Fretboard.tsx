@@ -1,16 +1,17 @@
 import React from "react"
 import { Box, Image, Flex } from "rebass"
 import styled from "styled-components"
-import { Sans, Display } from "./Typography"
+import { Display } from "./Typography"
+import fretboardGraphic from "./assets/fretboard.png"
 
 const notes = {
   flats: [
-    ["E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"],
-    ["B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"],
-    ["G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"],
-    ["D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"],
-    ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"],
-    ["E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"],
+    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
+    ["B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
+    ["G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
+    ["D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D"],
+    ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A"],
+    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
   ],
   sharps: [
     ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E"],
@@ -27,38 +28,29 @@ export const Fretboard = props => {
 
   return (
     <Container flexDirection="column" justifyContent="center">
-      <Image
-        width="100%"
-        height={220}
-        src={require("./assets/fretboard.png")}
-      />
+      <Image width="100%" height={220} src={fretboardGraphic} />
 
-      <DotsContainer width="100%" ml={-25}>
-        {guitar.map((str, strIndex) => {
+      <NotesContainer ml={-30}>
+        {guitar.map((string, stringIndex) => {
           return (
-            <Flex width="100%" key={strIndex}>
-              {str.map((note, noteIndex) => {
-                const BASE = 103
-                const DISTANCE_RATIO = 0.6
+            <Flex key={stringIndex}>
+              {string.map((note, noteIndex) => {
+                const BASE = 95
+                const DISTANCE_RATIO = 0.68
                 const SPACE = BASE - (BASE / 12) * (noteIndex * DISTANCE_RATIO)
 
                 return (
-                  <Flex
-                    key={noteIndex}
-                    mr={SPACE}
-                    alignItems="top"
-                    justifyContent="center"
-                    style={{ position: "relative" }}
-                  >
-                    <Dot />
-                    <Note size="2">{note}</Note>
-                  </Flex>
+                  // <NoteContainer key={noteIndex} mr={SPACE} mb="4px">
+                  <Note mr={SPACE}>
+                    <Display size="5">{note}</Display>
+                  </Note>
+                  // </NoteContainer>
                 )
               })}
             </Flex>
           )
         })}
-      </DotsContainer>
+      </NotesContainer>
     </Container>
   )
 }
@@ -70,21 +62,25 @@ const Container = styled(Flex)`
   position: relative;
 `
 
-const DotsContainer = styled(Box)`
+const NotesContainer = styled(Box)`
   position: absolute;
-  top: 15px;
 `
 
-const Dot = styled(Box)`
+const NoteContainer = styled(Flex)`
+  background-color: rgba(255, 255, 255, 1);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  margin-bottom: 14px;
-  background-color: white;
+  align-items: center;
+  justify-content: flex-start;
+  width: 30px;
+  height: 30px;
 `
 
-const Note = styled(Display)`
-  position: absolute;
-  color: black;
-  top: 2px;
+const Note = styled(Flex)`
+  color: white;
+  width: 30px;
+  height: 30px;
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+  top: 3px;
+  margin-bottom: 4px;
+  position: relative;
 `

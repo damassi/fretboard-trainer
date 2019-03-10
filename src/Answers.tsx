@@ -1,17 +1,22 @@
 import React from "react"
 import { Flex } from "rebass"
-import { shuffle } from "lodash"
+import { shuffle, take } from "lodash"
 import { Display } from "./Typography"
 import styled from "styled-components"
 
-const answers = ["A", "B", "Cb", "Bb", "D", "E", "Eb", "F", "G", "Gb"]
+const notes = {
+  flats: ["A", "Ab", "B", "Bb", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"],
+  sharps: ["A", "A#", "B", "B#", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"] // prettier-ignore
+}
 
-export const Answers = () => {
+export const Answers = props => {
+  const mode = notes[props.accidentalMode || "flats"]
+
   return (
     <Flex flexWrap="wrap" justifyContent="center">
-      {shuffle(answers).map((answer, index) => {
+      {take(shuffle(mode), 4).map((answer, index) => {
         return (
-          <Answer p={3} m={1} key={index}>
+          <Answer p={5} m={1} key={index}>
             <Display size="8">{answer}</Display>
           </Answer>
         )
@@ -21,7 +26,8 @@ export const Answers = () => {
 }
 
 const Answer = styled(Flex)`
-  border: 1px solid white;
+  border-radius: 3px;
+  border: 1px solid #666;
   cursor: pointer;
   width: 20%;
   align-items: center;

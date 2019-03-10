@@ -10,7 +10,9 @@ export const theme = {
     "4": 40,
     "5": 50,
     "6": 60,
+    "7": 70,
     "8": 80,
+    "9": 90,
     "10": 100,
   },
 
@@ -50,7 +52,8 @@ export const theme = {
         },
       },
       display: {
-        fontFamily: "Patua One",
+        // fontFamily: "Patua One",
+        fontFamily: "Bungee Inline",
         weights: {
           regular: 400,
         },

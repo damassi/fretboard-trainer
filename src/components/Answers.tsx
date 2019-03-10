@@ -1,7 +1,7 @@
 import React from "react"
 import { Flex, Box } from "rebass"
 import { shuffle, take } from "lodash"
-import { Display } from "./Typography"
+import { Display } from "src/components/ui/Typography"
 import styled from "styled-components"
 
 const notes = {

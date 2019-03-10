@@ -1,8 +1,9 @@
 import React from "react"
 import { Box } from "rebass"
 import styled from "styled-components"
-import { SettingsIcon } from "./SettingsIcon"
-import { Display } from "./Typography"
+
+import { SettingsIcon } from "src/components/ui/SettingsIcon"
+import { Display } from "src/components/ui/Typography"
 import { useGlobal } from "reactn"
 
 const settingsReducer = (state, action) => {

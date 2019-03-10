@@ -1,8 +1,8 @@
 import React from "react"
 import { Box, Image, Flex } from "rebass"
 import styled from "styled-components"
-import { Display } from "./Typography"
-import fretboardGraphic from "./assets/fretboard.png"
+import { Display } from "src/components/ui/Typography"
+import fretboardGraphic from "src/assets/fretboard.png"
 
 const notes = {
   flats: [

@@ -107,12 +107,15 @@ export const font = fontKey => theme.typography.fonts[fontKey].fontFamily
 const GlobalStyle = createGlobalStyle`
   body, html {
     background-color: #333;
+    background-image: linear-gradient(to right top, #434343, #333333, #252424, #161616, #010100);
+    width: 100%;
+    height: 100vh;
     font-family: ${font("sans")}, sans-serif;
     color: ${color("white")};
     font-size: ${theme.typography.sizes[4].fontSize}px;
     line-height: ${theme.typography.sizes[4].lineHeight}px;
     margin: 0 auto;
-    width: 1200px;
+    /* width: 1200px; */
   }
 `
 

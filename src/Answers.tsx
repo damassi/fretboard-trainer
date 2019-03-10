@@ -1,5 +1,5 @@
 import React from "react"
-import { Flex } from "rebass"
+import { Flex, Box } from "rebass"
 import { shuffle, take } from "lodash"
 import { Display } from "./Typography"
 import styled from "styled-components"
@@ -13,10 +13,16 @@ export const Answers = props => {
   const mode = notes[props.accidentalMode || "flats"]
 
   return (
-    <Flex flexWrap="wrap" justifyContent="center">
+    <Flex
+      flexWrap="wrap"
+      justifyContent="center"
+      mt={7}
+      width="100%"
+      alignItems="center"
+    >
       {take(shuffle(mode), 4).map((answer, index) => {
         return (
-          <Answer p={5} m={1} key={index}>
+          <Answer p={3} m={1} key={index}>
             <Display size="8">{answer}</Display>
           </Answer>
         )
@@ -26,15 +32,17 @@ export const Answers = props => {
 }
 
 const Answer = styled(Flex)`
-  border-radius: 3px;
+  /* border-radius: 3px; */
   border: 1px solid #666;
   cursor: pointer;
-  width: 20%;
+  width: 10%;
   align-items: center;
   justify-content: center;
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
 
   &:hover {
     background: white;
-    color: black;
+    color: #333;
+    text-shadow: none;
   }
 `

@@ -2,6 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { Text as TextBase } from "rebass"
 import { theme } from "./Theme"
+import { fontSize } from "styled-system"
 
 // Typography types
 
@@ -37,6 +38,7 @@ const Text = styled(TextBase)`
   font-size: ${props => props.fontSize};
   font-weight: ${props => props.fontWeight};
   line-height: ${props => props.lineHeight};
+  ${fontSize};
 `
 
 /**

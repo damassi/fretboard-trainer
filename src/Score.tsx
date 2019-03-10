@@ -5,7 +5,7 @@ import { Sans, Display } from "./Typography"
 
 export const Score = () => {
   return (
-    <Container justifyContent="center">
+    <Container justifyContent="center" mb={4}>
       <ScoreBox width="30%">
         <Box mr={6}>
           <Sans>Correct</Sans>
@@ -20,17 +20,9 @@ export const Score = () => {
   )
 }
 
-const Container = styled(Flex)`
-  position: relative;
-  height: 34px;
-  border-bottom: 1px solid #666;
-`
+const Container = styled(Flex)``
 
-const ScoreBox = styled(Box)`
-  background: #333;
-  display: flex;
+const ScoreBox = styled(Flex)`
   justify-content: center;
   text-align: center;
-  top: 1px;
-  position: relative;
 `

@@ -28,23 +28,29 @@ export const Fretboard = props => {
 
   return (
     <Container flexDirection="column" justifyContent="center">
-      <Image width="100%" height={220} src={fretboardGraphic} />
+      <Image width="100%" height={260} src={fretboardGraphic} />
 
-      <NotesContainer ml={-30}>
+      <NotesContainer ml={-40}>
         {guitar.map((string, stringIndex) => {
           return (
             <Flex key={stringIndex}>
               {string.map((note, noteIndex) => {
-                const BASE = 95
-                const DISTANCE_RATIO = 0.68
+                const BASE = 98
+                const DISTANCE_RATIO = 0.65
                 const SPACE = BASE - (BASE / 12) * (noteIndex * DISTANCE_RATIO)
 
                 return (
-                  // <NoteContainer key={noteIndex} mr={SPACE} mb="4px">
                   <Note mr={SPACE}>
-                    <Display size="5">{note}</Display>
+                    <Display
+                      size="5"
+                      style={{
+                        position: "relative",
+                        left: 8,
+                      }}
+                    >
+                      {note}
+                    </Display>
                   </Note>
-                  // </NoteContainer>
                 )
               })}
             </Flex>
@@ -66,21 +72,14 @@ const NotesContainer = styled(Box)`
   position: absolute;
 `
 
-const NoteContainer = styled(Flex)`
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 50%;
-  align-items: center;
-  justify-content: flex-start;
-  width: 30px;
-  height: 30px;
-`
-
 const Note = styled(Flex)`
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   width: 30px;
   height: 30px;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
-  top: 3px;
-  margin-bottom: 4px;
+  top: 5px;
+  margin-bottom: 10px;
   position: relative;
 `

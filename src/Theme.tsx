@@ -108,6 +108,8 @@ const GlobalStyle = createGlobalStyle`
     color: ${color("white")};
     font-size: ${theme.typography.sizes[4].fontSize}px;
     line-height: ${theme.typography.sizes[4].lineHeight}px;
+    margin: 0 auto;
+    width: 1200px;
   }
 `
 

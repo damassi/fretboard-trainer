@@ -1,12 +1,12 @@
 import React from "react"
-import { Flex, Box } from "rebass"
+import { Flex } from "rebass"
 import { shuffle, take } from "lodash"
 import { Display } from "src/components/ui/Typography"
 import styled from "styled-components"
 
 const notes = {
-  flats: ["A", "Ab", "B", "Bb", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"],
-  sharps: ["A", "A#", "B", "B#", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"] // prettier-ignore
+  flats: ["A", "A♭", "B", "B♭", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
+  sharps: ["A", "A♯", "B", "B♯", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯"] // prettier-ignore
 }
 
 export const Answers = props => {

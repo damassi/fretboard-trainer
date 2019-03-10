@@ -4,7 +4,7 @@ import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { Display } from "src/components/ui/Typography"
-import { useStore, useActions } from "src/hooks"
+import { useStore, useActions } from "src/utils/hooks"
 
 export const Settings = () => {
   const state = useStore(state => state.settings)

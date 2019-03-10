@@ -3,6 +3,7 @@ import { Box, Image, Flex } from "rebass"
 import styled from "styled-components"
 import { Display } from "src/components/ui/Typography"
 import fretboardGraphic from "src/assets/fretboard.png"
+import { useStore } from "src/utils/hooks"
 
 const notes = {
   flats: [
@@ -14,17 +15,18 @@ const notes = {
     ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
   ],
   sharps: [
-    ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E"],
-    ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
-    ["G", "G#", "A", "B#", "B", "C", "C#", "D", "D#", "E", "F", "G#", "G"],
-    ["D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D"],
-    ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A"],
-    ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E"],
+    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
+    ["B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
+    ["G", "G♯", "A", "B♯", "B", "C", "C♯", "D", "D♯", "E", "F", "G♯", "G"],
+    ["D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D"],
+    ["A", "A♯", "B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A"],
+    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
   ],
 }
 
-export const Fretboard = props => {
-  const guitar = notes[props.accidentalMode || "flats"]
+export const Fretboard = _props => {
+  const state = useStore(state => state.settings)
+  const guitar = notes[state.accidentalMode]
 
   return (
     <Container flexDirection="column" justifyContent="center">
@@ -40,17 +42,13 @@ export const Fretboard = props => {
                 const SPACE = BASE - (BASE / 12) * (noteIndex * DISTANCE_RATIO)
 
                 return (
-                  <Note mr={SPACE} key={noteIndex}>
-                    <Display
-                      size="5"
-                      style={{
-                        position: "relative",
-                        left: 8,
-                      }}
-                    >
-                      {note}
-                    </Display>
-                  </Note>
+                  <NoteContainer
+                    mr={SPACE}
+                    key={noteIndex}
+                    showNotes={state.showNotes}
+                  >
+                    <Note size="5">{note}</Note>
+                  </NoteContainer>
                 )
               })}
             </Flex>
@@ -72,7 +70,12 @@ const NotesContainer = styled(Box)`
   position: absolute;
 `
 
-const Note = styled(Flex)`
+const Note = styled(Display)`
+  position: relative;
+  left: 8px;
+`
+
+const NoteContainer = styled(Flex)<{ showNotes: boolean }>`
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   color: white;
@@ -82,4 +85,8 @@ const Note = styled(Flex)`
   top: 5px;
   margin-bottom: 10px;
   position: relative;
+
+  ${Note} {
+    visibility: ${props => (props.showNotes ? "visible" : "hidden")};
+  }
 `

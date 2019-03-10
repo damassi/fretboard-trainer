@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { Box, Flex } from "rebass"
+import { Flex } from "rebass"
 
 export const SettingsIcon = ({ fill = "#fff", ...props }) => {
   return (

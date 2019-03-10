@@ -1,13 +1,12 @@
 import { Action } from "easy-peasy"
 
-// prettier-ignore
 export interface SettingsModel {
-  showSettings: boolean;
-  showNotes: boolean;
-  accidentalMode: string;
-  toggleSettings: Action<SettingsModel, void>;
-  toggleNotes: Action<SettingsModel, void>;
-  setAccidentalMode: Action<SettingsModel, string>;
+  showSettings: boolean
+  showNotes: boolean
+  accidentalMode: string
+  toggleSettings: Action<SettingsModel, void>
+  toggleNotes: Action<SettingsModel, void>
+  setAccidentalMode: Action<SettingsModel, string>
 }
 
 export const settings: SettingsModel = {

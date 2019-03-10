@@ -1,14 +1,12 @@
 import React from "react"
-import { StoreContext } from "redux-react-hook"
+import { StoreProvider } from "easy-peasy"
 import { Theme } from "./Theme"
-import { makeStore } from "./state/store"
-
-const store = makeStore()
+import { store } from "./state/store"
 
 export const Boot = ({ children }) => {
   return (
-    <StoreContext.Provider value={store}>
+    <StoreProvider store={store}>
       <Theme>{children}</Theme>
-    </StoreContext.Provider>
+    </StoreProvider>
   )
 }

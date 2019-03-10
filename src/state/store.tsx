@@ -1,22 +1,15 @@
-import { applyMiddleware, createStore, combineReducers } from "redux"
-import logger from "redux-logger"
-import { settings } from "./settings"
-import { fretboard } from "./fretboard"
+import { createStore } from "easy-peasy"
+// import logger from "redux-logger"
+import { settings, SettingsModel } from "./settings"
+import { fretboard, Fretboard } from "./fretboard"
 
-export const initialState = {
-  settings: {
-    showSettings: true,
-    showNotes: true,
-    accidentalMode: "flats",
-  },
-  fretboard: {},
+// prettier-ignore
+export interface StoreModel {
+  settings: SettingsModel;
+  fretboard: Fretboard;
 }
 
-const reducers = combineReducers({
+export const store = createStore<StoreModel>({
   settings,
   fretboard,
 })
-
-export function makeStore(state = initialState) {
-  return createStore(reducers, state, applyMiddleware(logger))
-}

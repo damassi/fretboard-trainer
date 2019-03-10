@@ -1,5 +1,7 @@
-import { initialState } from "./store"
+export interface Fretboard {
+  answer: object
+}
 
-export const fretboard = (state = initialState.fretboard, action) => {
-  return state
+export const fretboard: Fretboard = {
+  answer: {},
 }

@@ -4,55 +4,25 @@ import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { Display } from "src/components/ui/Typography"
-import { useGlobal } from "reactn"
-
-const settingsReducer = (state, action) => {
-  switch (action.type) {
-    case "toggleSettings":
-      return {
-        ...state,
-        showSettings: !state.showSettings,
-      }
-    case "toggleNotes":
-      return {
-        ...state,
-        showNotes: !state.showNotes,
-      }
-    case "setAccidentalMode":
-      return {
-        ...state,
-        accidentalMode: action.payload,
-      }
-
-    default:
-      return state
-  }
-}
+import { useStore, useActions, State, Actions } from "easy-peasy"
+import { StoreModel } from "src/state/store"
 
 export const Settings = () => {
-  const [state] = useGlobal() // See https://github.com/CharlesStover/reactn/issues/42#issuecomment-464416714
-  const dispatch = useGlobal(settingsReducer)
+  const state = useStore((state: State<StoreModel>) => state.settings)
+  const actions = useActions((actions: Actions<StoreModel>) => actions.settings)
 
   return (
     <SettingsContainer>
       <SettingsIcon
         selected={state.showSettings}
-        onClick={() =>
-          dispatch({
-            type: "toggleSettings",
-          })
-        }
+        onClick={() => actions.toggleSettings()}
       />
       {state.showSettings && (
         <Box>
           <Box mt={2} ml={1}>
             <Button
               selected={state.showNotes}
-              onClick={() =>
-                dispatch({
-                  type: "toggleNotes",
-                })
-              }
+              onClick={() => actions.toggleNotes()}
             >
               <Display size="4">Display notes?</Display>
             </Button>
@@ -60,23 +30,13 @@ export const Settings = () => {
           <Box mt={1} ml={1}>
             <Button
               selected={state.accidentalMode === "flats"}
-              onClick={() =>
-                dispatch({
-                  type: "setAccidentalMode",
-                  payload: "flats",
-                })
-              }
+              onClick={() => actions.setAccidentalMode("flats")}
             >
               <Display size="4">Flats</Display>
             </Button>
             <Button
               selected={state.accidentalMode === "sharps"}
-              onClick={() =>
-                dispatch({
-                  type: "setAccidentalMode",
-                  payload: "sharps",
-                })
-              }
+              onClick={() => actions.setAccidentalMode("sharps")}
             >
               <Display size="4">Sharps</Display>
             </Button>

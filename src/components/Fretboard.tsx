@@ -40,7 +40,7 @@ export const Fretboard = props => {
                 const SPACE = BASE - (BASE / 12) * (noteIndex * DISTANCE_RATIO)
 
                 return (
-                  <Note mr={SPACE}>
+                  <Note mr={SPACE} key={noteIndex}>
                     <Display
                       size="5"
                       style={{

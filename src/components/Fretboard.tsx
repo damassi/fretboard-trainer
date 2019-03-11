@@ -109,7 +109,7 @@ const NoteContainer = styled(Flex)<{
   position: relative;
   visibility: ${p => (p.isCurrentNote ? "visible" : "hidden")};
 
-  animation-name: ${p => (p.isCurrentNote ? "fadeIn" : "none")};
+  animation-name: ${p => (p.isCurrentNote ? "fadeInNote" : "none")};
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
@@ -117,7 +117,7 @@ const NoteContainer = styled(Flex)<{
   opacity: 0;
   transform: scale(0.5);
 
-  @keyframes fadeIn {
+  @keyframes fadeInNote {
     0% {
       opacity: 0;
     }

@@ -7,8 +7,9 @@ export type AccidentalMode = "flats" | "sharps"
 export interface Fretboard {
   accidentalMode: AccidentalMode
   correctAnswers: number
-  incorrectAnswers: number
   currentNote: Note
+  flashMessage: string
+  incorrectAnswers: number
   questions: Note[]
   questionCount: number
   showAccidentals: boolean
@@ -19,6 +20,10 @@ export interface Fretboard {
 
   pickAnswer: Thunk<Fretboard, Note>
   pickRandomNote: Action<Fretboard, void>
+
+  setFlashMessage: Action<Fretboard, string>
+  showFlash: Thunk<Fretboard, string>
+
   setNote: Action<Fretboard, Note>
   setAccidentalMode: Action<Fretboard, AccidentalMode>
   toggleAccidentals: Action<Fretboard, void>
@@ -26,9 +31,10 @@ export interface Fretboard {
 
 export const fretboard: Fretboard = {
   accidentalMode: "flats",
+  currentNote: { note: "c", position: [5, 3] },
   correctAnswers: 0,
   incorrectAnswers: 0,
-  currentNote: { note: "c", position: [5, 3] },
+  flashMessage: "",
   questions: [],
   questionCount: 4,
   showAccidentals: true,
@@ -40,6 +46,13 @@ export const fretboard: Fretboard = {
     state.incorrectAnswers++
   },
 
+  showFlash: thunk((actions, flashMessage) => {
+    actions.setFlashMessage(flashMessage)
+    setTimeout(() => {
+      actions.setFlashMessage("")
+    }, 2000)
+  }),
+
   pickAnswer: thunk((actions, selectedNote, { getState }: any) => {
     const {
       fretboard: { currentNote },
@@ -47,12 +60,16 @@ export const fretboard: Fretboard = {
 
     const isCorrect = isEqual(currentNote, selectedNote)
     if (isCorrect) {
-      actions.correctAnswer()
+      actions.showFlash("correct!")
+      setTimeout(() => actions.correctAnswer(), 10)
     } else {
-      actions.incorrectAnswer()
+      actions.showFlash("incorrect!")
+      setTimeout(() => actions.incorrectAnswer(), 10)
     }
 
-    actions.pickRandomNote()
+    setTimeout(() => {
+      actions.pickRandomNote()
+    }, 2000)
   }),
 
   pickRandomNote: state => {
@@ -78,6 +95,10 @@ export const fretboard: Fretboard = {
 
   setAccidentalMode: (state, payload) => {
     state.accidentalMode = payload
+  },
+
+  setFlashMessage: (state, message) => {
+    state.flashMessage = message
   },
 
   setNote: (state, currentNote) => {

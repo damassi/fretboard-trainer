@@ -42,11 +42,12 @@ export interface Note {
  *   position: [1, 3] // first string, third fret
  * })
  */
-export const getNote = (props: {
+export function getNote(props: {
   mode: AccidentalMode
+  showAccidentals: boolean
   position?: NotePosition
-}): Note => {
-  const { mode, position } = props
+}): Note {
+  const { mode, position, showAccidentals } = props
 
   let string
   let note
@@ -63,10 +64,24 @@ export const getNote = (props: {
   // because 0 (as in [6, 0]) refers to an open string -- in this case the low `E`.
   string--
 
+  const noteName = notes[mode][string][note]
+
+  // Re-run function if we return an invalid result
+  if (!showAccidentals && containsSharpOrFlat(noteName)) {
+    return getNote(props)
+  }
+
   const foundNote: Note = {
-    note: notes[mode][string][note],
+    note: noteName,
     position: [string, note],
   }
 
   return foundNote
+}
+
+export function containsSharpOrFlat(note: string) {
+  if (note.includes("♭") || note.includes("♯")) {
+    return true
+  }
+  return false
 }

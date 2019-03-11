@@ -16,7 +16,9 @@ export const Settings = () => {
 
   return (
     <SettingsContainer>
-      <SettingsIcon selected={showSettings} onClick={() => toggleSettings()} />
+      <Box onClick={() => toggleSettings()}>
+        <SettingsIcon selected={showSettings} />
+      </Box>
       {showSettings && (
         <Box>
           <Box mt={1} ml={1}>

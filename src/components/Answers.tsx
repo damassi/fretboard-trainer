@@ -1,21 +1,14 @@
 import React from "react"
-import { Flex, Box } from "rebass"
-import { shuffle, take } from "lodash"
-import { Display } from "src/components/ui/Typography"
 import styled from "styled-components"
+import { Flex, Box } from "rebass"
+
+import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { OpenEyeIcon } from "./ui/OpenEyeIcon"
 
-const notes = {
-  flats: ["A", "A♭", "B", "B♭", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
-  sharps: ["A", "A♯", "B", "B♯", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯"] // prettier-ignore
-}
-
 export const Answers = _props => {
-  const { setRandomNote } = useActions(actions => actions.fretboard)
-  const { accidentalMode } = useStore(state => state.fretboard)
-  const possibleAnswers = take(shuffle(notes[accidentalMode]), 4)
-  // const currentNote = useStore(state => state.fretboard.currentNote)
+  const { pickAnswer } = useActions(actions => actions.fretboard)
+  const { questions } = useStore(state => state.fretboard)
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -26,10 +19,10 @@ export const Answers = _props => {
         width="100%"
         alignItems="center"
       >
-        {possibleAnswers.map((answer, index) => {
+        {questions.map((answer, index) => {
           return (
-            <Answer onClick={() => setRandomNote()} p={3} m={1} key={index}>
-              <Display size="8">{answer}</Display>
+            <Answer onClick={() => pickAnswer(answer)} p={3} m={1} key={index}>
+              <Display size="8">{answer.note}</Display>
             </Answer>
           )
         })}

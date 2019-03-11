@@ -6,7 +6,7 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.png"
 import { Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
-import { notes } from "src/utils/fretboard"
+import { notes, containsSharpOrFlat } from "src/utils/fretboardUtils"
 import { color } from "src/Theme"
 
 export const Fretboard = _props => {
@@ -36,8 +36,10 @@ export const Fretboard = _props => {
                 const getVisibility = () => {
                   switch (true) {
                     case showNotes: {
-                      if (!showAccidentals) {
-                        if (note.includes("♭") || note.includes("♯")) {
+                      if (showAccidentals) {
+                        return true
+                      } else {
+                        if (containsSharpOrFlat(note)) {
                           return false
                         }
                       }
@@ -56,7 +58,7 @@ export const Fretboard = _props => {
                   <NoteContainer
                     mr={SPACE}
                     key={noteIndex}
-                    isCurrentNote={isCurrentNote}
+                    isCurrentNote={showNote || isCurrentNote}
                     showNote={showNote}
                   >
                     <Note size="5" showNote={showNote}>
@@ -122,7 +124,7 @@ const NoteContainer = styled(Flex)<{
 
     100% {
       opacity: 1;
-      transform: scale(1.5);
+      transform: scale(${p => (p.showNote ? "1" : "1")});
     }
   }
 `

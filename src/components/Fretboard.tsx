@@ -1,56 +1,70 @@
 import React from "react"
-import { Box, Image, Flex } from "rebass"
 import styled from "styled-components"
-import { Display } from "src/components/ui/Typography"
+import { Box, Image, Flex } from "rebass"
+import { isEqual } from "lodash"
+
 import fretboardGraphic from "src/assets/fretboard.png"
+import { Display } from "src/components/ui/Typography"
+import { useStore } from "src/utils/hooks"
+import { notes, containsSharpOrFlat } from "src/utils/fretboardUtils"
+import { color } from "src/Theme"
 
-const notes = {
-  flats: [
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-    ["B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
-    ["G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
-    ["D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D"],
-    ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A"],
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-  ],
-  sharps: [
-    ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E"],
-    ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
-    ["G", "G#", "A", "B#", "B", "C", "C#", "D", "D#", "E", "F", "G#", "G"],
-    ["D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D"],
-    ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A"],
-    ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E"],
-  ],
-}
-
-export const Fretboard = props => {
-  const guitar = notes[props.accidentalMode || "flats"]
+export const Fretboard = _props => {
+  const { showNotes, showHint } = useStore(state => state.settings)
+  const { accidentalMode, currentNote, showAccidentals } = useStore(
+    state => state.fretboard
+  )
+  const fretboard = notes[accidentalMode]
 
   return (
     <Container flexDirection="column" justifyContent="center">
       <Image width="100%" height={260} src={fretboardGraphic} />
 
       <NotesContainer ml={-40}>
-        {guitar.map((string, stringIndex) => {
+        {fretboard.map((string, stringIndex) => {
           return (
             <Flex key={stringIndex}>
               {string.map((note, noteIndex) => {
                 const BASE = 98
                 const DISTANCE_RATIO = 0.65
                 const SPACE = BASE - (BASE / 12) * (noteIndex * DISTANCE_RATIO)
+                const isCurrentNote = isEqual(currentNote.position, [
+                  stringIndex,
+                  noteIndex,
+                ])
+
+                const getVisibility = () => {
+                  switch (true) {
+                    case showNotes: {
+                      if (showAccidentals) {
+                        return true
+                      } else {
+                        if (containsSharpOrFlat(note)) {
+                          return false
+                        }
+                      }
+                      return true
+                    }
+                    case isCurrentNote && showHint:
+                      return true
+                    default:
+                      return false
+                  }
+                }
+
+                const showNote = getVisibility()
 
                 return (
-                  <Note mr={SPACE} key={noteIndex}>
-                    <Display
-                      size="5"
-                      style={{
-                        position: "relative",
-                        left: 8,
-                      }}
-                    >
+                  <NoteContainer
+                    mr={SPACE}
+                    key={noteIndex}
+                    isCurrentNote={showNote || isCurrentNote}
+                    showNote={showNote}
+                  >
+                    <Note size="5" showNote={showNote}>
                       {note}
-                    </Display>
-                  </Note>
+                    </Note>
+                  </NoteContainer>
                 )
               })}
             </Flex>
@@ -72,14 +86,45 @@ const NotesContainer = styled(Box)`
   position: absolute;
 `
 
-const Note = styled(Flex)`
+const Note = styled(Display)<{ showNote: boolean }>`
+  position: relative;
+  left: 8px;
+  color: ${color("white")};
+  visibility: ${p => (p.showNote ? "visible" : "hidden")};
+`
+
+const NoteContainer = styled(Flex)<{
+  isCurrentNote: boolean
+  showNote: boolean
+}>`
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: ${p =>
+    p.showNote ? "rgba(255, 255, 255, .1)" : "rgba(243, 251, 81, .8)"};
   width: 30px;
   height: 30px;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   top: 5px;
   margin-bottom: 10px;
   position: relative;
+  visibility: ${p => (p.isCurrentNote ? "visible" : "hidden")};
+
+  animation-name: ${p => (p.isCurrentNote ? "fadeInNote" : "none")};
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
+
+  opacity: 0;
+  transform: scale(0.5);
+
+  @keyframes fadeInNote {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(${p => (p.showNote ? "1" : "1")});
+    }
+  }
 `

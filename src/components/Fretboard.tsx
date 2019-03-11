@@ -6,11 +6,14 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.png"
 import { Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
-import { notes } from "src/utils/fretboardUtils"
+import { notes } from "src/utils/fretboard"
+import { color } from "src/Theme"
 
 export const Fretboard = _props => {
-  const settings = useStore(state => state.settings)
-  const { accidentalMode, currentNote } = useStore(state => state.fretboard)
+  const { showNotes, showHint } = useStore(state => state.settings)
+  const { accidentalMode, currentNote, showAccidentals } = useStore(
+    state => state.fretboard
+  )
   const fretboard = notes[accidentalMode]
 
   return (
@@ -29,12 +32,36 @@ export const Fretboard = _props => {
                   stringIndex,
                   noteIndex,
                 ])
-                const showNote =
-                  isCurrentNote || settings.showHint || settings.showNotes
+
+                const getVisibility = () => {
+                  switch (true) {
+                    case showNotes: {
+                      if (!showAccidentals) {
+                        if (note.includes("♭") || note.includes("♯")) {
+                          return false
+                        }
+                      }
+                      return true
+                    }
+                    case isCurrentNote && showHint:
+                      return true
+                    default:
+                      return false
+                  }
+                }
+
+                const showNote = getVisibility()
 
                 return (
-                  <NoteContainer mr={SPACE} key={noteIndex} showNote={showNote}>
-                    <Note size="5">{note}</Note>
+                  <NoteContainer
+                    mr={SPACE}
+                    key={noteIndex}
+                    isCurrentNote={isCurrentNote}
+                    showNote={showNote}
+                  >
+                    <Note size="5" showNote={showNote}>
+                      {note}
+                    </Note>
                   </NoteContainer>
                 )
               })}
@@ -57,25 +84,45 @@ const NotesContainer = styled(Box)`
   position: absolute;
 `
 
-const Note = styled(Display)`
+const Note = styled(Display)<{ showNote: boolean }>`
   position: relative;
   left: 8px;
+  color: ${color("white")};
+  visibility: ${p => (p.showNote ? "visible" : "hidden")};
 `
 
-const NoteContainer = styled(Flex)<{ showNote: boolean }>`
+const NoteContainer = styled(Flex)<{
+  isCurrentNote: boolean
+  showNote: boolean
+}>`
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: ${p =>
+    p.showNote ? "rgba(255, 255, 255, .1)" : "rgba(243, 251, 81, .8)"};
   width: 30px;
   height: 30px;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   top: 5px;
   margin-bottom: 10px;
   position: relative;
-  visibility: ${p => (p.showNote ? "visible" : "hidden")};
-  transform: scale(1.5);
+  visibility: ${p => (p.isCurrentNote ? "visible" : "hidden")};
 
-  ${Note} {
-    visibility: ${p => (p.showNote ? "visible" : "hidden")};
+  animation-name: ${p => (p.isCurrentNote ? "fadeIn" : "none")};
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
+
+  opacity: 0;
+  transform: scale(0.5);
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1.5);
+    }
   }
 `

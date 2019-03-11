@@ -25,6 +25,8 @@ export const theme = {
     black5: "#F8F8F8",
     white: "#fff",
 
+    green1: "#69f969",
+
     purpleLight: "#deb6da",
     purpleDark: "#ce6fc4",
 
@@ -115,6 +117,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: ${theme.typography.sizes[4].fontSize}px;
     line-height: ${theme.typography.sizes[4].lineHeight}px;
     margin: 0 auto;
+    user-select: none;
     /* width: 1200px; */
   }
 `

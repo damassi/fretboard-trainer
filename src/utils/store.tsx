@@ -1,7 +1,7 @@
 import { createStore, EasyPeasyConfig } from "easy-peasy"
 import { createLogger } from "redux-logger"
-import { settings, SettingsModel } from "src/state/settings"
-import { fretboard, Fretboard } from "src/state/fretboard"
+import { settings, SettingsModel } from "src/state/settingsState"
+import { fretboard, Fretboard } from "src/state/fretboardState"
 
 export interface StoreModel {
   settings: SettingsModel

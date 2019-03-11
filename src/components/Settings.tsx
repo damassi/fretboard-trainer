@@ -7,35 +7,31 @@ import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 
 export const Settings = () => {
-  const state = useStore(state => state.settings)
-  const actions = useActions(actions => actions.settings)
+  const { showSettings, showNotes } = useStore(state => state.settings)
+  const { toggleNotes, toggleSettings } = useActions(actions => actions.settings) // prettier-ignore
+  const { accidentalMode } = useStore(state => state.fretboard)
+  const { setAccidentalMode } = useActions(actions => actions.fretboard)
 
   return (
     <SettingsContainer>
-      <SettingsIcon
-        selected={state.showSettings}
-        onClick={() => actions.toggleSettings()}
-      />
-      {state.showSettings && (
+      <SettingsIcon selected={showSettings} onClick={() => toggleSettings()} />
+      {showSettings && (
         <Box>
           <Box mt={2} ml={1}>
-            <Button
-              selected={state.showNotes}
-              onClick={() => actions.toggleNotes()}
-            >
+            <Button selected={showNotes} onClick={() => toggleNotes()}>
               <Display size="4">Display notes?</Display>
             </Button>
           </Box>
           <Box mt={1} ml={1}>
             <Button
-              selected={state.accidentalMode === "flats"}
-              onClick={() => actions.setAccidentalMode("flats")}
+              selected={accidentalMode === "flats"}
+              onClick={() => setAccidentalMode("flats")}
             >
               <Display size="4">Flats</Display>
             </Button>
             <Button
-              selected={state.accidentalMode === "sharps"}
-              onClick={() => actions.setAccidentalMode("sharps")}
+              selected={accidentalMode === "sharps"}
+              onClick={() => setAccidentalMode("sharps")}
             >
               <Display size="4">Sharps</Display>
             </Button>

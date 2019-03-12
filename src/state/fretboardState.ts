@@ -46,10 +46,12 @@ export const fretboard: Fretboard = {
     state.incorrectAnswers++
   },
 
-  showFlash: thunk((actions, flashMessage) => {
+  showFlash: thunk((actions, flashMessage, { dispatch }: any) => {
     actions.setFlashMessage(flashMessage)
+    dispatch.settings.toggleHint()
     setTimeout(() => {
       actions.setFlashMessage("")
+      dispatch.settings.toggleHint()
     }, 2000)
   }),
 

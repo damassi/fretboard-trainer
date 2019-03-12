@@ -29,7 +29,7 @@ export const Settings = () => {
               selected={!showAccidentals}
               onClick={() => toggleAccidentals()}
             >
-              <Display size="3">Whole notes only</Display>
+              <Display size="3">Natural notes only</Display>
             </Button>
           </Box>
 

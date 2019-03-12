@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Box, Image, Flex } from "rebass"
 import { isEqual } from "lodash"
 
-import fretboardGraphic from "src/assets/fretboard.png"
+import fretboardGraphic from "src/assets/fretboard.jpg"
 import { Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
 import { notes, containsSharpOrFlat } from "src/utils/fretboardUtils"

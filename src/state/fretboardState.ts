@@ -12,21 +12,20 @@ export interface Fretboard {
   incorrectAnswers: number
   questions: Note[]
   questionCount: number
-  showAccidentals: boolean
 
   // Actions
   correctAnswer: Action<Fretboard, void>
   incorrectAnswer: Action<Fretboard, void>
 
   pickAnswer: Thunk<Fretboard, Note>
-  pickRandomNote: Action<Fretboard, void>
+  pickRandomNote: Thunk<Fretboard, void>
 
-  setFlashMessage: Action<Fretboard, string>
   showFlash: Thunk<Fretboard, string>
 
-  setNote: Action<Fretboard, Note>
   setAccidentalMode: Action<Fretboard, AccidentalMode>
-  toggleAccidentals: Action<Fretboard, void>
+  setFlashMessage: Action<Fretboard, string>
+  setNote: Action<Fretboard, Note>
+  setQuestions: Action<Fretboard, Note[]>
 }
 
 export const fretboard: Fretboard = {
@@ -37,7 +36,6 @@ export const fretboard: Fretboard = {
   flashMessage: "",
   questions: [],
   questionCount: 4,
-  showAccidentals: true,
 
   correctAnswer: state => {
     state.correctAnswers++
@@ -74,13 +72,15 @@ export const fretboard: Fretboard = {
     }, 2000)
   }),
 
-  pickRandomNote: state => {
+  pickRandomNote: thunk((actions, _, { getState }: any) => {
+    const state = getState()
+
     const getNotes = () =>
       uniqBy(
         times(4, () => {
           return getNote({
-            mode: state.accidentalMode,
-            showAccidentals: state.showAccidentals,
+            mode: state.fretboard.accidentalMode,
+            showAccidentals: state.settings.showAccidentals,
           })
         }),
         "note"
@@ -91,9 +91,9 @@ export const fretboard: Fretboard = {
       notes = getNotes()
     }
 
-    state.currentNote = notes[0]
-    state.questions = shuffle(notes)
-  },
+    actions.setNote(notes[0])
+    actions.setQuestions(shuffle(notes))
+  }),
 
   setAccidentalMode: (state, payload) => {
     state.accidentalMode = payload
@@ -107,7 +107,7 @@ export const fretboard: Fretboard = {
     state.currentNote = currentNote
   },
 
-  toggleAccidentals: state => {
-    state.showAccidentals = !state.showAccidentals
+  setQuestions: (state, questions) => {
+    state.questions = questions
   },
 }

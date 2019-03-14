@@ -9,10 +9,14 @@ import { Spacer } from "./ui/Spacer"
 import { color } from "src/Theme"
 
 export const Settings = () => {
-  const { showSettings, showNotes } = useStore(state => state.settings)
-  const { toggleNotes, toggleSettings } = useActions(actions => actions.settings) // prettier-ignore
-  const { accidentalMode, showAccidentals } = useStore(state => state.fretboard)
-  const { setAccidentalMode, toggleAccidentals } = useActions(actions => actions.fretboard) // prettier-ignore
+  const { showAccidentals, showNotes, showSettings } = useStore(
+    state => state.settings
+  )
+  const { toggleAccidentals, toggleNotes, toggleSettings } = useActions(
+    actions => actions.settings
+  )
+  const { accidentalMode } = useStore(state => state.fretboard)
+  const { setAccidentalMode } = useActions(actions => actions.fretboard)
 
   return (
     <SettingsContainer>

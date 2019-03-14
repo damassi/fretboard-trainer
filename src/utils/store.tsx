@@ -1,8 +1,9 @@
 import { createStore, EasyPeasyConfig } from "easy-peasy"
-import { createLogger } from "redux-logger"
+
 import { settings, SettingsModel } from "src/state/settingsState"
 import { fretboard, Fretboard } from "src/state/fretboardState"
 
+import { createLogger } from "redux-logger"
 import { save, load } from "redux-localstorage-simple"
 
 const STORAGE_SETTINGS = {

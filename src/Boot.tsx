@@ -1,7 +1,7 @@
 import React from "react"
 import { StoreProvider } from "easy-peasy"
-import { Theme } from "./Theme"
-import { store } from "./utils/store"
+import { Theme } from "src/Theme"
+import { store } from "src/store"
 
 export const Boot = ({ children }) => {
   return (

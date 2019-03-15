@@ -44,6 +44,7 @@
     "@types/rebass": "^3.0.3",
     "@types/redux": "^3.6.0",
     "@types/styled-components": "^4.1.12",
+    "@types/webpack-env": "^1.13.9",
     "@typescript-eslint/eslint-plugin": "^1.4.2",
     "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",

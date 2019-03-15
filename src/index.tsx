@@ -1,17 +1,29 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { Boot } from "./Boot"
-import { App } from "./App"
+import styled from "styled-components"
+import { Flex } from "rebass"
 
-ReactDOM.render(
-  <Boot>
-    <App />
-  </Boot>,
-  document.getElementById("root")
-)
+import { Boot } from "src/Boot"
+import { FretboardApp } from "src/apps/fretboard"
 
-// @ts-ignore
+const App = () => {
+  return (
+    <Boot>
+      <AppContainer>
+        <FretboardApp />
+      </AppContainer>
+    </Boot>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById("root"))
+
+const AppContainer = styled(Flex)`
+  flex-direction: column;
+  width: 1200px;
+  margin: 0 auto;
+`
+
 if (module.hot) {
-  // @ts-ignore
   module.hot.accept()
 }

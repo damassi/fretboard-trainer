@@ -4,7 +4,7 @@ import { Flex, Box } from "rebass"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
-import { OpenEyeIcon } from "./ui/OpenEyeIcon"
+import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.fretboard)
@@ -34,8 +34,8 @@ export const Answers = _props => {
 }
 
 const HintButton = _props => {
-  const { showHint } = useStore(state => state.settings)
-  const { toggleHint } = useActions(actions => actions.settings)
+  const { showHint } = useStore(state => state.fretboard)
+  const { toggleHint } = useActions(actions => actions.fretboard)
 
   return (
     <Box p={2}>

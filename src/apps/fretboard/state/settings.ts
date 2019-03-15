@@ -1,23 +1,34 @@
 import { Action } from "easy-peasy"
 
-export interface SettingsModel {
+export type AccidentalMode = "flats" | "sharps"
+
+export interface Settings {
+  accidentalMode: AccidentalMode
+
   showAccidentals: boolean
   showHint: boolean
   showNotes: boolean
   showSettings: boolean
 
   // Actions
-  toggleAccidentals: Action<SettingsModel, void>
-  toggleHint: Action<SettingsModel, void>
-  toggleNotes: Action<SettingsModel, void>
-  toggleSettings: Action<SettingsModel, void>
+  toggleAccidentals: Action<Settings, void>
+  toggleHint: Action<Settings, void>
+  toggleNotes: Action<Settings, void>
+  toggleSettings: Action<Settings, void>
+
+  setAccidentalMode: Action<Settings, AccidentalMode>
 }
 
-export const settings: SettingsModel = {
+export const settingsState: Settings = {
+  accidentalMode: "flats",
   showAccidentals: true,
   showHint: false,
   showNotes: false,
   showSettings: true,
+
+  setAccidentalMode: (state, payload) => {
+    state.accidentalMode = payload
+  },
 
   toggleAccidentals: state => {
     state.showAccidentals = !state.showAccidentals

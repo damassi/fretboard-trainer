@@ -1,11 +1,9 @@
 import { Action, thunk, Thunk } from "easy-peasy"
 import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { Note, getNote } from "src/utils/fretboardUtils"
-
-export type AccidentalMode = "flats" | "sharps"
+import { StoreModel } from "src/store"
 
 export interface Fretboard {
-  accidentalMode: AccidentalMode
   correctAnswers: number
   currentNote: Note
   flashMessage: string
@@ -17,20 +15,21 @@ export interface Fretboard {
   correctAnswer: Action<Fretboard, void>
   incorrectAnswer: Action<Fretboard, void>
 
+  setQuestions: Action<Fretboard, Note[]>
   pickAnswer: Thunk<Fretboard, Note>
+
   pickRandomNote: Thunk<Fretboard, void>
+  setNote: Action<Fretboard, Note>
 
   showFlash: Thunk<Fretboard, string>
-
-  setAccidentalMode: Action<Fretboard, AccidentalMode>
   setFlashMessage: Action<Fretboard, string>
-  setNote: Action<Fretboard, Note>
-  setQuestions: Action<Fretboard, Note[]>
 }
 
-export const fretboard: Fretboard = {
-  accidentalMode: "flats",
-  currentNote: { note: "c", position: [5, 3] },
+export const fretboardState: Fretboard = {
+  currentNote: {
+    note: "c",
+    position: [5, 3],
+  },
   correctAnswers: 0,
   incorrectAnswers: 0,
   flashMessage: "",
@@ -46,17 +45,17 @@ export const fretboard: Fretboard = {
 
   showFlash: thunk((actions, flashMessage, { dispatch }: any) => {
     actions.setFlashMessage(flashMessage)
-    dispatch.settings.toggleHint()
+    dispatch.fretboard.toggleHint()
     setTimeout(() => {
       actions.setFlashMessage("")
-      dispatch.settings.toggleHint()
+      dispatch.fretboard.toggleHint()
     }, 2000)
   }),
 
-  pickAnswer: thunk((actions, selectedNote, { getState }: any) => {
+  pickAnswer: thunk((actions, selectedNote, { getState }) => {
     const {
       fretboard: { currentNote },
-    } = getState()
+    } = getState() as StoreModel
 
     const isCorrect = isEqual(currentNote, selectedNote)
     if (isCorrect) {
@@ -72,15 +71,15 @@ export const fretboard: Fretboard = {
     }, 2000)
   }),
 
-  pickRandomNote: thunk((actions, _, { getState }: any) => {
-    const state = getState()
+  pickRandomNote: thunk((actions, _, { getState }) => {
+    const state = getState() as StoreModel
 
     const getNotes = () =>
       uniqBy(
         times(4, () => {
           return getNote({
             mode: state.fretboard.accidentalMode,
-            showAccidentals: state.settings.showAccidentals,
+            showAccidentals: state.fretboard.showAccidentals,
           })
         }),
         "note"
@@ -94,10 +93,6 @@ export const fretboard: Fretboard = {
     actions.setNote(notes[0])
     actions.setQuestions(shuffle(notes))
   }),
-
-  setAccidentalMode: (state, payload) => {
-    state.accidentalMode = payload
-  },
 
   setFlashMessage: (state, message) => {
     state.flashMessage = message

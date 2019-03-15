@@ -10,13 +10,15 @@ import { color } from "src/Theme"
 
 export const Settings = () => {
   const { showAccidentals, showNotes, showSettings } = useStore(
-    state => state.fretboard
+    state => state.fretboard.settings
   )
   const { toggleAccidentals, toggleNotes, toggleSettings } = useActions(
-    actions => actions.fretboard
+    actions => actions.fretboard.settings
   )
-  const { accidentalMode } = useStore(state => state.fretboard)
-  const { setAccidentalMode } = useActions(actions => actions.fretboard)
+  const { accidentalMode } = useStore(state => state.fretboard.settings)
+  const { setAccidentalMode } = useActions(
+    actions => actions.fretboard.settings
+  )
 
   return (
     <SettingsContainer>

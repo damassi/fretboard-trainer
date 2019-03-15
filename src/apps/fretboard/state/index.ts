@@ -1,9 +1,11 @@
 import { fretboardState, Fretboard } from "./fretboard"
 import { settingsState, Settings } from "./settings"
 
-export interface FretboardModel extends Fretboard, Settings {}
+export interface FretboardModel extends Fretboard {
+  settings: Settings
+}
 
 export const fretboard: FretboardModel = {
   ...fretboardState,
-  ...settingsState,
+  settings: settingsState,
 }

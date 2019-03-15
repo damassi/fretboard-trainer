@@ -45,10 +45,10 @@ export const fretboardState: Fretboard = {
 
   showFlash: thunk((actions, flashMessage, { dispatch }: any) => {
     actions.setFlashMessage(flashMessage)
-    dispatch.fretboard.toggleHint()
+    dispatch.fretboard.settings.toggleHint()
     setTimeout(() => {
       actions.setFlashMessage("")
-      dispatch.fretboard.toggleHint()
+      dispatch.fretboard.settings.toggleHint()
     }, 2000)
   }),
 
@@ -78,8 +78,8 @@ export const fretboardState: Fretboard = {
       uniqBy(
         times(4, () => {
           return getNote({
-            mode: state.fretboard.accidentalMode,
-            showAccidentals: state.fretboard.showAccidentals,
+            mode: state.fretboard.settings.accidentalMode,
+            showAccidentals: state.fretboard.settings.showAccidentals,
           })
         }),
         "note"

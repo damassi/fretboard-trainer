@@ -4,16 +4,17 @@ import { Box } from "rebass"
 
 export const theme = {
   space: {
-    "1": 10,
-    "2": 20,
-    "3": 30,
-    "4": 40,
-    "5": 50,
-    "6": 60,
-    "7": 70,
-    "8": 80,
-    "9": 90,
-    "10": 100,
+    0.5: 5,
+    1: 10,
+    2: 20,
+    3: 30,
+    4: 40,
+    5: 50,
+    6: 60,
+    7: 70,
+    8: 80,
+    9: 90,
+    10: 100,
   },
 
   colors: {
@@ -24,12 +25,9 @@ export const theme = {
     black10: "#E5E5E5",
     black5: "#F8F8F8",
     white: "#fff",
-
     green1: "#69f969",
-
     purpleLight: "#deb6da",
     purpleDark: "#ce6fc4",
-
     teal: "#6faece",
   },
 
@@ -54,7 +52,6 @@ export const theme = {
         },
       },
       display: {
-        // fontFamily: "Patua One",
         fontFamily: "Bungee Inline",
         weights: {
           regular: 400,
@@ -118,7 +115,6 @@ const GlobalStyle = createGlobalStyle`
     line-height: ${theme.typography.sizes[4].lineHeight}px;
     margin: 0 auto;
     user-select: none;
-    /* width: 1200px; */
   }
 `
 

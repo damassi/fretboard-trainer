@@ -5,15 +5,15 @@ import styled from "styled-components"
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
-import { Spacer } from "./ui/Spacer"
+import { Spacer } from "src/components/ui/Spacer"
 import { color } from "src/Theme"
 
 export const Settings = () => {
   const { showAccidentals, showNotes, showSettings } = useStore(
-    state => state.settings
+    state => state.fretboard
   )
   const { toggleAccidentals, toggleNotes, toggleSettings } = useActions(
-    actions => actions.settings
+    actions => actions.fretboard
   )
   const { accidentalMode } = useStore(state => state.fretboard)
   const { setAccidentalMode } = useActions(actions => actions.fretboard)

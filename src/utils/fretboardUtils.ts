@@ -1,5 +1,5 @@
 import { random } from "lodash"
-import { AccidentalMode } from "src/state/fretboardState"
+import { AccidentalMode } from "src/apps/fretboard/state/settings"
 
 export const notes = {
   flats: [

@@ -83,9 +83,9 @@ const HintButton = props => {
   )
 }
 
-const Answer = styled(({ children, className }) => {
+const Answer = styled(({ children, className, ...props }) => {
   return (
-    <Flex className={className} p={3} m={1}>
+    <Flex className={className} p={3} m={1} {...props}>
       <Display size="8">{children}</Display>
     </Flex>
   )

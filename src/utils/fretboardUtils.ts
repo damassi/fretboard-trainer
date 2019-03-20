@@ -46,15 +46,16 @@ export function getNote(props: {
   mode: AccidentalMode
   showAccidentals: boolean
   position?: NotePosition
+  startingFret?: number
 }): Note {
-  const { mode, position, showAccidentals } = props
+  const { mode, position, showAccidentals, startingFret = 1 } = props
 
   let string
   let note
 
   if (!position) {
-    string = random(1, 6)
-    note = random(1, 12)
+    string = random(startingFret, 6)
+    note = random(startingFret, 12)
   } else {
     string = position[0]
     note = position[1]

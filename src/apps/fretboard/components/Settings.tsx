@@ -1,15 +1,18 @@
 import React from "react"
-import { Box } from "rebass"
+import { Box, Flex } from "rebass"
 import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { useStore, useActions } from "src/utils/hooks"
 import { Spacer } from "src/components/ui/Spacer"
 import { Toggle } from "src/components/ui/Toggle"
+import { Display } from "src/components/ui/Typography"
+import { font, fontSize } from "src/Theme"
 
 export const Settings = () => {
   const {
     setAccidentalMode,
+    setStartingFret,
     toggleAccidentals,
     toggleMultipleChoice,
     toggleNotes,
@@ -22,6 +25,7 @@ export const Settings = () => {
     showAccidentals,
     showNotes,
     showSettings,
+    startingFret,
   } = useStore(state => state.fretboard.settings)
 
   return (
@@ -39,11 +43,18 @@ export const Settings = () => {
               Natural notes only
             </Toggle>
             <Toggle selected={multipleChoice} onClick={toggleMultipleChoice}>
-              Multiple choice?
+              Multiple choice
             </Toggle>
           </Box>
 
-          <Spacer my={2} />
+          <Box>
+            <StartAtFret
+              value={startingFret}
+              onChange={event => setStartingFret(event.currentTarget.value)}
+            />
+          </Box>
+
+          <Spacer my={0} />
 
           <Box ml={1}>
             <Toggle
@@ -68,4 +79,42 @@ export const Settings = () => {
 const SettingsContainer = styled(Box)`
   position: absolute;
   top: 70px;
+`
+
+const StartAtFret = styled(({ className, onChange, value }) => {
+  return (
+    <Flex ml={1} my={0.5} className={className}>
+      <Display size="2">Start at fret</Display>
+      <input
+        type="number"
+        step="1"
+        min="1"
+        max="9"
+        value={value}
+        onChange={onChange}
+        onKeyDown={event => event.preventDefault()}
+      />
+    </Flex>
+  )
+})`
+  user-select: none;
+  input {
+    border: 0;
+    background: none;
+    font-family: ${font("display")};
+    ${fontSize("2")};
+    color: #ccc;
+    margin-left: 5px;
+    outline: none;
+    width: 30px;
+    user-select: none;
+    color: transparent;
+    text-shadow: 0 0 0 white;
+    position: relative;
+    top: -1px;
+
+    &:focus {
+      outline: none;
+    }
+  }
 `

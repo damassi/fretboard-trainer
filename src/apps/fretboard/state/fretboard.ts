@@ -1,7 +1,8 @@
-import { Action, thunk, Thunk } from "easy-peasy"
+import { Action, thunk, Thunk, listen, Listen } from "easy-peasy"
 import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { Note, getNote } from "src/utils/fretboardUtils"
 import { StoreModel } from "src/store"
+import { fretboard } from "."
 
 export interface Fretboard {
   correctAnswers: number
@@ -10,6 +11,9 @@ export interface Fretboard {
   incorrectAnswers: number
   questions: Note[]
   questionCount: number
+
+  // Listeners
+  listeners: Listen<Fretboard>
 
   // Actions
   correctAnswer: Action<Fretboard, void>
@@ -35,6 +39,16 @@ export const fretboardState: Fretboard = {
   flashMessage: "",
   questions: [],
   questionCount: 4,
+
+  listeners: listen(on => {
+    // Whenever a new starting fret has been selected reset the board
+    on(
+      fretboard.settings.setStartingFret,
+      thunk(actions => {
+        actions.pickRandomNote()
+      })
+    )
+  }),
 
   correctAnswer: state => {
     state.correctAnswers++
@@ -84,6 +98,7 @@ export const fretboardState: Fretboard = {
           return getNote({
             mode: state.fretboard.settings.accidentalMode,
             showAccidentals: state.fretboard.settings.showAccidentals,
+            startingFret: state.fretboard.settings.startingFret,
           })
         }),
         "note"

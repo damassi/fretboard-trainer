@@ -10,15 +10,17 @@ export interface Settings {
   showHint: boolean
   showNotes: boolean
   showSettings: boolean
+  startingFret: number
 
   // Actions
+  setAccidentalMode: Action<Settings, AccidentalMode>
+  setStartingFret: Action<Settings, number>
+
   toggleAccidentals: Action<Settings, void>
   toggleHint: Action<Settings, void>
   toggleMultipleChoice: Action<Settings, void>
   toggleNotes: Action<Settings, void>
   toggleSettings: Action<Settings, void>
-
-  setAccidentalMode: Action<Settings, AccidentalMode>
 }
 
 export const settingsState: Settings = {
@@ -28,9 +30,14 @@ export const settingsState: Settings = {
   showHint: false,
   showNotes: false,
   showSettings: true,
+  startingFret: 0,
 
   setAccidentalMode: (state, payload) => {
     state.accidentalMode = payload
+  },
+
+  setStartingFret: (state, payload) => {
+    state.startingFret = payload
   },
 
   toggleAccidentals: state => {

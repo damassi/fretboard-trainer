@@ -30,7 +30,7 @@ export const settingsState: Settings = {
   showHint: false,
   showNotes: false,
   showSettings: true,
-  startingFret: 0,
+  startingFret: 1,
 
   setAccidentalMode: (state, payload) => {
     state.accidentalMode = payload

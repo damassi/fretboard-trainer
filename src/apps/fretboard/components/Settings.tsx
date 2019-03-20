@@ -3,22 +3,26 @@ import { Box } from "rebass"
 import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
-import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { Spacer } from "src/components/ui/Spacer"
-import { color } from "src/Theme"
+import { Toggle } from "src/components/ui/Toggle"
 
 export const Settings = () => {
-  const { showAccidentals, showNotes, showSettings } = useStore(
-    state => state.fretboard.settings
-  )
-  const { toggleAccidentals, toggleNotes, toggleSettings } = useActions(
-    actions => actions.fretboard.settings
-  )
-  const { accidentalMode } = useStore(state => state.fretboard.settings)
-  const { setAccidentalMode } = useActions(
-    actions => actions.fretboard.settings
-  )
+  const {
+    setAccidentalMode,
+    toggleAccidentals,
+    toggleMultipleChoice,
+    toggleNotes,
+    toggleSettings,
+  } = useActions(actions => actions.fretboard.settings)
+
+  const {
+    accidentalMode,
+    multipleChoice,
+    showAccidentals,
+    showNotes,
+    showSettings,
+  } = useStore(state => state.fretboard.settings)
 
   return (
     <SettingsContainer>
@@ -28,32 +32,32 @@ export const Settings = () => {
       {showSettings && (
         <Box>
           <Box mt={1} ml={1}>
-            <Button selected={showNotes} onClick={() => toggleNotes()}>
-              <Display size="3">Show notes</Display>
-            </Button>
-            <Button
-              selected={!showAccidentals}
-              onClick={() => toggleAccidentals()}
-            >
-              <Display size="3">Natural notes only</Display>
-            </Button>
+            <Toggle selected={showNotes} onClick={toggleNotes}>
+              Show notes
+            </Toggle>
+            <Toggle selected={!showAccidentals} onClick={toggleAccidentals}>
+              Natural notes only
+            </Toggle>
+            <Toggle selected={multipleChoice} onClick={toggleMultipleChoice}>
+              Multiple choice?
+            </Toggle>
           </Box>
 
-          <Spacer my={1} />
+          <Spacer my={2} />
 
           <Box ml={1}>
-            <Button
+            <Toggle
               selected={accidentalMode === "flats"}
               onClick={() => setAccidentalMode("flats")}
             >
-              <Display size="3">Flats</Display>
-            </Button>
-            <Button
+              Flats
+            </Toggle>
+            <Toggle
               selected={accidentalMode === "sharps"}
               onClick={() => setAccidentalMode("sharps")}
             >
-              <Display size="3">Sharps</Display>
-            </Button>
+              Sharps
+            </Toggle>
           </Box>
         </Box>
       )}
@@ -64,18 +68,4 @@ export const Settings = () => {
 const SettingsContainer = styled(Box)`
   position: absolute;
   top: 70px;
-`
-
-const Button = styled(Box)`
-  position: relative;
-  cursor: pointer;
-  color: ${props => (props.selected ? color("green1") : "#fff")};
-  user-select: none;
-
-  &:before {
-    content: "${props => (props.selected ? "✓" : "")}";
-    position: absolute;
-    left: -18px;
-    top: 0px;
-  }
 `

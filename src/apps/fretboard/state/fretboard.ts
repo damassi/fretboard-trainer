@@ -16,7 +16,7 @@ export interface Fretboard {
   incorrectAnswer: Action<Fretboard, void>
 
   setQuestions: Action<Fretboard, Note[]>
-  pickAnswer: Thunk<Fretboard, Note>
+  pickAnswer: Thunk<Fretboard, string>
 
   pickRandomNote: Thunk<Fretboard, void>
   setNote: Action<Fretboard, Note>
@@ -57,7 +57,11 @@ export const fretboardState: Fretboard = {
       fretboard: { currentNote },
     } = getState() as StoreModel
 
-    const isCorrect = isEqual(currentNote, selectedNote)
+    const isCorrect = isEqual(
+      currentNote.note.toLowerCase(),
+      selectedNote.toLowerCase()
+    )
+
     if (isCorrect) {
       actions.showFlash("correct!")
       setTimeout(() => actions.correctAnswer(), 10)

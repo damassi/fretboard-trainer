@@ -4,6 +4,7 @@ export type AccidentalMode = "flats" | "sharps"
 
 export interface Settings {
   accidentalMode: AccidentalMode
+  multipleChoice: boolean
 
   showAccidentals: boolean
   showHint: boolean
@@ -13,6 +14,7 @@ export interface Settings {
   // Actions
   toggleAccidentals: Action<Settings, void>
   toggleHint: Action<Settings, void>
+  toggleMultipleChoice: Action<Settings, void>
   toggleNotes: Action<Settings, void>
   toggleSettings: Action<Settings, void>
 
@@ -21,6 +23,7 @@ export interface Settings {
 
 export const settingsState: Settings = {
   accidentalMode: "flats",
+  multipleChoice: true,
   showAccidentals: true,
   showHint: false,
   showNotes: false,
@@ -36,6 +39,10 @@ export const settingsState: Settings = {
 
   toggleHint: state => {
     state.showHint = !state.showHint
+  },
+
+  toggleMultipleChoice: state => {
+    state.multipleChoice = !state.multipleChoice
   },
 
   toggleNotes: state => {

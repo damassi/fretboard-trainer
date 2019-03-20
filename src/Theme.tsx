@@ -1,5 +1,5 @@
 import React from "react"
-import { createGlobalStyle, ThemeProvider } from "styled-components"
+import { createGlobalStyle, ThemeProvider, css } from "styled-components"
 import { Box } from "rebass"
 
 export const theme = {
@@ -99,9 +99,27 @@ export const theme = {
   },
 }
 
-export const color = colorKey => theme.colors[colorKey]
-export const space = spaceKey => theme.space[spaceKey] + "px"
-export const font = fontKey => theme.typography.fonts[fontKey].fontFamily
+// Utils
+
+export type Color = keyof typeof theme.colors
+export const color = (colorKey: Color) => theme.colors[colorKey]
+
+export type Space = keyof typeof theme.space
+export const space = (spaceKey: Space) => theme.space[spaceKey] + "px"
+
+export type Font = keyof typeof theme.typography.fonts
+export const font = (fontKey: Font) => theme.typography.fonts[fontKey].fontFamily // prettier-ignore
+
+export type FontSize = keyof typeof theme.typography.sizes
+export const fontSize = (fontSizeKey: FontSize) => {
+  const { fontSize: _fontSize, lineHeight } = theme.typography.sizes[
+    fontSizeKey
+  ]
+  return css`
+    font-size: ${_fontSize}px;
+    line-height: ${lineHeight}px;
+  `
+}
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -111,8 +129,9 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     font-family: ${font("sans")}, sans-serif;
     color: ${color("white")};
-    font-size: ${theme.typography.sizes[4].fontSize}px;
-    line-height: ${theme.typography.sizes[4].lineHeight}px;
+
+    ${fontSize("4")}
+
     margin: 0 auto;
     user-select: none;
   }

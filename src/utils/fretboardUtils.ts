@@ -54,7 +54,7 @@ export function getNote(props: {
   let note
 
   if (!position) {
-    string = random(startingFret, 6)
+    string = random(1, 6)
     note = random(startingFret, 12)
   } else {
     string = position[0]

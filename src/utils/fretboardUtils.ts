@@ -1,5 +1,5 @@
-import { random } from "lodash"
-import { AccidentalMode } from "src/apps/fretboard/state/settings"
+import { isEmpty, random } from "lodash"
+import { AccidentalMode, StringFocus } from "src/apps/fretboard/state/settings"
 
 export const notes = {
   flats: [
@@ -18,9 +18,17 @@ export const notes = {
     ["A", "A♯", "B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A"],
     ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
   ],
+  naturals: [
+    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
+    ["B", "C", "", "D", "", "E", "F", "", "G", "", "A", "", "B"],
+    ["G", "", "A", "", "B", "C", "", "D", "", "E", "F", "", "G"],
+    ["D", "", "E", "F", "", "G", "", "A", "", "B", "C", "", "D"],
+    ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", "", "A"],
+    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
+  ],
 }
 
-type StringRange = 1 | 2 | 3 | 4 | 5 | 6
+export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
 type NoteRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
 
 // The position of the note by string and fret
@@ -43,18 +51,18 @@ export interface Note {
  * })
  */
 export function getNote(props: {
-  mode: AccidentalMode
-  showAccidentals: boolean
+  accidentalMode: AccidentalMode
   position?: NotePosition
   startingFret?: number
+  stringFocus?: StringFocus
 }): Note {
-  const { mode, position, showAccidentals, startingFret = 1 } = props
+  const { accidentalMode, position, startingFret = 1, stringFocus = 0 } = props
 
   let string
   let note
 
   if (!position) {
-    string = random(1, 6)
+    string = stringFocus || random(1, 6)
     note = random(startingFret, 12)
   } else {
     string = position[0]
@@ -65,10 +73,14 @@ export function getNote(props: {
   // because 0 (as in [6, 0]) refers to an open string -- in this case the low `E`.
   string--
 
-  const noteName = notes[mode][string][note]
+  const noteName = notes[accidentalMode][string][note]
 
   // Re-run function if we return an invalid result
-  if (!showAccidentals && containsSharpOrFlat(noteName)) {
+  const showAccidentals = accidentalMode !== "naturals"
+  if (
+    (!showAccidentals && containsSharpOrFlat(noteName)) ||
+    isEmpty(noteName)
+  ) {
     return getNote(props)
   }
 

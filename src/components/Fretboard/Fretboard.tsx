@@ -10,7 +10,7 @@ import { notes, containsSharpOrFlat } from "src/utils/fretboardUtils"
 import { color } from "src/Theme"
 
 export const Fretboard = _props => {
-  const { showAccidentals, showHint, showNotes } = useStore(state => state.fretboard.settings) // prettier-ignore
+  const { showHint, showNotes } = useStore(state => state.fretboard.settings) // prettier-ignore
   const {
     settings: { accidentalMode },
     currentNote,
@@ -38,9 +38,7 @@ export const Fretboard = _props => {
                 const getVisibility = () => {
                   switch (true) {
                     case showNotes: {
-                      if (showAccidentals) {
-                        return true
-                      } else {
+                      if (accidentalMode === "naturals") {
                         if (containsSharpOrFlat(note)) {
                           return false
                         }
@@ -54,7 +52,8 @@ export const Fretboard = _props => {
                   }
                 }
 
-                const showNote = getVisibility()
+                // Natural notes are falsy
+                const showNote = Boolean(note) && getVisibility()
 
                 return (
                   <NoteContainer

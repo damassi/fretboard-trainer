@@ -1,22 +1,24 @@
 import { Action } from "easy-peasy"
+import { StringRange } from "src/utils/fretboardUtils"
 
-export type AccidentalMode = "flats" | "sharps"
+export type AccidentalMode = "naturals" | "flats" | "sharps"
+export type StringFocus = 0 | StringRange
 
 export interface Settings {
   accidentalMode: AccidentalMode
   multipleChoice: boolean
 
-  showAccidentals: boolean
   showHint: boolean
   showNotes: boolean
   showSettings: boolean
   startingFret: number
+  stringFocus: StringFocus
 
   // Actions
   setAccidentalMode: Action<Settings, AccidentalMode>
   setStartingFret: Action<Settings, number>
+  setStringFocus: Action<Settings, StringFocus>
 
-  toggleAccidentals: Action<Settings, void>
   toggleHint: Action<Settings, void>
   toggleMultipleChoice: Action<Settings, void>
   toggleNotes: Action<Settings, void>
@@ -26,22 +28,27 @@ export interface Settings {
 export const settingsState: Settings = {
   accidentalMode: "flats",
   multipleChoice: true,
-  showAccidentals: true,
   showHint: false,
   showNotes: false,
   showSettings: true,
   startingFret: 1,
+  stringFocus: 0, // 0 is disabled
 
   setAccidentalMode: (state, payload) => {
     state.accidentalMode = payload
   },
 
-  setStartingFret: (state, payload) => {
-    state.startingFret = payload
+  setStartingFret: (state, startingFret) => {
+    // Octive
+    if (startingFret === 13) {
+      // Open string
+      startingFret = 0
+    }
+    state.startingFret = startingFret
   },
 
-  toggleAccidentals: state => {
-    state.showAccidentals = !state.showAccidentals
+  setStringFocus: (state, stringFocus) => {
+    state.stringFocus = stringFocus
   },
 
   toggleHint: state => {

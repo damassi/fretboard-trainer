@@ -1,19 +1,17 @@
 import React from "react"
-import { Box, Flex } from "rebass"
+import { Box } from "rebass"
 import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { useStore, useActions } from "src/utils/hooks"
 import { Spacer } from "src/components/ui/Spacer"
-import { Toggle } from "src/components/ui/Toggle"
-import { Display } from "src/components/ui/Typography"
-import { font, fontSize } from "src/Theme"
+import { CycleButton } from "src/components/ui/CycleButton"
 
 export const Settings = () => {
   const {
     setAccidentalMode,
     setStartingFret,
-    toggleAccidentals,
+    setStringFocus,
     toggleMultipleChoice,
     toggleNotes,
     toggleSettings,
@@ -22,10 +20,10 @@ export const Settings = () => {
   const {
     accidentalMode,
     multipleChoice,
-    showAccidentals,
     showNotes,
     showSettings,
     startingFret,
+    stringFocus,
   } = useStore(state => state.fretboard.settings)
 
   return (
@@ -33,43 +31,79 @@ export const Settings = () => {
       <Box onClick={() => toggleSettings()}>
         <SettingsIcon selected={showSettings} />
       </Box>
-      {showSettings && (
-        <Box>
-          <Box mt={1} ml={1}>
-            <Toggle selected={showNotes} onClick={toggleNotes}>
-              Show notes
-            </Toggle>
-            <Toggle selected={!showAccidentals} onClick={toggleAccidentals}>
-              Natural notes only
-            </Toggle>
-            <Toggle selected={multipleChoice} onClick={toggleMultipleChoice}>
-              Multiple choice
-            </Toggle>
-          </Box>
 
+      {showSettings && (
+        <Box mt={2}>
           <Box>
-            <StartAtFret
-              value={startingFret}
-              onChange={event => setStartingFret(event.currentTarget.value)}
+            <CycleButton
+              index={multipleChoice ? 0 : 1}
+              items={["Multiple choice", "Input mode"]}
+              onClick={toggleMultipleChoice}
             />
           </Box>
 
-          <Spacer my={0} />
-
-          <Box ml={1}>
-            <Toggle
-              selected={accidentalMode === "flats"}
-              onClick={() => setAccidentalMode("flats")}
-            >
-              Flats
-            </Toggle>
-            <Toggle
-              selected={accidentalMode === "sharps"}
-              onClick={() => setAccidentalMode("sharps")}
-            >
-              Sharps
-            </Toggle>
+          <Box mt={1}>
+            <CycleButton
+              index={showNotes ? 1 : 0}
+              items={["Show notes", "Hide notes"]}
+              onClick={toggleNotes}
+            />
+            <CycleButton
+              index={() => {
+                switch (accidentalMode) {
+                  case "naturals":
+                    return 0
+                  case "flats":
+                    return 1
+                  case "sharps":
+                    return 2
+                }
+              }}
+              items={[
+                {
+                  label: "Natural notes only",
+                  onSelect: () => setAccidentalMode("naturals"),
+                },
+                {
+                  label: "Flats",
+                  onSelect: () => setAccidentalMode("flats"),
+                },
+                {
+                  label: "Sharps",
+                  onSelect: () => setAccidentalMode("sharps"),
+                },
+              ]}
+            />
           </Box>
+
+          <Box mt={1}>
+            <CycleButton
+              index={stringFocus}
+              onClick={({ index }) => setStringFocus(index)}
+              items={[
+                "All strings",
+                "string 1",
+                "string 2",
+                "string 3",
+                "string 4",
+                "string 5",
+                "string 6",
+              ]}
+            >
+              Focus on
+            </CycleButton>
+            <CycleButton
+              index={startingFret}
+              items={[...Array(13)].map((_, fret) => String(fret))}
+              onClick={() => {
+                setStartingFret(startingFret + 1)
+              }}
+            >
+              Start at fret
+            </CycleButton>
+          </Box>
+
+          <Spacer my={0} />
         </Box>
       )}
     </SettingsContainer>
@@ -79,42 +113,4 @@ export const Settings = () => {
 const SettingsContainer = styled(Box)`
   position: absolute;
   top: 70px;
-`
-
-const StartAtFret = styled(({ className, onChange, value }) => {
-  return (
-    <Flex ml={1} my={0.5} className={className}>
-      <Display size="2">Start at fret</Display>
-      <input
-        type="number"
-        step="1"
-        min="1"
-        max="9"
-        value={value}
-        onChange={onChange}
-        onKeyDown={event => event.preventDefault()}
-      />
-    </Flex>
-  )
-})`
-  user-select: none;
-  input {
-    border: 0;
-    background: none;
-    font-family: ${font("display")};
-    ${fontSize("2")};
-    color: #ccc;
-    margin-left: 5px;
-    outline: none;
-    width: 30px;
-    user-select: none;
-    color: transparent;
-    text-shadow: 0 0 0 white;
-    position: relative;
-    top: -1px;
-
-    &:focus {
-      outline: none;
-    }
-  }
 `

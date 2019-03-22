@@ -48,6 +48,13 @@ export const fretboardState: Fretboard = {
         actions.pickRandomNote()
       })
     )
+
+    on(
+      fretboard.settings.setStringFocus,
+      thunk(actions => {
+        actions.pickRandomNote()
+      })
+    )
   }),
 
   correctAnswer: state => {
@@ -92,17 +99,24 @@ export const fretboardState: Fretboard = {
   pickRandomNote: thunk((actions, _, { getState }) => {
     const state = getState() as StoreModel
 
-    const getNotes = () =>
-      uniqBy(
+    const getNotes = () => {
+      const {
+        accidentalMode,
+        startingFret,
+        stringFocus,
+      } = state.fretboard.settings
+
+      return uniqBy(
         times(4, () => {
           return getNote({
-            mode: state.fretboard.settings.accidentalMode,
-            showAccidentals: state.fretboard.settings.showAccidentals,
-            startingFret: state.fretboard.settings.startingFret,
+            accidentalMode,
+            startingFret,
+            stringFocus,
           })
         }),
         "note"
       )
+    }
 
     let notes = getNotes()
     while (notes.length < 4) {

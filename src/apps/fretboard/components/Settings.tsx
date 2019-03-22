@@ -96,7 +96,7 @@ export const Settings = () => {
               index={startingFret}
               items={[...Array(13)].map((_, fret) => String(fret))}
               onClick={() => {
-                setStartingFret(startingFret + 1)
+                setStartingFret(Number(startingFret) + 1)
               }}
             >
               Start at fret

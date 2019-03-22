@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { Display } from "src/components/ui/Typography"
 import { Box } from "rebass"
-import { isFunction, isString } from "lodash"
+import { isFunction, isString, isNumber } from "lodash"
 
-type CycleItem = string | { label: string; onSelect: () => void }
+type CycleItem = string | number | { label: string; onSelect: () => void }
 
 interface CycleButtonProps {
   children?: React.ReactNode
@@ -24,9 +24,9 @@ export const CycleButton: React.FC<CycleButtonProps> = ({
 
   const getItem = () => {
     const item = items[currIndex]
-    if (isString(item)) {
+    if (isString(item) || isNumber(item)) {
       return {
-        label: item,
+        label: String(item),
         onSelect: () => null,
       }
     } else {
@@ -36,7 +36,7 @@ export const CycleButton: React.FC<CycleButtonProps> = ({
 
   const item = getItem()
 
-  if (item.onSelect) {
+  if (isFunction(item.onSelect)) {
     item.onSelect()
   }
 

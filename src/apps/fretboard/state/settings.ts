@@ -7,6 +7,7 @@ export type StringFocus = 0 | StringRange
 export interface Settings {
   accidentalMode: AccidentalMode
   multipleChoice: boolean
+  isMuted: boolean
 
   showHint: boolean
   showNotes: boolean
@@ -21,6 +22,7 @@ export interface Settings {
 
   toggleHint: Action<Settings, void>
   toggleMultipleChoice: Action<Settings, void>
+  toggleMuted: Action<Settings, void>
   toggleNotes: Action<Settings, void>
   toggleSettings: Action<Settings, void>
 }
@@ -28,6 +30,7 @@ export interface Settings {
 export const settingsState: Settings = {
   accidentalMode: "flats",
   multipleChoice: true,
+  isMuted: false,
   showHint: false,
   showNotes: false,
   showSettings: true,
@@ -57,6 +60,10 @@ export const settingsState: Settings = {
 
   toggleMultipleChoice: state => {
     state.multipleChoice = !state.multipleChoice
+  },
+
+  toggleMuted: state => {
+    state.isMuted = !state.isMuted
   },
 
   toggleNotes: state => {

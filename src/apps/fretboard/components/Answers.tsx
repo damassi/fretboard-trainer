@@ -6,6 +6,8 @@ import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 import { font, fontSize } from "src/Theme"
+import { VolumeToggle } from "./VolumeToggle"
+import { Spacer } from "src/components/ui/Spacer"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.fretboard)
@@ -18,10 +20,11 @@ export const Answers = _props => {
 
   return (
     <Flex flexDirection="column" alignItems="center">
+      <Spacer mt={1} />
+      <VolumeToggle />
       <Flex
         flexWrap="wrap"
         justifyContent="center"
-        mt={7}
         width="100%"
         alignItems="center"
       >
@@ -68,7 +71,7 @@ const HintButton = props => {
   const { toggleHint } = useActions(actions => actions.fretboard.settings)
 
   return (
-    <Box p={2}>
+    <Box pt={2}>
       <OpenEyeIcon
         onClick={() => {
           toggleHint()

@@ -3,6 +3,7 @@ import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { Note, getNote } from "src/utils/fretboardUtils"
 import { StoreModel } from "src/store"
 import { fretboard } from "."
+import { Howl } from "howler"
 
 export interface Fretboard {
   correctAnswers: number
@@ -75,7 +76,10 @@ export const fretboardState: Fretboard = {
 
   pickAnswer: thunk((actions, selectedNote, { getState }) => {
     const {
-      fretboard: { currentNote },
+      fretboard: {
+        currentNote,
+        settings: { isMuted },
+      },
     } = getState() as StoreModel
 
     const isCorrect = isEqual(
@@ -86,6 +90,17 @@ export const fretboardState: Fretboard = {
     if (isCorrect) {
       actions.showFlash("correct!")
       setTimeout(() => actions.correctAnswer(), 10)
+
+      // Play sound
+      if (!isMuted) {
+        const [string, note] = currentNote.position
+        const soundFile = `/audio/${string + 1}-${note}.mp3`
+        const sound = new Howl({
+          src: [soundFile],
+          volume: 0.3,
+        })
+        sound.play()
+      }
     } else {
       actions.showFlash("incorrect!")
       setTimeout(() => actions.incorrectAnswer(), 10)

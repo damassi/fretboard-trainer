@@ -61,6 +61,7 @@
     "@types/react": "16.8.7",
     "@types/react-dom": "16.8.2",
     "easy-peasy": "^1.14.1",
+    "howler": "^2.1.1",
     "lodash": "^4.17.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

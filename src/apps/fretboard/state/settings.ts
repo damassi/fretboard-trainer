@@ -28,7 +28,7 @@ export interface Settings {
 }
 
 export const settingsState: Settings = {
-  accidentalMode: "flats",
+  accidentalMode: "naturals",
   multipleChoice: true,
   isMuted: true,
   showHint: false,

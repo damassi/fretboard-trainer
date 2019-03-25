@@ -30,7 +30,7 @@ export interface Settings {
 export const settingsState: Settings = {
   accidentalMode: "flats",
   multipleChoice: true,
-  isMuted: false,
+  isMuted: true,
   showHint: false,
   showNotes: false,
   showSettings: true,

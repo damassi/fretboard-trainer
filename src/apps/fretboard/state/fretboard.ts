@@ -6,10 +6,8 @@ import { fretboard } from "."
 import { Howl } from "howler"
 
 export interface Fretboard {
-  correctAnswers: number
   currentNote: Note
   flashMessage: string
-  incorrectAnswers: number
   questions: Note[]
   questionCount: number
 
@@ -17,17 +15,11 @@ export interface Fretboard {
   listeners: Listen<Fretboard>
 
   // Actions
-  correctAnswer: Action<Fretboard, void>
-  incorrectAnswer: Action<Fretboard, void>
-
   setQuestions: Action<Fretboard, Note[]>
-  pickAnswer: Thunk<Fretboard, string>
+  pickAnswer: Thunk<Fretboard, string, any, StoreModel>
 
   pickRandomNote: Thunk<Fretboard, void>
   setNote: Action<Fretboard, Note>
-
-  showFlash: Thunk<Fretboard, string>
-  setFlashMessage: Action<Fretboard, string>
 }
 
 export const fretboardState: Fretboard = {
@@ -35,8 +27,6 @@ export const fretboardState: Fretboard = {
     note: "c",
     position: [5, 3],
   },
-  correctAnswers: 0,
-  incorrectAnswers: 0,
   flashMessage: "",
   questions: [],
   questionCount: 4,
@@ -58,23 +48,7 @@ export const fretboardState: Fretboard = {
     )
   }),
 
-  correctAnswer: state => {
-    state.correctAnswers++
-  },
-  incorrectAnswer: state => {
-    state.incorrectAnswers++
-  },
-
-  showFlash: thunk((actions, flashMessage, { dispatch }: any) => {
-    actions.setFlashMessage(flashMessage)
-    dispatch.fretboard.settings.toggleHint()
-    setTimeout(() => {
-      actions.setFlashMessage("")
-      dispatch.fretboard.settings.toggleHint()
-    }, 2000)
-  }),
-
-  pickAnswer: thunk((actions, selectedNote, { getState }) => {
+  pickAnswer: thunk((actions, selectedNote, { getState, dispatch }) => {
     const {
       fretboard: {
         currentNote,
@@ -88,8 +62,8 @@ export const fretboardState: Fretboard = {
     )
 
     if (isCorrect) {
-      actions.showFlash("correct!")
-      setTimeout(() => actions.correctAnswer(), 10)
+      dispatch.scoreboard.showFlash("correct!")
+      setTimeout(() => dispatch.scoreboard.correctAnswer(), 10)
 
       // Play sound
       if (!isMuted) {
@@ -102,8 +76,8 @@ export const fretboardState: Fretboard = {
         sound.play()
       }
     } else {
-      actions.showFlash("incorrect!")
-      setTimeout(() => actions.incorrectAnswer(), 10)
+      dispatch.scoreboard.showFlash("incorrect!")
+      setTimeout(() => dispatch.scoreboard.incorrectAnswer(), 10)
     }
 
     setTimeout(() => {
@@ -141,10 +115,6 @@ export const fretboardState: Fretboard = {
     actions.setNote(notes[0])
     actions.setQuestions(shuffle(notes))
   }),
-
-  setFlashMessage: (state, message) => {
-    state.flashMessage = message
-  },
 
   setNote: (state, currentNote) => {
     state.currentNote = currentNote

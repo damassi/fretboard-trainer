@@ -135,6 +135,11 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     user-select: none;
   }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `
 
 export const Theme = ({ children }) => {

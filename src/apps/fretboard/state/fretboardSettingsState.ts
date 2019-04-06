@@ -4,7 +4,7 @@ import { StringRange } from "src/utils/fretboardUtils"
 export type AccidentalMode = "naturals" | "flats" | "sharps"
 export type StringFocus = 0 | StringRange
 
-export interface Settings {
+export interface FretboardSettings {
   accidentalMode: AccidentalMode
   multipleChoice: boolean
   isMuted: boolean
@@ -16,18 +16,18 @@ export interface Settings {
   stringFocus: StringFocus
 
   // Actions
-  setAccidentalMode: Action<Settings, AccidentalMode>
-  setStartingFret: Action<Settings, number>
-  setStringFocus: Action<Settings, StringFocus>
+  setAccidentalMode: Action<FretboardSettings, AccidentalMode>
+  setStartingFret: Action<FretboardSettings, number>
+  setStringFocus: Action<FretboardSettings, StringFocus>
 
-  toggleHint: Action<Settings, void>
-  toggleMultipleChoice: Action<Settings, void>
-  toggleMuted: Action<Settings, void>
-  toggleNotes: Action<Settings, void>
-  toggleSettings: Action<Settings, void>
+  toggleHint: Action<FretboardSettings, void>
+  toggleMultipleChoice: Action<FretboardSettings, void>
+  toggleMuted: Action<FretboardSettings, void>
+  toggleNotes: Action<FretboardSettings, void>
+  toggleSettings: Action<FretboardSettings, void>
 }
 
-export const settingsState: Settings = {
+export const fretboardSettingsState: FretboardSettings = {
   accidentalMode: "naturals",
   multipleChoice: true,
   isMuted: true,

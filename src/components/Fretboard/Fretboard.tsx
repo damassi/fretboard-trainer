@@ -60,6 +60,7 @@ export const Fretboard = _props => {
                     mr={SPACE}
                     key={noteIndex}
                     isCurrentNote={showNote || isCurrentNote}
+                    isRoot={note === "B"}
                     showNote={showNote}
                   >
                     <Note
@@ -108,11 +109,19 @@ const Note = styled(Display)<{ showNote: boolean }>`
 
 const NoteContainer = styled(Flex)<{
   isCurrentNote: boolean
+  isRoot?: boolean
   showNote: boolean
 }>`
   border-radius: 50%;
   background-color: ${p =>
     p.showNote ? "rgba(255, 255, 255, .1)" : "rgba(243, 251, 81, .8)"};
+
+  ${p => {
+    if (p.isRoot) {
+      return `background-color: red`
+    }
+  }};
+
   width: 30px;
   height: 30px;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);

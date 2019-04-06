@@ -6,7 +6,7 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
-import { notes, containsSharpOrFlat } from "src/utils/fretboardUtils"
+import { notes, containsSharpOrFlat, getNote } from "src/utils/fretboardUtils"
 import { color } from "src/Theme"
 
 export const Fretboard = _props => {
@@ -62,7 +62,19 @@ export const Fretboard = _props => {
                     isCurrentNote={showNote || isCurrentNote}
                     showNote={showNote}
                   >
-                    <Note size="5" showNote={showNote}>
+                    <Note
+                      size="5"
+                      showNote={showNote}
+                      onClick={() => {
+                        const noteLookup: any = [stringIndex + 1, noteIndex]
+                        const found = getNote({
+                          accidentalMode: "naturals",
+                          position: noteLookup,
+                        })
+
+                        console.warn(`[${noteLookup}]`, found)
+                      }}
+                    >
                       {note}
                     </Note>
                   </NoteContainer>
@@ -77,7 +89,7 @@ export const Fretboard = _props => {
 }
 
 const Container = styled(Flex)`
-  pointer-events: none;
+  /* pointer-events: none; */
   user-select: none;
   align-content: center;
   position: relative;

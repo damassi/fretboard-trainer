@@ -6,7 +6,7 @@ import { useStore } from "src/utils/hooks"
 
 export const Scoreboard = () => {
   const { correctAnswers, incorrectAnswers, flashMessage } = useStore(
-    state => state.fretboard
+    state => state.scoreboard
   )
 
   return (

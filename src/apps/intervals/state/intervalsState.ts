@@ -1,146 +1,146 @@
-export const intervals = [
-  // One string
-  [
-    [[[6, 1], [6, 1]], ["unison"]],
-    [[[6, 1], [6, 2]], ["b2"]],
-    [[[6, 1], [6, 3]], ["2"]],
-    [[[6, 1], [6, 4]], ["#2", "b3"]],
-    [[[6, 1], [6, 5]], ["3"]],
-    [[[6, 1], [6, 6]], ["4"]],
-    [[[6, 1], [6, 7]], ["#4", "b5"]],
-    [[[6, 1], [6, 8]], ["5"]],
-    [[[6, 1], [6, 9]], ["#5", "b6"]],
-    [[[6, 1], [6, 10]], ["6"]],
-    [[[6, 1], [6, 11]], ["b7"]],
-    [[[6, 1], [6, 12]], ["7"]],
-  ],
-]
+import { Action } from "easy-peasy"
+import { getNote, Note } from "src/utils/fretboardUtils"
+import { sample } from "lodash"
 
 export interface Intervals {
-  foo: boolean
+  currentInterval: Interval
+  getInterval: Action<Intervals, void>
 }
+
 export const intervalsState = {
-  foo: true,
+  currentInterval: getRandomInterval(),
+  getInterval: state => {
+    state.currentInterval = getRandomInterval()
+  },
 }
 
-export const relativeIntervalMatrix = [
-  [-2, -11, "7"],
-  [-2, -10, "1"],
-  [-2, -9, "b2"],
-  [-2, -8, "2"],
-  [-2, -7, "b3"],
-  [-2, -6, "3"],
-  [-2, -5, "4"],
-  [-2, -4, "b5"],
-  [-2, -3, "5"],
-  [-2, -2, "b6"],
-  [-2, -1, "6"],
-  [-2, 0, "b7"],
-  [-2, 1, "7"],
-  [-2, 2, "1"], // root
-  [-2, 3, "b2"],
-  [-2, 4, "2"],
-  [-2, 5, "b3"],
-  [-2, 6, "3"],
-  [-2, 7, "4"],
-  [-2, 8, "b5"],
-  [-2, 9, "5"],
-  [-2, 10, "b6"],
-  [-2, 11, "6"],
+// Helpers
 
-  [-1, -11, "4"],
-  [-1, -10, "5"],
-  [-1, -9, "b6"],
-  [-1, -8, "6"],
-  [-1, -7, "b7"],
-  [-1, -6, "7"],
-  [-1, -5, "1"],
-  [-1, -4, "b2"],
-  [-1, -3, "2"],
-  [-1, -2, "b3"],
-  [-1, -1, "3"],
-  [-1, 0, "4"],
-  [-1, 1, "b5"],
-  [-1, 2, "5"],
-  [-1, 3, "b6"],
-  [-1, 4, "6"],
-  [-1, 5, "b7"],
-  [-1, 6, "7"],
-  [-1, 7, "1"],
-  [-1, 8, "b2"],
-  [-1, 9, "2"],
-  [-1, 10, "b3"],
-  [-1, 11, "3"],
+type IntervalLabels =
+  | "unison"
+  | "minor 2nd"
+  | "b2"
+  | "major 2nd"
+  | "2"
+  | "minor 3rd"
+  | "b3"
+  | "major 3rd"
+  | "3"
+  | "perfect 4th"
+  | "4"
+  | "dim 5th"
+  | "aug 4th"
+  | "b4"
+  | "#5"
+  | "perfect 5th"
+  | "5"
+  | "minor 6th"
+  | "aug 5th"
+  | "major 6th"
+  | "6"
+  | "minor 7th"
+  | "b7"
+  | "major 7th"
+  | "octave"
 
-  [0, -11, "b2"],
-  [0, -10, "2"],
-  [0, -9, "b3"],
-  [0, -8, "3"],
-  [0, -7, "4"],
-  [0, -6, "b5"],
-  [0, -5, "5"],
-  [0, -4, "b6"],
-  [0, -3, "6"],
-  [0, -2, "b7"],
-  [0, -1, "7"],
-  [0, 0, "1"], // root
-  [0, 1, "b2"],
-  [0, 2, "2"],
-  [0, 3, "b3"],
-  [0, 4, "3"],
-  [0, 5, "4"],
-  [0, 6, "b5"],
-  [0, 7, "5"],
-  [0, 8, "b6"],
-  [0, 9, "6"],
-  [0, 10, "b7"],
-  [0, 11, "7"],
+type IntervalRange = [Note, Note]
 
-  [1, -11, "5"],
-  [1, -10, "6"],
-  [1, -9, "b7"],
-  [1, -8, "7"],
-  [1, -7, "1"],
-  [1, -6, "b2"],
-  [1, -5, "2"],
-  [1, -4, "b3"],
-  [1, -3, "3"],
-  [1, -2, "4"],
-  [1, -1, "b5"],
-  [1, 0, "5"],
-  [1, 1, "b6"],
-  [1, 2, "6"],
-  [1, 3, "b7"],
-  [1, 4, "7"],
-  [1, 5, "1"],
-  [1, 6, "b2"],
-  [1, 7, "2"],
-  [1, 8, "b3"],
-  [1, 9, "3"],
-  [1, 10, "4"],
-  [1, 11, "b5"],
+interface Interval {
+  notes: IntervalRange
+  label: IntervalLabels[]
+}
 
-  [2, -11, "b3"],
-  [2, -10, "3"],
-  [2, -9, "4"],
-  [2, -8, "b5"],
-  [2, -7, "5"],
-  [2, -6, "b6"],
-  [2, -5, "6"],
-  [2, -4, "b7"],
-  [2, -3, "7"],
-  [2, -2, "1"],
-  [2, -1, "b2"],
-  [2, 0, "2"],
-  [2, 1, "b3"],
-  [2, 2, "3"],
-  [2, 3, "4"],
-  [2, 4, "b5"],
-  [2, 5, "5"],
-  [2, 6, "b6"],
-  [2, 7, "6"],
-  [2, 8, "b7"],
-  [2, 9, "7"],
-  [2, 10, "1"],
-  [2, 11, "b2"],
+export const basicIntervals: Interval[] = [
+  {
+    notes: getNotes([[6, 1], [6, 2]]),
+    label: ["minor 2nd"],
+  },
+  {
+    notes: getNotes([[6, 5], [5, 1]]),
+    label: ["minor 2nd", "b2"],
+  },
+  {
+    notes: getNotes([[6, 1], [6, 3]]),
+    label: ["major 2nd", "2"],
+  },
+  {
+    notes: getNotes([[6, 5], [5, 2]]),
+    label: ["major 2nd", "2"],
+  },
+  {
+    notes: getNotes([[6, 1], [6, 4]]),
+    label: ["minor 3rd", "b3"],
+  },
+  {
+    notes: getNotes([[6, 3], [5, 1]]),
+    label: ["minor 3rd", "b3"],
+  },
+  {
+    notes: getNotes([[6, 1], [6, 5]]),
+    label: ["major 3rd", "3"],
+  },
+  {
+    notes: getNotes([[6, 3], [5, 2]]),
+    label: ["major 3rd", "3"],
+  },
+  {
+    notes: getNotes([[6, 1], [5, 1]]),
+    label: ["perfect 4th", "4"],
+  },
+  {
+    notes: getNotes([[6, 1], [5, 2]]),
+    label: ["dim 5th", "aug 4th"],
+  },
+  {
+    notes: getNotes([[6, 1], [5, 3]]),
+    label: ["perfect 5th", "5"],
+  },
+  {
+    notes: getNotes([[6, 5], [5, 2]]),
+    label: ["perfect 5th", "5"],
+  },
+  {
+    notes: getNotes([[6, 1], [5, 4]]),
+    label: ["minor 6th", "aug 5th"],
+  },
+  {
+    notes: getNotes([[6, 1], [5, 5]]),
+    label: ["major 6th"],
+  },
+  {
+    notes: getNotes([[6, 3], [4, 2]]),
+    label: ["major 6th"],
+  },
+  {
+    notes: getNotes([[6, 1], [4, 1]]),
+    label: ["minor 7th"],
+  },
+  {
+    notes: getNotes([[6, 1], [4, 2]]),
+    label: ["major 7th"],
+  },
+  {
+    notes: getNotes([[6, 1], [4, 3]]),
+    label: ["octave"],
+  },
+  {
+    notes: getNotes([[6, 5], [3, 2]]),
+    label: ["octave"],
+  },
 ]
+
+function getNotes([note1, note2]): IntervalRange {
+  return [
+    getNote({
+      position: note1,
+    }),
+    getNote({
+      position: note2,
+    }),
+  ]
+}
+
+function getRandomInterval(): Interval {
+  const interval = sample(basicIntervals) as Interval // FIXME: Fix casting
+  return interval
+}

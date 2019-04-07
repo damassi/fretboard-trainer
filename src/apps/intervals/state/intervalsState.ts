@@ -56,7 +56,7 @@ export const intervalsState: Intervals = {
 
     actions.setInterval(intervals[0])
     actions.setQuestions(shuffle(intervals))
-    console.log(intervals[0])
+    // console.log(intervals[0])
   }),
 
   setInterval: (state, interval) => {

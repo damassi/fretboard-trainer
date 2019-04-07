@@ -4,6 +4,7 @@ import {
 } from "src/apps/fretboard/state/fretboardSettingsState"
 
 import { isEmpty, random } from "lodash"
+import { IntervalLabels } from "src/apps/intervals/state/intervalsState"
 
 // TODO:
 // Surely this map can be done dynamically based upon empty slots in the
@@ -45,6 +46,7 @@ export interface Note {
   note: string
   string?: GuitarString
   position: NotePosition
+  interval?: IntervalLabels
 }
 
 /**

@@ -1,6 +1,6 @@
 import { Action, Thunk, thunk } from "easy-peasy"
 import { getNote, Note } from "src/utils/fretboardUtils"
-import { isEqual, sample, shuffle, uniqBy, times } from "lodash"
+import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
 
@@ -44,8 +44,8 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          return pickStaticInterval("intermediate")
-          // return pickRandomInterval()
+          // return pickStaticInterval("intermediate")
+          return pickRandomInterval()
         }),
         "label"
       )
@@ -70,7 +70,8 @@ export const intervalsState: Intervals = {
 
 // Helpers
 
-type IntervalLabels =
+export type IntervalLabels =
+  | "1"
   | "unison"
   | "minor 2nd"
   | "♭2"
@@ -82,6 +83,7 @@ type IntervalLabels =
   | "3"
   | "perfect 4th"
   | "4"
+  | "♭5"
   | "dim 5th"
   | "aug 4th"
   | "♭4"
@@ -96,6 +98,7 @@ type IntervalLabels =
   | "minor 7th"
   | "♭7"
   | "major 7th"
+  | "7"
   | "octave"
 
 type IntervalRange = [Note, Note]
@@ -153,7 +156,7 @@ export const basicIntervals: Interval[] = [
   },
   {
     ...getInterval([[6, 1], [5, 2]]),
-    label: ["dim 5th", "aug 4th"],
+    label: ["dim 5th", "aug 4th", "♭5"],
   },
   {
     ...getInterval([[6, 1], [5, 3]]),
@@ -169,11 +172,11 @@ export const basicIntervals: Interval[] = [
   },
   {
     ...getInterval([[6, 1], [5, 5]]),
-    label: ["major 6th"],
+    label: ["major 6th", "6"],
   },
   {
     ...getInterval([[6, 3], [4, 2]]),
-    label: ["major 6th"],
+    label: ["major 6th", "6"],
   },
   {
     ...getInterval([[6, 1], [4, 1]]),
@@ -181,7 +184,7 @@ export const basicIntervals: Interval[] = [
   },
   {
     ...getInterval([[6, 1], [4, 2]]),
-    label: ["major 7th"],
+    label: ["major 7th", "7"],
   },
   {
     ...getInterval([[6, 1], [4, 3]]),
@@ -200,23 +203,23 @@ export const basicIntervals: Interval[] = [
 export const complexIntervals: Interval[] = [
   {
     ...getInterval([[4, 3], [2, 1]]),
-    label: ["perfect 5th"],
+    label: ["perfect 5th", "5"],
   },
   {
     ...getInterval([[4, 3], [2, 2]]),
-    label: ["minor 6th", "aug 5th"],
+    label: ["minor 6th", "aug 5th", "♭6"],
   },
   {
     ...getInterval([[4, 3], [2, 3]]),
-    label: ["major 6th"],
+    label: ["major 6th", "6"],
   },
   {
     ...getInterval([[4, 3], [2, 4]]),
-    label: ["minor 7th"],
+    label: ["minor 7th", "♭7"],
   },
   {
     ...getInterval([[4, 3], [2, 5]]),
-    label: ["major 7th"],
+    label: ["major 7th", "7"],
   },
   {
     ...getInterval([[4, 2], [2, 5]]),
@@ -232,51 +235,51 @@ export const complexIntervals: Interval[] = [
   },
   {
     ...getInterval([[3, 4], [2, 1]]),
-    label: ["minor 2nd"],
+    label: ["minor 2nd", "♭2"],
   },
   {
     ...getInterval([[3, 5], [2, 3]]),
-    label: ["major 2nd"],
+    label: ["major 2nd", "2"],
   },
   {
     ...getInterval([[3, 4], [2, 3]]),
-    label: ["minor 3rd"],
+    label: ["minor 3rd", "♭3"],
   },
   {
     ...getInterval([[3, 4], [2, 4]]),
-    label: ["major 3rd"],
+    label: ["major 3rd", "3"],
   },
   {
     ...getInterval([[3, 2], [2, 3]]),
-    label: ["perfect 4th"],
+    label: ["perfect 4th", "4"],
   },
   {
     ...getInterval([[3, 2], [2, 4]]),
-    label: ["dim 5th", "aug 4th"],
+    label: ["dim 5th", "aug 4th", "♭5"],
   },
   {
     ...getInterval([[3, 2], [2, 5]]),
-    label: ["perfect 5th"],
+    label: ["perfect 5th", "5"],
   },
   {
     ...getInterval([[3, 5], [1, 3]]),
-    label: ["perfect 5th"],
+    label: ["perfect 5th", "5"],
   },
   {
     ...getInterval([[3, 2], [1, 1]]),
-    label: ["minor 6th", "dim 5th"],
+    label: ["minor 6th", "dim 5th", "♭6"],
   },
   {
     ...getInterval([[3, 2], [1, 2]]),
-    label: ["major 6th"],
+    label: ["major 6th", "6"],
   },
   {
     ...getInterval([[3, 2], [1, 3]]),
-    label: ["minor 7th"],
+    label: ["minor 7th", "♭7"],
   },
   {
     ...getInterval([[3, 2], [1, 4]]),
-    label: ["major 7th"],
+    label: ["major 7th", "7"],
   },
   {
     ...getInterval([[3, 2], [1, 5]]),
@@ -345,6 +348,10 @@ export function pickRandomInterval(): Interval {
   if (!interval) {
     return pickRandomInterval()
   }
+
+  // TODO: Add non-root relative intervals
+  note1.interval = "1"
+  note2.interval = last(interval.label)
 
   return {
     ...interval,

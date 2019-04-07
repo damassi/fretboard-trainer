@@ -1,12 +1,13 @@
 import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
-import { Fretboard } from "src/components/Fretboard"
+import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
 import { Answers } from "src/apps/fretboard/components/Answers"
 import { store } from "src/store"
+import { getNote } from "src/utils/fretboardUtils"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   return (
@@ -16,7 +17,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard />
+      <Fretboard2 selectedNotes={[getNote(), getNote(), getNote()]} />
       <Answers />
     </>
   )

@@ -54,13 +54,20 @@ export interface Note {
  *   position: [1, 3] // first string, third fret
  * })
  */
-export function getNote(props: {
-  accidentalMode: AccidentalMode
-  position?: NotePosition
-  startingFret?: number
-  stringFocus?: StringFocus
-}): Note {
-  const { accidentalMode, position, startingFret = 1, stringFocus = 0 } = props
+export function getNote(
+  props: {
+    accidentalMode?: AccidentalMode
+    position?: NotePosition
+    startingFret?: number
+    stringFocus?: StringFocus
+  } = {}
+): Note {
+  const {
+    accidentalMode = "flats",
+    position,
+    startingFret = 1,
+    stringFocus = 0,
+  } = props
 
   let string
   let note

@@ -60,7 +60,7 @@ export const Fretboard = _props => {
                     mr={SPACE}
                     key={noteIndex}
                     isCurrentNote={showNote || isCurrentNote}
-                    isRoot={note === "C"}
+                    isRoot={showNote || isCurrentNote}
                     showNote={showNote}
                   >
                     <Note

@@ -9,6 +9,7 @@ import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 import { font, fontSize } from "src/Theme"
 // import { VolumeToggle } from "./VolumeToggle"
 import { Spacer } from "src/components/ui/Spacer"
+import { VolumeToggle } from "src/apps/fretboard/components/VolumeToggle"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
@@ -22,7 +23,7 @@ export const Answers = _props => {
   return (
     <Flex flexDirection="column" alignItems="center">
       <Spacer mt={1} />
-      {/* <VolumeToggle /> */}
+      <VolumeToggle />
       <Flex
         flexWrap="wrap"
         justifyContent="center"
@@ -90,7 +91,7 @@ const HintButton = props => {
 const Answer = styled(({ children, className, ...props }) => {
   return (
     <Flex className={className} p={3} m={1} {...props}>
-      <Display size="8">{children}</Display>
+      <Display size="6">{children}</Display>
     </Flex>
   )
 })`

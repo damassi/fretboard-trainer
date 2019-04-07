@@ -2,6 +2,7 @@ import { Action, Thunk, thunk } from "easy-peasy"
 import { getNote, Note } from "src/utils/fretboardUtils"
 import { isEqual, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
+import { IntervalMode } from "./intervalsSettingsState"
 
 type RelativeInterval = [number, number]
 
@@ -24,7 +25,7 @@ export interface Intervals {
 }
 
 export const intervalsState: Intervals = {
-  currentInterval: pickStaticInterval(),
+  currentInterval: pickStaticInterval("intermediate"),
   questions: [],
   questionCount: 4,
 
@@ -43,7 +44,8 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          return pickRandomInterval()
+          return pickStaticInterval("intermediate")
+          // return pickRandomInterval()
         }),
         "label"
       )
@@ -303,9 +305,17 @@ function getInterval([notePosition1, notePosition2]): {
 /**
  * Static intervals for testing possibilities.
  */
-function pickStaticInterval(): Interval {
-  const interval = sample(basicIntervals) as Interval
-  return interval
+function pickStaticInterval(mode: IntervalMode = "basic"): Interval {
+  switch (mode) {
+    case "basic":
+      return sample(basicIntervals) as Interval
+    case "intermediate":
+      return sample(complexIntervals) as Interval
+    case "advanced":
+      return sample(basicIntervals) as Interval // TODO
+    default:
+      return sample(basicIntervals) as Interval
+  }
 }
 
 /**
@@ -323,6 +333,7 @@ function pickRandomInterval(): Interval {
   }
 
   const relativeInterval = computeRelativeInterval(note1, note2)
+
   const interval = basicIntervals.find(interval => {
     if (isEqual(interval.relativeInterval, relativeInterval)) {
       return true

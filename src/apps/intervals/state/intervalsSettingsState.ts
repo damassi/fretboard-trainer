@@ -9,7 +9,7 @@ import { Action } from "easy-peasy"
  * chooses an interval that's offset from that position, vs the root. A whole
  * step to the right would be a perfect 5th, rather than a 2nd.
  */
-type IntervalMode = "basic" | "intermediate" | "advanced"
+export type IntervalMode = "basic" | "intermediate" | "advanced"
 
 export interface IntervalsSettings {
   intervalMode: IntervalMode

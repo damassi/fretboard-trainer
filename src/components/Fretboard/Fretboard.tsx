@@ -60,7 +60,7 @@ export const Fretboard = _props => {
                     mr={SPACE}
                     key={noteIndex}
                     isCurrentNote={showNote || isCurrentNote}
-                    isRoot={note === "B"}
+                    isRoot={note === "C"}
                     showNote={showNote}
                   >
                     <Note
@@ -69,7 +69,7 @@ export const Fretboard = _props => {
                       onClick={() => {
                         const noteLookup: any = [stringIndex + 1, noteIndex]
                         const found = getNote({
-                          accidentalMode: "naturals",
+                          accidentalMode,
                           position: noteLookup,
                         })
 
@@ -90,7 +90,6 @@ export const Fretboard = _props => {
 }
 
 const Container = styled(Flex)`
-  /* pointer-events: none; */
   user-select: none;
   align-content: center;
   position: relative;
@@ -116,11 +115,7 @@ const NoteContainer = styled(Flex)<{
   background-color: ${p =>
     p.showNote ? "rgba(255, 255, 255, .1)" : "rgba(243, 251, 81, .8)"};
 
-  ${p => {
-    if (p.isRoot) {
-      return `background-color: red`
-    }
-  }};
+  background-color: ${p => p.isRoot && "red"};
 
   width: 30px;
   height: 30px;

@@ -7,7 +7,6 @@ import { Howl } from "howler"
 
 export interface Fretboard {
   currentNote: Note
-  flashMessage: string
   questions: Note[]
   questionCount: number
 
@@ -17,7 +16,6 @@ export interface Fretboard {
   // Actions
   setQuestions: Action<Fretboard, Note[]>
   pickAnswer: Thunk<Fretboard, string, any, StoreModel>
-
   pickRandomNote: Thunk<Fretboard, void>
   setNote: Action<Fretboard, Note>
 }
@@ -27,7 +25,6 @@ export const fretboardState: Fretboard = {
     note: "c",
     position: [5, 3],
   },
-  flashMessage: "",
   questions: [],
   questionCount: 4,
 

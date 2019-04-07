@@ -14,8 +14,8 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       <Link to="/">
         <Posterboard>Interval Trainer</Posterboard>
       </Link>
-      <Scoreboard />
 
+      <Scoreboard />
       <Fretboard />
       <Answers />
     </>

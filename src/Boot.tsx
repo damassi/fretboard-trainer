@@ -9,7 +9,7 @@ export const Boot = ({ children }) => {
   return (
     <StoreProvider store={store}>
       <Theme>
-        <AppContainer>{children} </AppContainer>
+        <AppContainer>{children}</AppContainer>
       </Theme>
     </StoreProvider>
   )

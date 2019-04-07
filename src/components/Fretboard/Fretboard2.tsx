@@ -11,7 +11,7 @@ interface FretboardProps {
   selectedNotes: NoteProps[]
 }
 
-export const Fretboard2 = ({ selectedNotes }) => {
+export const Fretboard2: React.FC<FretboardProps> = ({ selectedNotes }) => {
   const {
     settings: { accidentalMode },
   } = useStore(state => state.fretboard)

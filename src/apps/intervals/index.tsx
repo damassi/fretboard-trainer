@@ -7,9 +7,11 @@ import { Scoreboard } from "src/components/Scoreboard"
 
 import { Answers } from "src/apps/fretboard/components/Answers"
 import { store } from "src/store"
-import { getNote } from "src/utils/fretboardUtils"
+import { getRandomInterval } from "src/utils/fretboardUtils"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
+  const { notes } = getRandomInterval()
+
   return (
     <>
       <Link to="/">
@@ -17,7 +19,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard2 selectedNotes={[getNote(), getNote(), getNote()]} />
+      <Fretboard2 selectedNotes={notes} />
       <Answers />
     </>
   )

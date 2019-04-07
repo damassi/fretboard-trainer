@@ -1,5 +1,13 @@
+import {
+  AccidentalMode,
+  StringFocus,
+} from "src/apps/fretboard/state/fretboardSettingsState"
+
 import { isEmpty, random } from "lodash"
-import { AccidentalMode, StringFocus } from "src/apps/fretboard/state/settings"
+
+// TODO:
+// Surely this map can be done dynamically based upon empty slots in the
+// `naturals` array below.
 
 export const notes = {
   flats: [
@@ -29,34 +37,38 @@ export const notes = {
 }
 
 export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
-type NoteRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
-
-// The position of the note by string and fret
+export type NoteRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
+export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
 export type NotePosition = [StringRange, NoteRange]
 
-// Note lookup
 export interface Note {
   note: string
+  string?: GuitarString
   position: NotePosition
 }
 
 /**
  * Returns a note from the notes array.
  *
- * @example
- *
  * const note = getNote({
  *   mode: 'flats',
  *   position: [1, 3] // first string, third fret
  * })
  */
-export function getNote(props: {
-  accidentalMode: AccidentalMode
-  position?: NotePosition
-  startingFret?: number
-  stringFocus?: StringFocus
-}): Note {
-  const { accidentalMode, position, startingFret = 1, stringFocus = 0 } = props
+export function getNote(
+  props: {
+    accidentalMode?: AccidentalMode
+    position?: NotePosition
+    startingFret?: number
+    stringFocus?: StringFocus
+  } = {}
+): Note {
+  const {
+    accidentalMode = "flats",
+    position,
+    startingFret = 1,
+    stringFocus = 0,
+  } = props
 
   let string
   let note
@@ -71,6 +83,7 @@ export function getNote(props: {
 
   // Use a 1-based index to follow guitar idioms. We don't subtract from `noteId`
   // because 0 (as in [6, 0]) refers to an open string -- in this case the low `E`.
+  const stringName = getString(string)
   string--
 
   const noteName = notes[accidentalMode][string][note]
@@ -86,6 +99,7 @@ export function getNote(props: {
 
   const foundNote: Note = {
     note: noteName,
+    string: stringName,
     position: [string, note],
   }
 
@@ -97,4 +111,23 @@ export function containsSharpOrFlat(note: string) {
     return true
   }
   return false
+}
+
+export function getString(stringIndex: StringRange): GuitarString {
+  switch (stringIndex) {
+    case 1:
+      return "E"
+    case 2:
+      return "b"
+    case 3:
+      return "g"
+    case 4:
+      return "d"
+    case 5:
+      return "a"
+    case 6:
+      return "e"
+    default:
+      throw new Error("String not found.")
+  }
 }

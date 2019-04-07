@@ -1,11 +1,11 @@
 import React from "react"
 import { Box } from "rebass"
-import styled from "styled-components"
 
 import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { useStore, useActions } from "src/utils/hooks"
 import { Spacer } from "src/components/ui/Spacer"
 import { CycleButton } from "src/components/ui/CycleButton"
+import { SettingsContainer } from "src/components/ui/SettingsContainer"
 
 export const Settings = () => {
   const {
@@ -109,8 +109,3 @@ export const Settings = () => {
     </SettingsContainer>
   )
 }
-
-const SettingsContainer = styled(Box)`
-  position: absolute;
-  top: 70px;
-`

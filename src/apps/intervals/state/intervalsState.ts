@@ -322,7 +322,7 @@ function pickStaticInterval(mode: IntervalMode = "basic"): Interval {
  * Dynamic intervals. Mapped against static intervals by computing the relative
  * difference between two note positions in the array.
  */
-function pickRandomInterval(): Interval {
+export function pickRandomInterval(): Interval {
   const note1 = getNote()
   const note2 = getNote()
 

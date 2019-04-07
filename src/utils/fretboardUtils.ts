@@ -5,9 +5,40 @@ import {
 
 import { isEmpty, random } from "lodash"
 
+// TODO:
+// Surely this map can be done dynamically based upon empty slots in the
+// `naturals` array below.
+
+export const notes = {
+  flats: [
+    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
+    ["B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
+    ["G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
+    ["D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D"],
+    ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A"],
+    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
+  ],
+  sharps: [
+    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
+    ["B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
+    ["G", "G♯", "A", "B♯", "B", "C", "C♯", "D", "D♯", "E", "F", "G♯", "G"],
+    ["D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D"],
+    ["A", "A♯", "B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A"],
+    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
+  ],
+  naturals: [
+    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
+    ["B", "C", "", "D", "", "E", "F", "", "G", "", "A", "", "B"],
+    ["G", "", "A", "", "B", "C", "", "D", "", "E", "F", "", "G"],
+    ["D", "", "E", "F", "", "G", "", "A", "", "B", "C", "", "D"],
+    ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", "", "A"],
+    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
+  ],
+}
+
 export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
 export type NoteRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
-export type GuitarString = "e" | "a" | "d" | "g" | "b" | "E"
+export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
 export type NotePosition = [StringRange, NoteRange]
 
 export interface Note {
@@ -75,25 +106,6 @@ export function getNote(
   return foundNote
 }
 
-export function getString(stringIndex: StringRange): GuitarString {
-  switch (stringIndex) {
-    case 1:
-      return "e"
-    case 2:
-      return "a"
-    case 3:
-      return "d"
-    case 4:
-      return "g"
-    case 5:
-      return "b"
-    case 6:
-      return "E"
-    default:
-      throw new Error("String not found.")
-  }
-}
-
 export function containsSharpOrFlat(note: string) {
   if (note.includes("♭") || note.includes("♯")) {
     return true
@@ -101,29 +113,21 @@ export function containsSharpOrFlat(note: string) {
   return false
 }
 
-export const notes = {
-  flats: [
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-    ["B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
-    ["G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
-    ["D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D"],
-    ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A"],
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-  ],
-  sharps: [
-    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
-    ["B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
-    ["G", "G♯", "A", "B♯", "B", "C", "C♯", "D", "D♯", "E", "F", "G♯", "G"],
-    ["D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D"],
-    ["A", "A♯", "B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A"],
-    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
-  ],
-  naturals: [
-    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
-    ["B", "C", "", "D", "", "E", "F", "", "G", "", "A", "", "B"],
-    ["G", "", "A", "", "B", "C", "", "D", "", "E", "F", "", "G"],
-    ["D", "", "E", "F", "", "G", "", "A", "", "B", "C", "", "D"],
-    ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", "", "A"],
-    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
-  ],
+export function getString(stringIndex: StringRange): GuitarString {
+  switch (stringIndex) {
+    case 1:
+      return "E"
+    case 2:
+      return "b"
+    case 3:
+      return "g"
+    case 4:
+      return "d"
+    case 5:
+      return "a"
+    case 6:
+      return "e"
+    default:
+      throw new Error("String not found.")
+  }
 }

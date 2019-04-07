@@ -24,7 +24,7 @@ export interface Intervals {
 }
 
 export const intervalsState: Intervals = {
-  currentInterval: pickRandomInterval(),
+  currentInterval: pickStaticInterval(),
   questions: [],
   questionCount: 4,
 
@@ -43,7 +43,7 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          return pickRandomInterval2()
+          return pickRandomInterval()
         }),
         "label"
       )
@@ -191,6 +191,97 @@ export const basicIntervals: Interval[] = [
   },
 ]
 
+/**
+ * Complex intervals incorporate the G string, which is tuned to a 3rd, vs a 4th
+ * as the rest of the strings. This leads to offset behavior interval-wise.
+ */
+export const complexIntervals: Interval[] = [
+  {
+    ...getInterval([[4, 3], [2, 1]]),
+    label: ["perfect 5th"],
+  },
+  {
+    ...getInterval([[4, 3], [2, 2]]),
+    label: ["minor 6th", "aug 5th"],
+  },
+  {
+    ...getInterval([[4, 3], [2, 3]]),
+    label: ["major 6th"],
+  },
+  {
+    ...getInterval([[4, 3], [2, 4]]),
+    label: ["minor 7th"],
+  },
+  {
+    ...getInterval([[4, 3], [2, 5]]),
+    label: ["major 7th"],
+  },
+  {
+    ...getInterval([[4, 2], [2, 5]]),
+    label: ["octave"],
+  },
+  {
+    ...getInterval([[4, 3], [1, 1]]),
+    label: ["octave"],
+  },
+  {
+    ...getInterval([[3, 5], [2, 1]]),
+    label: ["unison"],
+  },
+  {
+    ...getInterval([[3, 4], [2, 1]]),
+    label: ["minor 2nd"],
+  },
+  {
+    ...getInterval([[3, 5], [2, 3]]),
+    label: ["major 2nd"],
+  },
+  {
+    ...getInterval([[3, 4], [2, 3]]),
+    label: ["minor 3rd"],
+  },
+  {
+    ...getInterval([[3, 4], [2, 4]]),
+    label: ["major 3rd"],
+  },
+  {
+    ...getInterval([[3, 2], [2, 3]]),
+    label: ["perfect 4th"],
+  },
+  {
+    ...getInterval([[3, 2], [2, 4]]),
+    label: ["dim 5th", "aug 4th"],
+  },
+  {
+    ...getInterval([[3, 2], [2, 5]]),
+    label: ["perfect 5th"],
+  },
+  {
+    ...getInterval([[3, 5], [1, 3]]),
+    label: ["perfect 5th"],
+  },
+  {
+    ...getInterval([[3, 2], [1, 1]]),
+    label: ["minor 6th", "dim 5th"],
+  },
+  {
+    ...getInterval([[3, 2], [1, 2]]),
+    label: ["major 6th"],
+  },
+  {
+    ...getInterval([[3, 2], [1, 3]]),
+    label: ["minor 7th"],
+  },
+  {
+    ...getInterval([[3, 2], [1, 4]]),
+    label: ["major 7th"],
+  },
+  {
+    ...getInterval([[3, 2], [1, 5]]),
+    label: ["octave"],
+  },
+]
+
 function getInterval([notePosition1, notePosition2]): {
   notes: IntervalRange
   relativeInterval: RelativeInterval
@@ -212,7 +303,7 @@ function getInterval([notePosition1, notePosition2]): {
 /**
  * Static intervals for testing possibilities.
  */
-function pickRandomInterval(): Interval {
+function pickStaticInterval(): Interval {
   const interval = sample(basicIntervals) as Interval
   return interval
 }
@@ -221,9 +312,16 @@ function pickRandomInterval(): Interval {
  * Dynamic intervals. Mapped against static intervals by computing the relative
  * difference between two note positions in the array.
  */
-function pickRandomInterval2(): Interval {
+function pickRandomInterval(): Interval {
   const note1 = getNote()
   const note2 = getNote()
+
+  // TODO: Avoid `G` string for now until a proper heuristic is found for
+  // offsetting fret distances.
+  if (note1.string === "g" || note2.string === "g") {
+    return pickRandomInterval()
+  }
+
   const relativeInterval = computeRelativeInterval(note1, note2)
   const interval = basicIntervals.find(interval => {
     if (isEqual(interval.relativeInterval, relativeInterval)) {
@@ -234,7 +332,7 @@ function pickRandomInterval2(): Interval {
   })
 
   if (!interval) {
-    return pickRandomInterval2()
+    return pickRandomInterval()
   }
 
   return {

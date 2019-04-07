@@ -43,7 +43,7 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          return pickRandomInterval()
+          return pickRandomInterval2()
         }),
         "label"
       )
@@ -56,7 +56,6 @@ export const intervalsState: Intervals = {
 
     actions.setInterval(intervals[0])
     actions.setQuestions(shuffle(intervals))
-    // console.log(intervals[0])
   }),
 
   setInterval: (state, interval) => {
@@ -99,6 +98,20 @@ type IntervalLabels =
 
 type IntervalRange = [Note, Note]
 
+/**
+ * Provides a map of common intervals so that dynamic intervals can be computed
+ * by comparing relative interval distances.
+ *
+ * The flow is as such:
+ *
+ * a) Pick two random notes
+ * b) Subtract noteB from noteA to get the relative distance
+ * c) Iterate through the basic interval map searching for equal relative distance
+ * d) If found, that's the interval. Return it to display on fretboard.
+ * e) If not found, recursively call function until a match is found.
+ *
+ * TODO: Need to account for the `g` string, and intervals _around_ it.
+ */
 export const basicIntervals: Interval[] = [
   {
     ...getInterval([[6, 1], [6, 2]]),
@@ -196,9 +209,38 @@ function getInterval([notePosition1, notePosition2]): {
   }
 }
 
+/**
+ * Static intervals for testing possibilities.
+ */
 function pickRandomInterval(): Interval {
   const interval = sample(basicIntervals) as Interval
   return interval
+}
+
+/**
+ * Dynamic intervals. Mapped against static intervals by computing the relative
+ * difference between two note positions in the array.
+ */
+function pickRandomInterval2(): Interval {
+  const note1 = getNote()
+  const note2 = getNote()
+  const relativeInterval = computeRelativeInterval(note1, note2)
+  const interval = basicIntervals.find(interval => {
+    if (isEqual(interval.relativeInterval, relativeInterval)) {
+      return true
+    } else {
+      return false
+    }
+  })
+
+  if (!interval) {
+    return pickRandomInterval2()
+  }
+
+  return {
+    ...interval,
+    notes: [note1, note2],
+  }
 }
 
 function computeRelativeInterval(note1, note2): RelativeInterval {

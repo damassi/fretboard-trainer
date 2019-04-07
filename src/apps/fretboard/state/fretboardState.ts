@@ -51,7 +51,7 @@ export const fretboardState: Fretboard = {
         currentNote,
         settings: { isMuted },
       },
-    } = getState() as StoreModel
+    } = getState()
 
     const isCorrect = isEqual(
       currentNote.note.toLowerCase(),

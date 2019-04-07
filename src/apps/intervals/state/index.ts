@@ -8,7 +8,7 @@ export interface IntervalsModel extends Intervals {
   settings: IntervalsSettings
 }
 
-export const fretboard: IntervalsModel = {
+export const intervals: IntervalsModel = {
   ...intervalsState,
   settings: intervalsSettingsState,
 }

@@ -1,7 +1,21 @@
+import { Action } from "easy-peasy"
+
 export interface IntervalsSettings {
-  hello: boolean
+  multipleChoice: boolean
+  isMuted: boolean
+  toggleMultipleChoice: Action<IntervalsSettings, void>
+  toggleMuted: Action<IntervalsSettings, void>
 }
 
 export const intervalsSettingsState: IntervalsSettings = {
-  hello: false,
+  multipleChoice: true,
+  isMuted: true,
+
+  toggleMultipleChoice: state => {
+    state.multipleChoice = !state.multipleChoice
+  },
+
+  toggleMuted: state => {
+    state.isMuted = !state.isMuted
+  },
 }

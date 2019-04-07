@@ -5,12 +5,17 @@ import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Answers } from "src/apps/fretboard/components/Answers"
+import { Answers } from "src/apps/intervals/components/Answers"
 import { store } from "src/store"
-import { getNote } from "src/utils/fretboardUtils"
+import { useStore } from "src/utils/hooks"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
-  const notes = [getNote(), getNote()]
+  const { currentInterval } = useStore(state => state.intervals)
+
+  // FIXME: Init with current interval
+  if (!currentInterval) {
+    return null
+  }
 
   return (
     <>
@@ -19,11 +24,11 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard2 selectedNotes={notes} />
+      <Fretboard2 selectedNotes={currentInterval.notes} />
       <Answers />
     </>
   )
 }
 
 // Kick off app
-store.dispatch.fretboard.pickRandomNote()
+store.dispatch.intervals.pickRandomInterval()

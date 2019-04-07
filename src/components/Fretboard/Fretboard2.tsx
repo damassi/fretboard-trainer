@@ -65,6 +65,8 @@ const FretboardContainer = styled(Box)`
   background-size: 100% 100%;
   height: 260px;
   position: relative;
+
+  pointer-events: none;
 `
 
 const NoteContainer = styled(Box)`

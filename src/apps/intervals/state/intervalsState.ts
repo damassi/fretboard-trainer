@@ -1,16 +1,65 @@
-import { Action } from "easy-peasy"
+import { Action, Thunk, thunk } from "easy-peasy"
 import { getNote, Note } from "src/utils/fretboardUtils"
-import { sample } from "lodash"
+import { isEqual, sample, shuffle, uniqBy, times } from "lodash"
+import { StoreModel } from "src/store"
+
+interface Interval {
+  notes: IntervalRange
+  label: IntervalLabels[]
+}
 
 export interface Intervals {
   currentInterval: Interval
-  getInterval: Action<Intervals, void>
+  questions: Interval[]
+  questionCount: number
+
+  // Actions
+  pickAnswer: Thunk<Intervals, any, any, StoreModel>
+  pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
+  setInterval: Action<Intervals, Interval>
+  setQuestions: Action<Intervals, Interval[]>
 }
 
-export const intervalsState = {
-  currentInterval: getRandomInterval(),
-  getInterval: state => {
-    state.currentInterval = getRandomInterval()
+export const intervalsState: Intervals = {
+  currentInterval: pickRandomInterval(),
+  questions: [],
+  questionCount: 4,
+
+  pickAnswer: thunk((actions, selectedInterval, { getState }) => {
+    const {
+      intervals: { currentInterval },
+    } = getState() as StoreModel
+
+    const isCorrect = isEqual(selectedInterval, currentInterval)
+    if (isCorrect) {
+      console.warn("correct!")
+    }
+  }),
+
+  pickRandomInterval: thunk(actions => {
+    const getIntervals = () => {
+      return uniqBy(
+        times(4, () => {
+          return pickRandomInterval()
+        }),
+        "label"
+      )
+    }
+
+    let intervals = getIntervals()
+    while (intervals.length < 4) {
+      intervals = getIntervals()
+    }
+
+    actions.setInterval(intervals[0])
+    actions.setQuestions(shuffle(intervals))
+  }),
+
+  setInterval: (state, interval) => {
+    state.currentInterval = interval
+  },
+  setQuestions: (state, questions) => {
+    state.questions = questions
   },
 }
 
@@ -19,45 +68,41 @@ export const intervalsState = {
 type IntervalLabels =
   | "unison"
   | "minor 2nd"
-  | "b2"
+  | "♭2"
   | "major 2nd"
   | "2"
   | "minor 3rd"
-  | "b3"
+  | "♭3"
   | "major 3rd"
   | "3"
   | "perfect 4th"
   | "4"
   | "dim 5th"
   | "aug 4th"
-  | "b4"
+  | "♭4"
   | "#5"
   | "perfect 5th"
   | "5"
   | "minor 6th"
+  | "♭6"
   | "aug 5th"
   | "major 6th"
   | "6"
   | "minor 7th"
-  | "b7"
+  | "♭7"
   | "major 7th"
   | "octave"
 
 type IntervalRange = [Note, Note]
 
-interface Interval {
-  notes: IntervalRange
-  label: IntervalLabels[]
-}
-
 export const basicIntervals: Interval[] = [
   {
     notes: getNotes([[6, 1], [6, 2]]),
-    label: ["minor 2nd"],
+    label: ["minor 2nd", "♭2"],
   },
   {
     notes: getNotes([[6, 5], [5, 1]]),
-    label: ["minor 2nd", "b2"],
+    label: ["minor 2nd", "♭2"],
   },
   {
     notes: getNotes([[6, 1], [6, 3]]),
@@ -69,11 +114,11 @@ export const basicIntervals: Interval[] = [
   },
   {
     notes: getNotes([[6, 1], [6, 4]]),
-    label: ["minor 3rd", "b3"],
+    label: ["minor 3rd", "♭3"],
   },
   {
     notes: getNotes([[6, 3], [5, 1]]),
-    label: ["minor 3rd", "b3"],
+    label: ["minor 3rd", "♭3"],
   },
   {
     notes: getNotes([[6, 1], [6, 5]]),
@@ -101,7 +146,7 @@ export const basicIntervals: Interval[] = [
   },
   {
     notes: getNotes([[6, 1], [5, 4]]),
-    label: ["minor 6th", "aug 5th"],
+    label: ["minor 6th", "aug 5th", "♭6"],
   },
   {
     notes: getNotes([[6, 1], [5, 5]]),
@@ -113,7 +158,7 @@ export const basicIntervals: Interval[] = [
   },
   {
     notes: getNotes([[6, 1], [4, 1]]),
-    label: ["minor 7th"],
+    label: ["minor 7th", "♭7"],
   },
   {
     notes: getNotes([[6, 1], [4, 2]]),
@@ -140,7 +185,7 @@ function getNotes([note1, note2]): IntervalRange {
   ]
 }
 
-function getRandomInterval(): Interval {
+function pickRandomInterval(): Interval {
   const interval = sample(basicIntervals) as Interval // FIXME: Fix casting
   return interval
 }

@@ -5,11 +5,11 @@ import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Answers } from "src/apps/intervals/components/Answers"
+import { Answers } from "src/apps/intervals/Answers"
 import { store } from "src/store"
 import { useStore } from "src/utils/hooks"
 import { Settings } from "src/apps/settings/Settings"
-import { NoteRenderer } from "./components/NoteRenderer"
+import { NoteRenderer } from "./NoteRenderer"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   const { currentInterval } = useStore(state => state.intervals)
@@ -28,7 +28,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       <Scoreboard />
       <Fretboard2
         selectedNotes={currentInterval.notes}
-        renderNote={NoteRenderer}
+        renderNote={props => <NoteRenderer {...props} />}
       />
       <Answers />
       <Settings />

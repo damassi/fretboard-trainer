@@ -1,13 +1,15 @@
 import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
-import { Fretboard } from "src/components/Fretboard"
+// import { Fretboard } from "src/components/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
 import { Settings } from "src/apps/settings/Settings"
-import { Answers } from "src/apps/notes/components/Answers"
+import { Answers } from "src/apps/notes/Answers"
 import { store } from "src/store"
+import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
+import { NoteRenderer } from "./NoteRenderer"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
   return (
@@ -17,8 +19,7 @@ export const NotesApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-
-      <Fretboard />
+      <Fretboard2 renderNote={props => <NoteRenderer {...props} />} />
       <Answers />
       <Settings />
     </>

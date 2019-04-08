@@ -6,22 +6,18 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
 import { Display } from "src/components/ui/Typography"
-import { AccidentalMode } from "src/apps/settings/settingsState"
+import { useStore } from "src/utils/hooks"
+import { getNote } from "src/utils/fretboardUtils"
 
 interface FretboardProps {
-  selectedNotes: NoteProps[]
-  accidentalMode?: AccidentalMode
+  selectedNotes?: NoteProps[]
   isVisible?: (props?) => boolean
   renderNote?: (props?) => React.ReactNode
 }
 
 export const Fretboard2: React.FC<FretboardProps> = props => {
-  const {
-    selectedNotes,
-    accidentalMode = "flats",
-    isVisible = () => true,
-  } = props
-
+  const { selectedNotes, isVisible = () => true } = props
+  const { accidentalMode } = useStore(state => state.settings)
   const fretboard = notes[accidentalMode]
 
   return (
@@ -34,10 +30,13 @@ export const Fretboard2: React.FC<FretboardProps> = props => {
             {string.map((note, noteIndex) => {
               const notePosition = updatePosition(stringIndex, noteIndex)
 
-              const currentNote = selectedNotes.find(n => {
-                const match = isEqual([stringIndex, noteIndex], n.position)
-                return match
-              })
+              let currentNote
+              if (selectedNotes) {
+                currentNote = selectedNotes.find(n => {
+                  const match = isEqual([stringIndex, noteIndex], n.position)
+                  return match
+                })
+              }
 
               const visible = isVisible({
                 ...props,
@@ -45,13 +44,21 @@ export const Fretboard2: React.FC<FretboardProps> = props => {
               })
 
               return (
-                <NoteContainer key={noteIndex} style={notePosition}>
+                <NoteContainer
+                  key={noteIndex}
+                  style={notePosition}
+                  onClick={() =>
+                    logNote({ stringIndex, noteIndex, accidentalMode })
+                  }
+                >
                   {props.renderNote ? (
                     props.renderNote({
                       ...props,
                       Note,
-                      note,
                       currentNote,
+                      note,
+                      stringIndex,
+                      noteIndex,
                       visible,
                     })
                   ) : (
@@ -87,16 +94,45 @@ const NoteContainer = styled(Box)`
 `
 
 export interface FretboardNoteProps {
+  isRoot?: boolean
   selected: boolean
-  visible: boolean
+  visible?: boolean
   children: React.ReactNode
 }
 
 const Note = styled(Flex)<FretboardNoteProps>`
   border-radius: 50%;
 
-  background-color: rgba(255, 255, 255, 0.1);
-  background-color: ${p => (p.selected ? "green" : "")};
+  ${props => {
+    switch (true) {
+      case props.isRoot:
+        return css`
+          background-color: red;
+        `
+      case props.visible:
+        return css`
+          background-color: rgba(255, 255, 255, 0.1);
+        `
+      default:
+        return css`
+          background-color: rgba(243, 251, 81, 0.8);
+        `
+    }
+  }};
+
+  ${props => {
+    switch (true) {
+      case props.visible || props.selected:
+        return css`
+          visibility: visible;
+        `
+      default:
+        return css`
+          visibility: hidden;
+        `
+    }
+  }}
+
   color: white;
 
   ${noteSize};
@@ -108,7 +144,27 @@ const Note = styled(Flex)<FretboardNoteProps>`
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
 
-  visibility: ${p => (p.visible ? "visible" : "hidden")};
+  /* TODO: Move this animation out of CSS */
+  animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
+
+  /* Start animation */
+  opacity: 0;
+  transform: scale(0.5);
+
+  /* Transition to */
+  @keyframes fadeInNote {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(${p => (p.visible ? "1" : "1")});
+    }
+  }
 `
 
 // Helpers
@@ -128,4 +184,14 @@ function computeNotePosition(lastPos: number = 0) {
       top,
     }
   }
+}
+
+function logNote({ stringIndex, noteIndex, accidentalMode }) {
+  const noteLookup: any = [stringIndex + 1, noteIndex]
+  const found = getNote({
+    accidentalMode,
+    position: noteLookup,
+  })
+
+  console.warn(`[${noteLookup}]`, found)
 }

@@ -13,7 +13,7 @@ import {
 
 const STORAGE_SETTINGS = {
   namespace: "fretboard-trainer",
-  states: ["fretboard.settings"],
+  states: ["notes.settings", "settings"],
 }
 
 // Define modules

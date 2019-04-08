@@ -1,7 +1,7 @@
 import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
-import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
+import { Fretboard } from "src/components/Fretboard/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
@@ -26,7 +26,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard2
+      <Fretboard
         selectedNotes={currentInterval.notes}
         renderNote={props => <NoteRenderer {...props} />}
       />

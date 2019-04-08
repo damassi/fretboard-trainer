@@ -1,7 +1,7 @@
 import React from "react"
 import { Display } from "src/components/ui/Typography"
 import { Note } from "src/utils/fretboardUtils"
-import { FretboardNoteProps } from "src/components/Fretboard/Fretboard2"
+import { FretboardNoteProps } from "src/components/Fretboard/Fretboard"
 
 interface NoteRendererProps {
   Note: (props: FretboardNoteProps) => JSX.Element

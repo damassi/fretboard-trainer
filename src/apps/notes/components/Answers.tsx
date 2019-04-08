@@ -6,7 +6,7 @@ import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 import { font, fontSize } from "src/Theme"
-import { VolumeToggle } from "./VolumeToggle"
+import { VolumeToggle } from "src/components/ui/VolumeToggle"
 import { Spacer } from "src/components/ui/Spacer"
 
 export const Answers = _props => {

@@ -5,14 +5,14 @@ import { Fretboard } from "src/components/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Settings } from "src/apps/notes/components/Settings"
+import { Settings } from "src/apps/settings/Settings"
 import { Answers } from "src/apps/notes/components/Answers"
 import { store } from "src/store"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
   return (
     <>
-      <Link to="/">
+      <Link to="/intervals">
         <Posterboard>Fretboard Trainer</Posterboard>
       </Link>
 

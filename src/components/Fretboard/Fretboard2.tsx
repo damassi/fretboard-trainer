@@ -6,12 +6,13 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
 import { Display } from "src/components/ui/Typography"
-import { AccidentalMode } from "src/apps/settings/state"
+import { AccidentalMode } from "src/apps/settings/settingsState"
 
 interface FretboardProps {
   selectedNotes: NoteProps[]
   accidentalMode?: AccidentalMode
   isVisible?: (props?) => boolean
+  renderNote?: (props?) => React.ReactNode
 }
 
 export const Fretboard2: React.FC<FretboardProps> = props => {
@@ -45,9 +46,19 @@ export const Fretboard2: React.FC<FretboardProps> = props => {
 
               return (
                 <NoteContainer key={noteIndex} style={notePosition}>
-                  <Note selected={Boolean(currentNote)} visible={visible}>
-                    <Display>{note}</Display>
-                  </Note>
+                  {props.renderNote ? (
+                    props.renderNote({
+                      ...props,
+                      Note,
+                      note,
+                      currentNote,
+                      visible,
+                    })
+                  ) : (
+                    <Note selected={Boolean(currentNote)} visible={visible}>
+                      <Display>{note}</Display>
+                    </Note>
+                  )}
                 </NoteContainer>
               )
             })}
@@ -75,10 +86,13 @@ const NoteContainer = styled(Box)`
   ${noteSize};
 `
 
-const Note = styled(Flex)<{
-  selected?: boolean
-  visible?: boolean
-}>`
+export interface FretboardNoteProps {
+  selected: boolean
+  visible: boolean
+  children: React.ReactNode
+}
+
+const Note = styled(Flex)<FretboardNoteProps>`
   border-radius: 50%;
 
   background-color: rgba(255, 255, 255, 0.1);

@@ -12,7 +12,7 @@ import { store } from "src/store"
 export const FretboardApp: React.FC<RouteComponentProps> = () => {
   return (
     <>
-      <Link to="/intervals">
+      <Link to="/">
         <Posterboard>Fretboard Trainer</Posterboard>
       </Link>
 

@@ -4,6 +4,7 @@ import { save, load } from "redux-localstorage-simple"
 
 import { fretboard, FretboardModel } from "src/apps/fretboard/state"
 import { intervals, IntervalsModel } from "./apps/intervals/state"
+import { settingsState as settings, SettingsModel } from "./apps/settings/state"
 
 import {
   scoreboard,
@@ -15,17 +16,21 @@ const STORAGE_SETTINGS = {
   states: ["fretboard.settings"],
 }
 
+// Define modules
 export interface StoreModel {
   fretboard: FretboardModel
   intervals: IntervalsModel
   scoreboard: ScoreboardModel
+  settings: SettingsModel
 }
 
+// Build store
 export const store = createStore<StoreModel, EasyPeasyConfig>(
   {
     fretboard,
     intervals,
     scoreboard,
+    settings,
   },
   {
     middleware: [

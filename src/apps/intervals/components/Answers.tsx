@@ -69,8 +69,8 @@ export const Answers = _props => {
 }
 
 const HintButton = props => {
-  const { showHint } = useStore(state => state.fretboard.settings)
-  const { toggleHint } = useActions(actions => actions.fretboard.settings)
+  const { showHint } = useStore(state => state.settings)
+  const { toggleHint } = useActions(actions => actions.settings)
 
   return (
     <Box pt={2}>

@@ -11,12 +11,10 @@ import { Spacer } from "src/components/ui/Spacer"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.fretboard)
-  const answerInputRef = useRef(null)
+  const { questions } = useStore(state => state.fretboard)
+  const { multipleChoice } = useStore(state => state.settings)
 
-  const {
-    questions,
-    settings: { multipleChoice },
-  } = useStore(state => state.fretboard)
+  const answerInputRef = useRef(null)
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -67,8 +65,8 @@ export const Answers = _props => {
 }
 
 const HintButton = props => {
-  const { showHint } = useStore(state => state.fretboard.settings)
-  const { toggleHint } = useActions(actions => actions.fretboard.settings)
+  const { showHint } = useStore(state => state.settings)
+  const { toggleHint } = useActions(actions => actions.settings)
 
   return (
     <Box pt={2}>

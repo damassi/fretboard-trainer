@@ -6,7 +6,7 @@ import { isEqual } from "lodash"
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
 import { Display } from "src/components/ui/Typography"
-import { AccidentalMode } from "src/apps/fretboard/state/fretboardSettingsState"
+import { AccidentalMode } from "src/apps/settings/state"
 
 interface FretboardProps {
   selectedNotes: NoteProps[]

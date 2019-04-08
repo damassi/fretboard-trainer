@@ -47,10 +47,8 @@ export const fretboardState: Fretboard = {
 
   pickAnswer: thunk((actions, selectedNote, { getState, dispatch }) => {
     const {
-      fretboard: {
-        currentNote,
-        settings: { isMuted },
-      },
+      fretboard: { currentNote },
+      settings: { isMuted },
     } = getState()
 
     const isCorrect = isEqual(
@@ -86,11 +84,8 @@ export const fretboardState: Fretboard = {
     const state = getState() as StoreModel
 
     const getNotes = () => {
-      const {
-        accidentalMode,
-        startingFret,
-        stringFocus,
-      } = state.fretboard.settings
+      const { accidentalMode } = state.settings
+      const { startingFret, stringFocus } = state.fretboard.settings
 
       return uniqBy(
         times(4, () => {

@@ -8,16 +8,16 @@ import { CycleButton } from "src/components/ui/CycleButton"
 import { SettingsContainer } from "src/components/ui/SettingsContainer"
 
 export const Settings = () => {
+  const { setStartingFret, setStringFocus } = useActions(
+    actions => actions.fretboard.settings
+  )
+
   const {
     setAccidentalMode,
     toggleMultipleChoice,
     toggleNotes,
     toggleSettings,
   } = useActions(actions => actions.settings)
-
-  const { setStartingFret, setStringFocus } = useActions(
-    actions => actions.fretboard.settings
-  )
 
   const { accidentalMode, multipleChoice, showNotes, showSettings } = useStore(
     state => state.settings

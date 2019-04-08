@@ -35,10 +35,10 @@ export const scoreboard: ScoreboardModel = {
     actions.setFlashMessage(flashMessage)
 
     // TODO: Move hint toggling to a listener inside of fretboardState
-    dispatch.fretboard.settings.toggleHint()
+    dispatch.settings.toggleHint()
     setTimeout(() => {
       actions.setFlashMessage("")
-      dispatch.fretboard.settings.toggleHint()
+      dispatch.settings.toggleHint()
     }, 2000)
   }),
 }

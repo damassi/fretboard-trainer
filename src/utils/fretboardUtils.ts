@@ -1,10 +1,8 @@
-import {
-  AccidentalMode,
-  StringFocus,
-} from "src/apps/fretboard/state/fretboardSettingsState"
-
 import { isEmpty, random } from "lodash"
+
+import { StringFocus } from "src/apps/fretboard/state/fretboardSettingsState"
 import { IntervalLabels } from "src/apps/intervals/state/intervalsState"
+import { AccidentalMode } from "src/apps/settings/state"
 
 // TODO:
 // Surely this map can be done dynamically based upon empty slots in the

@@ -10,8 +10,8 @@ import { VolumeToggle } from "./VolumeToggle"
 import { Spacer } from "src/components/ui/Spacer"
 
 export const Answers = _props => {
-  const { pickAnswer } = useActions(actions => actions.fretboard)
-  const { questions } = useStore(state => state.fretboard)
+  const { pickAnswer } = useActions(actions => actions.notes)
+  const { questions } = useStore(state => state.notes)
   const { multipleChoice } = useStore(state => state.settings)
 
   const answerInputRef = useRef(null)

@@ -7,7 +7,7 @@ export const SoundNote = () => {
     currentNote: {
       position: [string, note],
     },
-  } = useStore(state => state.fretboard)
+  } = useStore(state => state.notes)
 
   const soundFile = `/audio/${string + 1}-${note}.mp3`
 

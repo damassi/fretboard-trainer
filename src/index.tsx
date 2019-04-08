@@ -3,13 +3,13 @@ import ReactDOM from "react-dom"
 import { Router } from "@reach/router"
 
 import { Boot } from "src/Boot"
-import { FretboardApp } from "src/apps/fretboard"
+import { NotesApp } from "src/apps/notes"
 import { IntervalsApp } from "./apps/intervals"
 
 ReactDOM.render(
   <Boot>
     <Router>
-      <FretboardApp path="/" />
+      <NotesApp path="/" />
       <IntervalsApp path="/intervals" />
     </Router>
   </Boot>,

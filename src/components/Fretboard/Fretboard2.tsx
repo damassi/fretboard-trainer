@@ -1,54 +1,52 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { Box, Flex } from "rebass"
-import fretboardGraphic from "src/assets/fretboard.jpg"
-import { useStore } from "src/utils/hooks"
-import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
-import { Display } from "../ui/Typography"
 import { isEqual } from "lodash"
+
+import fretboardGraphic from "src/assets/fretboard.jpg"
+import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
+import { Display } from "src/components/ui/Typography"
+import { AccidentalMode } from "src/apps/settings/state"
 
 interface FretboardProps {
   selectedNotes: NoteProps[]
+  accidentalMode?: AccidentalMode
+  isVisible?: (props?) => boolean
 }
 
-export const Fretboard2: React.FC<FretboardProps> = ({ selectedNotes }) => {
+export const Fretboard2: React.FC<FretboardProps> = props => {
   const {
-    settings: { accidentalMode },
-  } = useStore(state => state.fretboard)
+    selectedNotes,
+    accidentalMode = "flats",
+    isVisible = () => true,
+  } = props
 
   const fretboard = notes[accidentalMode]
 
   return (
     <FretboardContainer>
       {fretboard.map((string, stringIndex) => {
-        let lastPos = 0
+        const updatePosition = computeNotePosition()
+
         return (
           <Flex key={stringIndex}>
             {string.map((note, noteIndex) => {
-              const base = 135
-              let space = base + lastPos - (base / 12) * (noteIndex * 0.5)
-              lastPos = space
-              space -= 167
+              const notePosition = updatePosition(stringIndex, noteIndex)
 
-              const foundMatch = selectedNotes.some(n => {
+              const currentNote = selectedNotes.find(n => {
                 const match = isEqual([stringIndex, noteIndex], n.position)
                 return match
               })
 
+              const visible = isVisible({
+                ...props,
+                currentNote,
+              })
+
               return (
-                <NoteContainer
-                  key={noteIndex}
-                  style={{
-                    left: space,
-                    top: 15 + stringIndex * 40,
-                  }}
-                >
-                  <Note
-                    style={{
-                      backgroundColor: foundMatch ? "green" : "",
-                    }}
-                  >
-                    <Display>1</Display>
+                <NoteContainer key={noteIndex} style={notePosition}>
+                  <Note selected={Boolean(currentNote)} visible={visible}>
+                    <Display>{note}</Display>
                   </Note>
                 </NoteContainer>
               )
@@ -65,25 +63,55 @@ const FretboardContainer = styled(Box)`
   background-size: 100% 100%;
   height: 260px;
   position: relative;
+`
 
-  pointer-events: none;
+const noteSize = css`
+  width: 30px;
+  height: 30px;
 `
 
 const NoteContainer = styled(Box)`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  ${noteSize};
 `
 
-const Note = styled(Flex)`
+const Note = styled(Flex)<{
+  selected?: boolean
+  visible?: boolean
+}>`
   border-radius: 50%;
-  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.1);
+
+  background-color: rgba(255, 255, 255, 0.1);
+  background-color: ${p => (p.selected ? "green" : "")};
   color: white;
-  justify-content: center;
+
+  ${noteSize};
+
   align-items: center;
+  justify-content: center;
+  position: absolute;
+
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+
+  visibility: ${p => (p.visible ? "visible" : "hidden")};
 `
+
+// Helpers
+
+/**
+ * TODO: Make this dynamic based upon the width of the fretboard
+ */
+function computeNotePosition(lastPos: number = 0) {
+  return (stringIndex: number, noteIndex: number) => {
+    const base = 135
+    let left = base + lastPos - (base / 12) * (noteIndex * 0.5)
+    lastPos = left
+    left -= 167
+    const top = 15 + stringIndex * 40
+    return {
+      left,
+      top,
+    }
+  }
+}

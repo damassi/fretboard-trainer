@@ -4,9 +4,8 @@ import { color } from "src/Theme"
 import { Box } from "rebass"
 
 export const VolumeToggle: React.FC = () => {
-  const { isMuted } = useStore(state => state.fretboard.settings)
-  const { toggleMuted } = useActions(actions => actions.fretboard.settings)
-
+  const { isMuted } = useStore(state => state.settings)
+  const { toggleMuted } = useActions(actions => actions.settings)
   const iconColor = isMuted ? color("black60") : color("white")
 
   return (

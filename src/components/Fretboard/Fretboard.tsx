@@ -10,11 +10,8 @@ import { notes, containsSharpOrFlat, getNote } from "src/utils/fretboardUtils"
 import { color } from "src/Theme"
 
 export const Fretboard = _props => {
-  const { showHint, showNotes } = useStore(state => state.fretboard.settings) // prettier-ignore
-  const {
-    settings: { accidentalMode },
-    currentNote,
-  } = useStore(state => state.fretboard)
+  const { accidentalMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
+  const { currentNote } = useStore(state => state.fretboard)
 
   const fretboard = notes[accidentalMode]
 

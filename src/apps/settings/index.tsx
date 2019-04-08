@@ -1,1 +1,1 @@
-export const settings = {}
+export * from "./components/Settings"

@@ -3,15 +3,15 @@ import { StringRange } from "src/utils/fretboardUtils"
 
 export type StringFocus = 0 | StringRange
 
-export interface FretboardSettings {
+export interface NotesSettings {
   startingFret: number
   stringFocus: StringFocus
 
-  setStartingFret: Action<FretboardSettings, number>
-  setStringFocus: Action<FretboardSettings, StringFocus>
+  setStartingFret: Action<NotesSettings, number>
+  setStringFocus: Action<NotesSettings, StringFocus>
 }
 
-export const fretboardSettingsState: FretboardSettings = {
+export const notesSettingsState: NotesSettings = {
   startingFret: 1,
   stringFocus: 0, // 0 is disabled
 

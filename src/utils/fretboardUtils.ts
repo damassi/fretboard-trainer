@@ -1,6 +1,6 @@
 import { isEmpty, random } from "lodash"
 
-import { StringFocus } from "src/apps/fretboard/state/fretboardSettingsState"
+import { StringFocus } from "src/apps/notes/state/notesSettingsState"
 import { IntervalLabels } from "src/apps/intervals/state/intervalsState"
 import { AccidentalMode } from "src/apps/settings/state"
 

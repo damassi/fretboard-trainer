@@ -9,7 +9,7 @@ import { SettingsContainer } from "src/components/ui/SettingsContainer"
 
 export const Settings = () => {
   const { setStartingFret, setStringFocus } = useActions(
-    actions => actions.fretboard.settings
+    actions => actions.notes.settings
   )
 
   const {
@@ -23,9 +23,7 @@ export const Settings = () => {
     state => state.settings
   )
 
-  const { startingFret, stringFocus } = useStore(
-    state => state.fretboard.settings
-  )
+  const { startingFret, stringFocus } = useStore(state => state.notes.settings)
 
   return (
     <SettingsContainer>

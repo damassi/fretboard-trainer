@@ -5,11 +5,11 @@ import { Fretboard } from "src/components/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Settings } from "src/apps/fretboard/components/Settings"
-import { Answers } from "src/apps/fretboard/components/Answers"
+import { Settings } from "src/apps/notes/components/Settings"
+import { Answers } from "src/apps/notes/components/Answers"
 import { store } from "src/store"
 
-export const FretboardApp: React.FC<RouteComponentProps> = () => {
+export const NotesApp: React.FC<RouteComponentProps> = () => {
   return (
     <>
       <Link to="/">
@@ -26,4 +26,4 @@ export const FretboardApp: React.FC<RouteComponentProps> = () => {
 }
 
 // Kick off app
-store.dispatch.fretboard.pickRandomNote()
+store.dispatch.notes.pickRandomNote()

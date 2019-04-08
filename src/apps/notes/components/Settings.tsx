@@ -16,16 +16,14 @@ export const Settings = () => {
   } = useActions(actions => actions.settings)
 
   const { setStartingFret, setStringFocus } = useActions(
-    actions => actions.fretboard.settings
+    actions => actions.notes.settings
   )
 
   const { accidentalMode, multipleChoice, showNotes, showSettings } = useStore(
     state => state.settings
   )
 
-  const { startingFret, stringFocus } = useStore(
-    state => state.fretboard.settings
-  )
+  const { startingFret, stringFocus } = useStore(state => state.notes.settings)
 
   return (
     <SettingsContainer>

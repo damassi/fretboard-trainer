@@ -2,7 +2,7 @@ import { Action, thunk, Thunk, listen, Listen } from "easy-peasy"
 import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { Note, getNote } from "src/utils/fretboardUtils"
 import { StoreModel } from "src/store"
-import { fretboard } from "."
+import { notes } from "src/apps/notes/state"
 import { Howl } from "howler"
 
 export interface Fretboard {
@@ -20,7 +20,7 @@ export interface Fretboard {
   setNote: Action<Fretboard, Note>
 }
 
-export const fretboardState: Fretboard = {
+export const notesState: Fretboard = {
   currentNote: {
     note: "c",
     position: [5, 3],
@@ -31,14 +31,14 @@ export const fretboardState: Fretboard = {
   listeners: listen(on => {
     // Whenever a new starting fret has been selected reset the board
     on(
-      fretboard.settings.setStartingFret,
+      notes.settings.setStartingFret,
       thunk(actions => {
         actions.pickRandomNote()
       })
     )
 
     on(
-      fretboard.settings.setStringFocus,
+      notes.settings.setStringFocus,
       thunk(actions => {
         actions.pickRandomNote()
       })
@@ -47,7 +47,7 @@ export const fretboardState: Fretboard = {
 
   pickAnswer: thunk((actions, selectedNote, { getState, dispatch }) => {
     const {
-      fretboard: { currentNote },
+      notes: { currentNote },
       settings: { isMuted },
     } = getState()
 
@@ -85,7 +85,7 @@ export const fretboardState: Fretboard = {
 
     const getNotes = () => {
       const { accidentalMode } = state.settings
-      const { startingFret, stringFocus } = state.fretboard.settings
+      const { startingFret, stringFocus } = state.notes.settings
 
       return uniqBy(
         times(4, () => {

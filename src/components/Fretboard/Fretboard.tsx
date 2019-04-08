@@ -11,7 +11,7 @@ import { color } from "src/Theme"
 
 export const Fretboard = _props => {
   const { accidentalMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
-  const { currentNote } = useStore(state => state.fretboard)
+  const { currentNote } = useStore(state => state.notes)
 
   const fretboard = notes[accidentalMode]
 

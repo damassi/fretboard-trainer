@@ -2,7 +2,7 @@ import { createStore, EasyPeasyConfig } from "easy-peasy"
 import { createLogger } from "redux-logger"
 import { save, load } from "redux-localstorage-simple"
 
-import { fretboard, FretboardModel } from "src/apps/fretboard/state"
+import { notes, NotesModel } from "src/apps/notes/state"
 import { intervals, IntervalsModel } from "./apps/intervals/state"
 import { settingsState as settings, SettingsModel } from "./apps/settings/state"
 
@@ -18,7 +18,7 @@ const STORAGE_SETTINGS = {
 
 // Define modules
 export interface StoreModel {
-  fretboard: FretboardModel
+  notes: NotesModel
   intervals: IntervalsModel
   scoreboard: ScoreboardModel
   settings: SettingsModel
@@ -27,7 +27,7 @@ export interface StoreModel {
 // Build store
 export const store = createStore<StoreModel, EasyPeasyConfig>(
   {
-    fretboard,
+    notes,
     intervals,
     scoreboard,
     settings,

@@ -1,24 +1,24 @@
 import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
-import { Fretboard } from "src/components/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Settings } from "src/apps/notes/components/Settings"
-import { Answers } from "src/apps/notes/components/Answers"
+import { Settings } from "src/apps/settings/Settings"
+import { Answers } from "src/apps/notes/Answers"
 import { store } from "src/store"
+import { Fretboard } from "src/components/Fretboard/Fretboard"
+import { NoteRenderer } from "./NoteRenderer"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
   return (
     <>
-      <Link to="/">
+      <Link to="/intervals">
         <Posterboard>Fretboard Trainer</Posterboard>
       </Link>
 
       <Scoreboard />
-
-      <Fretboard />
+      <Fretboard renderNote={props => <NoteRenderer {...props} />} />
       <Answers />
       <Settings />
     </>

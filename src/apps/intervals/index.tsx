@@ -1,14 +1,15 @@
 import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
-import { Fretboard2 } from "src/components/Fretboard/Fretboard2"
+import { Fretboard } from "src/components/Fretboard/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Answers } from "src/apps/intervals/components/Answers"
+import { Answers } from "src/apps/intervals/Answers"
 import { store } from "src/store"
 import { useStore } from "src/utils/hooks"
-import { Settings } from "./components/Settings"
+import { Settings } from "src/apps/settings/Settings"
+import { NoteRenderer } from "./NoteRenderer"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   const { currentInterval } = useStore(state => state.intervals)
@@ -25,7 +26,10 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard2 selectedNotes={currentInterval.notes} />
+      <Fretboard
+        selectedNotes={currentInterval.notes}
+        renderNote={props => <NoteRenderer {...props} />}
+      />
       <Answers />
       <Settings />
     </>

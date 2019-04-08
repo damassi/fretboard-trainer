@@ -2,7 +2,7 @@ import { isEmpty, random } from "lodash"
 
 import { StringFocus } from "src/apps/notes/state/notesSettingsState"
 import { IntervalLabels } from "src/apps/intervals/state/intervalsState"
-import { AccidentalMode } from "src/apps/settings/state"
+import { AccidentalMode } from "src/apps/settings/settingsState"
 
 // TODO:
 // Surely this map can be done dynamically based upon empty slots in the

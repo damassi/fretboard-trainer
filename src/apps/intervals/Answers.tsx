@@ -8,7 +8,7 @@ import { useStore, useActions } from "src/utils/hooks"
 import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
-import { VolumeToggle } from "src/apps/notes/components/VolumeToggle"
+import { VolumeToggle } from "src/components/ui/VolumeToggle"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)

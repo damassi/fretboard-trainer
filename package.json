@@ -68,7 +68,6 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-scripts": "2.1.8",
-    "react-spring": "^8.0.14",
     "rebass": "^3.0.1",
     "redux": "^4.0.1",
     "redux-localstorage-simple": "^2.1.6",

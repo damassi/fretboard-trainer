@@ -4,7 +4,11 @@ import { save, load } from "redux-localstorage-simple"
 
 import { notes, NotesModel } from "src/apps/notes/state"
 import { intervals, IntervalsModel } from "./apps/intervals/state"
-import { settingsState as settings, SettingsModel } from "./apps/settings/state"
+
+import {
+  settingsState as settings,
+  SettingsModel,
+} from "./apps/settings/settingsState"
 
 import {
   scoreboard,

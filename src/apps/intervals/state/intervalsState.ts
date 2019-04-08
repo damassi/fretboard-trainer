@@ -36,7 +36,7 @@ export const intervalsState: Intervals = {
 
     const isCorrect = isEqual(selectedInterval, currentInterval)
     if (isCorrect) {
-      console.warn("correct!")
+      actions.pickRandomInterval()
     }
   }),
 

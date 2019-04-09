@@ -4,7 +4,7 @@ import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
 
-type RelativeInterval = [number, number]
+export type RelativeInterval = [number, number]
 
 interface Interval {
   notes: IntervalRange
@@ -25,7 +25,7 @@ export interface Intervals {
 }
 
 export const intervalsState: Intervals = {
-  currentInterval: pickStaticInterval("intermediate"),
+  currentInterval: pickStaticInterval("basic"),
   questions: [],
   questionCount: 4,
 
@@ -69,6 +69,21 @@ export const intervalsState: Intervals = {
 }
 
 // Helpers
+
+export const intervals = [
+  "1",
+  "♭2",
+  "2",
+  "♭3",
+  "3",
+  "4",
+  "#4/♭5",
+  "5",
+  "#5/♭6",
+  "6",
+  "♭7",
+  "7",
+]
 
 export type IntervalLabels =
   | "1"
@@ -359,10 +374,11 @@ export function pickRandomInterval(): Interval {
   }
 }
 
-function computeRelativeInterval(note1, note2): RelativeInterval {
+export function computeRelativeInterval(note1, note2): RelativeInterval {
   const subtract = ([string2, note2], [string1, note1]) => {
     return [string2 - string1, note2 - note1]
   }
+
   const relativeInterval = subtract(
     note2.position,
     note1.position

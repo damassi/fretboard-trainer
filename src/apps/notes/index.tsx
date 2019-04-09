@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
 import { Posterboard } from "src/components/Posterboard"
@@ -11,6 +11,10 @@ import { Fretboard } from "src/components/Fretboard/Fretboard"
 import { NoteRenderer } from "./NoteRenderer"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
+  useEffect(() => {
+    store.dispatch.notes.pickRandomNote()
+  }, [])
+
   return (
     <>
       <Link to="/intervals">
@@ -24,6 +28,3 @@ export const NotesApp: React.FC<RouteComponentProps> = () => {
     </>
   )
 }
-
-// Kick off app
-store.dispatch.notes.pickRandomNote()

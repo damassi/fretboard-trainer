@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
 import { Fretboard } from "src/components/Fretboard/Fretboard"
@@ -7,14 +7,16 @@ import { Scoreboard } from "src/components/Scoreboard"
 
 import { Answers } from "src/apps/intervals/Answers"
 import { store } from "src/store"
-import { useStore } from "src/utils/hooks"
 import { Settings } from "src/apps/settings/Settings"
 import { NoteRenderer } from "./NoteRenderer"
+import { useStore } from "src/utils/hooks"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
-  const { currentInterval } = useStore(state => state.intervals)
+  useEffect(() => {
+    store.dispatch.intervals.pickRandomInterval()
+  }, [])
 
-  // FIXME: Init with current interval
+  const { currentInterval } = useStore(state => state.intervals)
   if (!currentInterval) {
     return null
   }
@@ -26,15 +28,9 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       </Link>
 
       <Scoreboard />
-      <Fretboard
-        selectedNotes={currentInterval.notes}
-        renderNote={props => <NoteRenderer {...props} />}
-      />
+      <Fretboard renderNote={props => <NoteRenderer {...props} />} />
       <Answers />
       <Settings />
     </>
   )
 }
-
-// Kick off app
-store.dispatch.intervals.pickRandomInterval()

@@ -7,12 +7,14 @@ export interface SettingsModel {
   isMuted: boolean
   multipleChoice: boolean
   showHint: boolean
+  showIntervals: boolean
   showNotes: boolean
   showSettings: boolean
 
   setAccidentalMode: Action<SettingsModel, AccidentalMode>
 
   toggleHint: Action<SettingsModel, void>
+  toggleIntervals: Action<SettingsModel, void>
   toggleMultipleChoice: Action<SettingsModel, void>
   toggleMuted: Action<SettingsModel, void>
   toggleNotes: Action<SettingsModel, void>
@@ -24,6 +26,7 @@ export const settingsState: SettingsModel = {
   isMuted: true,
   multipleChoice: true,
   showHint: false,
+  showIntervals: false,
   showNotes: false,
   showSettings: true,
 
@@ -33,6 +36,10 @@ export const settingsState: SettingsModel = {
 
   toggleHint: state => {
     state.showHint = !state.showHint
+  },
+
+  toggleIntervals: state => {
+    state.showIntervals = !state.showIntervals
   },
 
   toggleMultipleChoice: state => {

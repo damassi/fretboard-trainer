@@ -1,22 +1,28 @@
 import React from "react"
 import styled, { css } from "styled-components"
 import { Box, Flex } from "rebass"
-import { isEqual } from "lodash"
 
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
-import { Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
 import { getNote } from "src/utils/fretboardUtils"
+import {
+  width,
+  height,
+  WidthProps,
+  HeightProps,
+  background,
+  BackgroundProps,
+} from "styled-system"
+import { AccidentalMode } from "src/apps/settings/settingsState"
 
 interface FretboardProps {
   selectedNotes?: NoteProps[]
   isVisible?: (props?) => boolean
-  renderNote?: (props?) => React.ReactNode
+  renderNote: (props?) => React.ReactNode
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
-  const { selectedNotes, isVisible = () => true } = props
   const { accidentalMode } = useStore(state => state.settings)
   const fretboard = notes[accidentalMode]
 
@@ -27,20 +33,13 @@ export const Fretboard: React.FC<FretboardProps> = props => {
 
         return (
           <Flex key={stringIndex}>
-            {string.map((note, noteIndex) => {
+            {string.map((noteLabel, noteIndex) => {
               const notePosition = updatePosition(stringIndex, noteIndex)
 
-              let currentNote
-              if (selectedNotes) {
-                currentNote = selectedNotes.find(n => {
-                  const match = isEqual([stringIndex, noteIndex], n.position)
-                  return match
-                })
-              }
-
-              const visible = isVisible({
-                ...props,
-                currentNote,
+              const note = lookupNote({
+                stringIndex,
+                noteIndex: 0,
+                accidentalMode,
               })
 
               return (
@@ -51,21 +50,15 @@ export const Fretboard: React.FC<FretboardProps> = props => {
                     logNote({ stringIndex, noteIndex, accidentalMode })
                   }
                 >
-                  {props.renderNote ? (
-                    props.renderNote({
-                      ...props,
-                      Note,
-                      currentNote,
-                      note,
-                      stringIndex,
-                      noteIndex,
-                      visible,
-                    })
-                  ) : (
-                    <Note selected={Boolean(currentNote)} visible={visible}>
-                      <Display>{note}</Display>
-                    </Note>
-                  )}
+                  {// FIXME: Add type to `renderNote` callback
+                  props.renderNote({
+                    ...props,
+                    Note,
+                    note,
+                    noteLabel,
+                    stringIndex,
+                    noteIndex,
+                  })}
                 </NoteContainer>
               )
             })}
@@ -83,18 +76,20 @@ const FretboardContainer = styled(Box)`
   position: relative;
 `
 
-const noteSize = css`
+const NoteContainer = styled(Flex)`
+  position: absolute;
   width: 30px;
   height: 30px;
+  justify-content: flex-start;
+  align-items: center;
 `
 
-const NoteContainer = styled(Box)`
-  position: absolute;
-  ${noteSize};
-`
-
-export interface FretboardNoteProps {
+export interface FretboardNoteProps
+  extends WidthProps,
+    HeightProps,
+    BackgroundProps {
   isRoot?: boolean
+  isInterval?: boolean
   selected: boolean
   visible?: boolean
   children: React.ReactNode
@@ -108,6 +103,10 @@ const Note = styled(Flex)<FretboardNoteProps>`
       case props.isRoot:
         return css`
           background-color: red;
+        `
+      case props.isInterval:
+        return css`
+          background-color: rgba(243, 251, 81, 0.8);
         `
       case props.visible:
         return css`
@@ -135,14 +134,26 @@ const Note = styled(Flex)<FretboardNoteProps>`
 
   color: white;
 
-  ${noteSize};
-
   align-items: center;
   justify-content: center;
   position: absolute;
 
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+
+  /* Default size which can be overridden via props */
+  width: 30px;
+  height: 30px;
+  ${width};
+  ${height};
+
+  ${background};
+
+  /* Align inner text content, ignoring accidental */
+  justify-content: flex-start;
+  > div {
+    margin-left: 9px;
+  }
 
   /* TODO: Move this animation out of CSS */
   animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};
@@ -169,6 +180,27 @@ const Note = styled(Flex)<FretboardNoteProps>`
 
 // Helpers
 
+interface NoteLookupProps {
+  stringIndex: number
+  noteIndex: number
+  accidentalMode: AccidentalMode
+}
+
+function lookupNote(props: NoteLookupProps): NoteProps {
+  const { stringIndex, noteIndex, accidentalMode } = props
+  const noteLookup: any = [stringIndex + 1, noteIndex]
+  const note = getNote({
+    accidentalMode,
+    position: noteLookup,
+  })
+  return note
+}
+
+function logNote(props) {
+  const note = lookupNote(props)
+  console.warn(note)
+}
+
 /**
  * TODO: Make this dynamic based upon the width of the fretboard, or find some
  * proper fretboard fret spacing math...
@@ -185,14 +217,4 @@ function computeNotePosition(lastPos: number = 0) {
       top,
     }
   }
-}
-
-function logNote({ stringIndex, noteIndex, accidentalMode }) {
-  const noteLookup: any = [stringIndex + 1, noteIndex]
-  const found = getNote({
-    accidentalMode,
-    position: noteLookup,
-  })
-
-  console.warn(`[${noteLookup}]`, found)
 }

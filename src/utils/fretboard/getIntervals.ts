@@ -6,7 +6,7 @@ export function getIntervals() {
   const fretboardNotes = getFretboard("flats")
 
   const note = getNote({
-    accidentalMode: "flats",
+    fretboardMode: "flats",
     position: [1, 1],
   })
 

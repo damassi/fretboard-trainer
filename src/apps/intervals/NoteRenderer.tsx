@@ -12,7 +12,6 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
   stringIndex,
   noteIndex,
   noteLabel,
-  // note,
 }) => {
   const { currentInterval } = useStore(state => state.intervals)
 
@@ -25,7 +24,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     })
   })
 
-  const { accidentalMode, showHint, showNotes } = useStore(
+  const { fretboardMode, showHint, showNotes } = useStore(
     state => state.settings
   )
 
@@ -33,7 +32,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     switch (true) {
       case showNotes: {
         return (
-          getNoteVisibiltyForSetting(accidentalMode, noteLabel) &&
+          getNoteVisibiltyForSetting(fretboardMode, noteLabel) &&
           Boolean(noteLabel)
         )
       }
@@ -67,7 +66,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     note => {
       switch (true) {
         case showNotes: {
-          if (accidentalMode === "intervals") {
+          if (fretboardMode === "intervals") {
             return noteLabel === "1"
           }
           return noteLabel === currentInterval.notes[0].note
@@ -86,7 +85,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   return (
     <FretboardNote
-      accidentalMode={accidentalMode}
+      fretboardMode={fretboardMode}
       width={size}
       height={size}
       selected={Boolean(currentNote)}

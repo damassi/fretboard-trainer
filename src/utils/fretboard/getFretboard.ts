@@ -1,10 +1,10 @@
-import { AccidentalMode } from "../types"
+import { FretboardMode } from "../types"
 import { getIntervals } from "./getIntervals"
 
 export function getFretboard(
-  accidentalMode: AccidentalMode = "flats"
+  fretboardMode: FretboardMode = "flats"
 ): string[][] {
-  if (accidentalMode === "intervals") {
+  if (fretboardMode === "intervals") {
     const intervals = getIntervals()
     return intervals
   }
@@ -21,7 +21,7 @@ export function getFretboard(
       if (note) {
         return note
       } else {
-        switch (accidentalMode) {
+        switch (fretboardMode) {
           case "flats":
             return string[noteIndex + 1] + "♭"
           case "sharps":

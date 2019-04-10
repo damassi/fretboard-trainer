@@ -26,7 +26,7 @@ export type ScaleNote =
   | "B♭"
   | "B"
 
-export type AccidentalMode = "naturals" | "flats" | "sharps" | "intervals"
+export type FretboardMode = "naturals" | "flats" | "sharps" | "intervals"
 
 export type IntervalLabels =
   | "1"

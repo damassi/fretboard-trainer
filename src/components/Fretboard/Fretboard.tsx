@@ -2,10 +2,8 @@ import React from "react"
 import styled, { css } from "styled-components"
 import fretboardGraphic from "src/assets/fretboard.jpg"
 import { useStore } from "src/utils/hooks"
-import { Note as NoteProps, getNote, Note } from "src/utils/fretboard/getNote"
-import { fretboardNoteMap } from "src/utils/types"
+import { getNote } from "src/utils/fretboard/getNote"
 import { Box, Flex } from "rebass"
-import { AccidentalMode } from "src/apps/settings/settingsState"
 
 import {
   width,
@@ -15,6 +13,8 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
+import { AccidentalMode, Note } from "src/utils/types"
+import { getFretboard } from "src/utils/fretboard/getFretboard"
 
 export interface NoteRendererProps {
   FretboardNote: typeof FretboardNote
@@ -25,14 +25,14 @@ export interface NoteRendererProps {
 }
 
 interface FretboardProps {
-  selectedNotes?: NoteProps[]
+  selectedNotes?: Note[]
   isVisible?: (props?) => boolean
   renderNote: (props: NoteRendererProps) => React.ReactNode
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
   const { accidentalMode } = useStore(state => state.settings)
-  const fretboard = fretboardNoteMap[accidentalMode]
+  const fretboard = getFretboard(accidentalMode)
 
   return (
     <FretboardContainer>
@@ -193,7 +193,7 @@ interface NoteLookupProps {
   accidentalMode: AccidentalMode
 }
 
-function lookupNote(props: NoteLookupProps): NoteProps {
+function lookupNote(props: NoteLookupProps): Note {
   const { stringIndex, noteIndex, accidentalMode } = props
   const noteLookup: any = [stringIndex + 1, noteIndex]
   const note = getNote({

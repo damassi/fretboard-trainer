@@ -2,8 +2,8 @@ import { Action, Thunk, thunk } from "easy-peasy"
 import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
-import { IntervalLabels } from "src/utils/types"
-import { getNote, Note } from "src/utils/fretboard/getNote"
+import { IntervalLabels, Note } from "src/utils/types"
+import { getNote } from "src/utils/fretboard/getNote"
 import { getIntervals } from "src/utils/fretboard/getIntervals"
 
 export type RelativeInterval = [number, number]

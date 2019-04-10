@@ -1,6 +1,5 @@
 import { Action } from "easy-peasy"
-
-export type AccidentalMode = "naturals" | "flats" | "sharps"
+import { AccidentalMode } from "src/utils/types"
 
 export interface SettingsModel {
   accidentalMode: AccidentalMode

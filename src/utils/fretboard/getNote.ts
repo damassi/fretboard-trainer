@@ -1,15 +1,9 @@
-import { AccidentalMode } from "src/apps/settings/settingsState"
 import { containsSharpOrFlat } from "./containsSharpOrFlat"
 import { getString } from "./getString"
 import { isEmpty, random } from "lodash"
 import { StringFocus } from "src/apps/notes/state/notesSettingsState"
-
-import {
-  GuitarString,
-  NotePosition,
-  fretboardNoteMap,
-  IntervalLabels,
-} from "../types"
+import { NotePosition, AccidentalMode, Note } from "../types"
+import { getFretboard } from "./getFretboard"
 
 /**
  * Returns a note from the notes array.
@@ -19,14 +13,6 @@ import {
  *   position: [1, 3] // first string, third fret
  * })
  */
-
-export interface Note {
-  note: string
-  string?: GuitarString
-  position: NotePosition
-  interval?: IntervalLabels
-}
-
 export function getNote(
   props: {
     accidentalMode?: AccidentalMode
@@ -58,7 +44,7 @@ export function getNote(
   const stringName = getString(string)
   string--
 
-  const noteName = fretboardNoteMap[accidentalMode][string][note]
+  const noteName = getFretboard(accidentalMode)[string][note]
 
   // Re-run function if we return an invalid result
   const showAccidentals = accidentalMode !== "naturals"

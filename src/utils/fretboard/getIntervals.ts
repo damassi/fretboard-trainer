@@ -1,8 +1,9 @@
 import { getNote } from "./getNote"
-import { fretboardNoteMap, intervalList } from "../types"
+import { intervalList } from "../types"
+import { getFretboard } from "./getFretboard"
 
 export function getIntervals() {
-  const fretboardNotes = fretboardNoteMap.flats
+  const fretboardNotes = getFretboard("flats")
 
   const note = getNote({
     accidentalMode: "flats",

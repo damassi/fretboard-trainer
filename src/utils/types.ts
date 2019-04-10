@@ -1,10 +1,32 @@
-export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
-
-export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
-
-export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
+export interface Note {
+  note: string
+  string?: GuitarString
+  position: NotePosition
+  interval?: IntervalLabels
+}
 
 export type NotePosition = [StringRange, NoteRange]
+
+export type ScaleNote =
+  | "C"
+  | "C#"
+  | "D♭"
+  | "D"
+  | "D#"
+  | "E♭"
+  | "E"
+  | "F"
+  | "F#"
+  | "G♭"
+  | "G"
+  | "G#"
+  | "A♭"
+  | "A"
+  | "A#"
+  | "B♭"
+  | "B"
+
+export type AccidentalMode = "naturals" | "flats" | "sharps"
 
 export type IntervalLabels =
   | "1"
@@ -39,6 +61,12 @@ export type IntervalLabels =
   | "7"
   | "octave"
 
+export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
+
+export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
+
+export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
+
 export const intervalList: Partial<IntervalLabels>[] = [
   "1",
   "♭2",
@@ -54,34 +82,3 @@ export const intervalList: Partial<IntervalLabels>[] = [
   "7",
   "1",
 ]
-
-// TODO:
-// Surely this map can be done dynamically based upon empty slots in the
-// `naturals` array below.
-
-export const fretboardNoteMap = {
-  flats: [
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-    ["B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B"],
-    ["G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G"],
-    ["D", "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D"],
-    ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭", "A"],
-    ["E", "F", "G♭", "G", "A♭", "A", "B♭", "B", "C", "D♭", "D", "E♭", "E"],
-  ],
-  sharps: [
-    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
-    ["B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
-    ["G", "G♯", "A", "B♯", "B", "C", "C♯", "D", "D♯", "E", "F", "G♯", "G"],
-    ["D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D"],
-    ["A", "A♯", "B", "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A"],
-    ["E", "F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"],
-  ],
-  naturals: [
-    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
-    ["B", "C", "", "D", "", "E", "F", "", "G", "", "A", "", "B"],
-    ["G", "", "A", "", "B", "C", "", "D", "", "E", "F", "", "G"],
-    ["D", "", "E", "F", "", "G", "", "A", "", "B", "C", "", "D"],
-    ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", "", "A"],
-    ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
-  ],
-}

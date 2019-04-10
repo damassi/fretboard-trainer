@@ -1,5 +1,5 @@
-import { AccidentalMode } from "src/apps/settings/settingsState"
 import { containsSharpOrFlat } from "./containsSharpOrFlat"
+import { AccidentalMode } from "../types"
 
 /**
  * When selecting "Show Notes" from the settings menu we need to check if

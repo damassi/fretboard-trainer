@@ -67,6 +67,9 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     p => {
       switch (true) {
         case showNotes: {
+          if (accidentalMode === "intervals") {
+            return noteLabel === "1"
+          }
           return noteLabel === currentInterval.notes[0].note
         }
         case p!.interval === "1":
@@ -84,6 +87,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   return (
     <FretboardNote
+      accidentalMode={accidentalMode}
       width={size}
       height={size}
       selected={Boolean(currentNote)}

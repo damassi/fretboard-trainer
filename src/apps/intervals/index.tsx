@@ -9,17 +9,11 @@ import { Answers } from "src/apps/intervals/Answers"
 import { store } from "src/store"
 import { Settings } from "src/apps/settings/Settings"
 import { NoteRenderer } from "./NoteRenderer"
-import { useStore } from "src/utils/hooks"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
     store.dispatch.intervals.pickRandomInterval()
   }, [])
-
-  const { currentInterval } = useStore(state => state.intervals)
-  if (!currentInterval) {
-    return null
-  }
 
   return (
     <>

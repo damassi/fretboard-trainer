@@ -31,7 +31,12 @@ export const NoteRenderer: React.FC<NoteRendererProps> = props => {
   const isRoot = !showHint && showLabel && noteLabel === currentNote.note
 
   return (
-    <FretboardNote selected={isCurrentNote} visible={showLabel} isRoot={isRoot}>
+    <FretboardNote
+      selected={isCurrentNote}
+      visible={showLabel}
+      isRoot={isRoot}
+      accidentalMode={accidentalMode}
+    >
       {showLabel && <Display>{noteLabel}</Display>}
     </FretboardNote>
   )

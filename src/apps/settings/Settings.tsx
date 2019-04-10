@@ -56,6 +56,8 @@ export const Settings = () => {
                     return 1
                   case "sharps":
                     return 2
+                  case "intervals":
+                    return 3
                 }
               }}
               items={[
@@ -70,6 +72,10 @@ export const Settings = () => {
                 {
                   label: "Sharps",
                   onSelect: () => setAccidentalMode("sharps"),
+                },
+                {
+                  label: "Intervals",
+                  onSelect: () => setAccidentalMode("intervals"),
                 },
               ]}
             />

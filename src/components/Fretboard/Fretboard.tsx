@@ -95,6 +95,7 @@ export interface FretboardNoteProps
   extends WidthProps,
     HeightProps,
     BackgroundProps {
+  accidentalMode: AccidentalMode
   isRoot?: boolean
   isInterval?: boolean
   selected: boolean
@@ -156,11 +157,21 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
 
   ${background};
 
-  /* Align inner text content, ignoring accidental */
-  justify-content: flex-start;
-  > div {
-    margin-left: 9px;
-  }
+  ${props => {
+    if (props.accidentalMode === "intervals") {
+      return css`
+        justify-content: center;
+      `
+    } else {
+      /* Align inner text content, ignoring accidental */
+      return css`
+        justify-content: flex-start;
+        > div {
+          margin-left: 9px;
+        }
+      `
+    }
+  }}
 
   /* TODO: Move this animation out of CSS */
   animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};

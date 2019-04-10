@@ -1,8 +1,14 @@
 import { AccidentalMode } from "../types"
+import { getIntervals } from "./getIntervals"
 
 export function getFretboard(
   accidentalMode: AccidentalMode = "flats"
 ): string[][] {
+  if (accidentalMode === "intervals") {
+    const intervals = getIntervals()
+    return intervals
+  }
+
   const fretboard = [
     ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],
     ["B", "C", "", "D", "", "E", "F", "", "G", "", "A", "", "B"],

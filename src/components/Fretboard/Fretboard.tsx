@@ -13,7 +13,7 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
-import { AccidentalMode, Note } from "src/utils/types"
+import { FretboardMode, Note } from "src/utils/types"
 import { getFretboard } from "src/utils/fretboard/getFretboard"
 
 export interface NoteRendererProps {
@@ -31,8 +31,8 @@ interface FretboardProps {
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
-  const { accidentalMode } = useStore(state => state.settings)
-  const fretboard = getFretboard(accidentalMode)
+  const { fretboardMode } = useStore(state => state.settings)
+  const fretboard = getFretboard(fretboardMode)
 
   return (
     <FretboardContainer>
@@ -47,7 +47,7 @@ export const Fretboard: React.FC<FretboardProps> = props => {
               const note = lookupNote({
                 stringIndex,
                 noteIndex: 0,
-                accidentalMode,
+                fretboardMode,
               })
 
               return (
@@ -55,7 +55,7 @@ export const Fretboard: React.FC<FretboardProps> = props => {
                   key={noteIndex}
                   style={notePosition}
                   onClick={() =>
-                    logNote({ stringIndex, noteIndex, accidentalMode })
+                    logNote({ stringIndex, noteIndex, fretboardMode })
                   }
                 >
                   {props.renderNote({
@@ -95,6 +95,7 @@ export interface FretboardNoteProps
   extends WidthProps,
     HeightProps,
     BackgroundProps {
+  fretboardMode: FretboardMode
   isRoot?: boolean
   isInterval?: boolean
   selected: boolean
@@ -156,11 +157,21 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
 
   ${background};
 
-  /* Align inner text content, ignoring accidental */
-  justify-content: flex-start;
-  > div {
-    margin-left: 9px;
-  }
+  ${props => {
+    if (props.fretboardMode === "intervals") {
+      return css`
+        justify-content: center;
+      `
+    } else {
+      /* Align inner text content, ignoring accidental */
+      return css`
+        justify-content: flex-start;
+        > div {
+          margin-left: 9px;
+        }
+      `
+    }
+  }}
 
   /* TODO: Move this animation out of CSS */
   animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};
@@ -190,14 +201,14 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
 interface NoteLookupProps {
   stringIndex: number
   noteIndex: number
-  accidentalMode: AccidentalMode
+  fretboardMode: FretboardMode
 }
 
 function lookupNote(props: NoteLookupProps): Note {
-  const { stringIndex, noteIndex, accidentalMode } = props
+  const { stringIndex, noteIndex, fretboardMode } = props
   const noteLookup: any = [stringIndex + 1, noteIndex]
   const note = getNote({
-    accidentalMode,
+    fretboardMode,
     position: noteLookup,
   })
   return note

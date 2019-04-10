@@ -85,13 +85,13 @@ export const notesState: Fretboard = {
     const state = getState() as StoreModel
 
     const getNotes = () => {
-      const { accidentalMode } = state.settings
+      const { fretboardMode } = state.settings
       const { startingFret, stringFocus } = state.notes.settings
 
       return uniqBy(
         times(4, () => {
           return getNote({
-            accidentalMode,
+            fretboardMode,
             startingFret,
             stringFocus,
           })

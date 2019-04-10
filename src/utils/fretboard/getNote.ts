@@ -2,7 +2,7 @@ import { containsSharpOrFlat } from "./containsSharpOrFlat"
 import { getString } from "./getString"
 import { isEmpty, random } from "lodash"
 import { StringFocus } from "src/apps/notes/state/notesSettingsState"
-import { NotePosition, AccidentalMode, Note } from "../types"
+import { NotePosition, FretboardMode, Note } from "../types"
 import { getFretboard } from "./getFretboard"
 
 /**
@@ -15,14 +15,14 @@ import { getFretboard } from "./getFretboard"
  */
 export function getNote(
   props: {
-    accidentalMode?: AccidentalMode
+    fretboardMode?: FretboardMode
     position?: NotePosition
     startingFret?: number
     stringFocus?: StringFocus
   } = {}
 ): Note {
   const {
-    accidentalMode = "flats",
+    fretboardMode = "flats",
     position,
     startingFret = 1,
     stringFocus = 0,
@@ -44,10 +44,10 @@ export function getNote(
   const stringName = getString(string)
   string--
 
-  const noteName = getFretboard(accidentalMode)[string][note]
+  const noteName = getFretboard(fretboardMode)[string][note]
 
   // Re-run function if we return an invalid result
-  const showAccidentals = accidentalMode !== "naturals"
+  const showAccidentals = fretboardMode !== "naturals"
   if (
     (!showAccidentals && containsSharpOrFlat(noteName)) ||
     isEmpty(noteName)

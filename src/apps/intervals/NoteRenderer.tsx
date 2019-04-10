@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import React from "react"
 import { Display } from "src/components/ui/Typography"
 import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
@@ -7,25 +5,26 @@ import { isEqual } from "lodash"
 import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
 import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
+import { Note } from "src/utils/types"
 
 export const NoteRenderer: React.FC<NoteRendererProps> = ({
   FretboardNote,
   stringIndex,
   noteIndex,
   noteLabel,
-  // note,
 }) => {
   const { currentInterval } = useStore(state => state.intervals)
 
-  // FIXME: Initialze interval before first render
-  const currentNote = get(currentInterval, p => {
+  // TODO: Figure out how to deal with value | undefined from `find`
+  // @ts-ignore
+  const currentNote: Note = get(currentInterval, p => {
     return p.notes.find(n => {
       const match = isEqual([stringIndex, noteIndex], n.position)
       return match
     })
   })
 
-  const { accidentalMode, showHint, showNotes } = useStore(
+  const { fretboardMode, showHint, showNotes } = useStore(
     state => state.settings
   )
 
@@ -33,7 +32,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     switch (true) {
       case showNotes: {
         return (
-          getNoteVisibiltyForSetting(accidentalMode, noteLabel) &&
+          getNoteVisibiltyForSetting(fretboardMode, noteLabel) &&
           Boolean(noteLabel)
         )
       }
@@ -45,14 +44,14 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   const label = get(
     currentNote,
-    p => {
+    note => {
       switch (true) {
         case showNotes:
           return noteLabel
         case showHint:
-          return p!.interval
-        case p!.interval === "1":
-          return p!.interval
+          return note.interval
+        case note.interval === "1":
+          return note.interval
         default:
           return ""
       }
@@ -60,18 +59,20 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     ""
   )
 
-  const isInterval = get(currentNote, p => p!.interval !== "1")
+  const isInterval = get(currentNote, note => note.interval !== "1")
 
   const isRoot = get(
     currentNote,
-    p => {
+    note => {
       switch (true) {
         case showNotes: {
+          if (fretboardMode === "intervals") {
+            return noteLabel === "1"
+          }
           return noteLabel === currentInterval.notes[0].note
         }
-        case p!.interval === "1":
+        case note.interval === "1":
           return true
-
         default:
           return false
       }
@@ -84,6 +85,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   return (
     <FretboardNote
+      fretboardMode={fretboardMode}
       width={size}
       height={size}
       selected={Boolean(currentNote)}

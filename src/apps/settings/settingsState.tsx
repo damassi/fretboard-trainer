@@ -1,8 +1,8 @@
 import { Action } from "easy-peasy"
-import { AccidentalMode } from "src/utils/types"
+import { FretboardMode } from "src/utils/types"
 
 export interface SettingsModel {
-  accidentalMode: AccidentalMode
+  fretboardMode: FretboardMode
   isMuted: boolean
   multipleChoice: boolean
   showHint: boolean
@@ -10,7 +10,7 @@ export interface SettingsModel {
   showNotes: boolean
   showSettings: boolean
 
-  setAccidentalMode: Action<SettingsModel, AccidentalMode>
+  setFretboardMode: Action<SettingsModel, FretboardMode>
 
   toggleHint: Action<SettingsModel, void>
   toggleIntervals: Action<SettingsModel, void>
@@ -21,7 +21,7 @@ export interface SettingsModel {
 }
 
 export const settingsState: SettingsModel = {
-  accidentalMode: "naturals",
+  fretboardMode: "naturals",
   isMuted: true,
   multipleChoice: true,
   showHint: false,
@@ -29,8 +29,8 @@ export const settingsState: SettingsModel = {
   showNotes: false,
   showSettings: true,
 
-  setAccidentalMode: (state, payload) => {
-    state.accidentalMode = payload
+  setFretboardMode: (state, payload) => {
+    state.fretboardMode = payload
   },
 
   toggleHint: state => {

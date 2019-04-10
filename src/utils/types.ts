@@ -26,7 +26,7 @@ export type ScaleNote =
   | "B♭"
   | "B"
 
-export type AccidentalMode = "naturals" | "flats" | "sharps"
+export type FretboardMode = "naturals" | "flats" | "sharps" | "intervals"
 
 export type IntervalLabels =
   | "1"
@@ -74,11 +74,28 @@ export const intervalList: Partial<IntervalLabels>[] = [
   "♭3",
   "3",
   "4",
-  "#4/♭5",
+  "♭5",
   "5",
-  "#5/♭6",
+  "♭6",
   "6",
   "♭7",
   "7",
   "1",
 ]
+
+// TODO: Handle sharps and flats in design
+// export const intervalList: Partial<IntervalLabels>[] = [
+//   "1",
+//   "♭2",
+//   "2",
+//   "♭3",
+//   "3",
+//   "4",
+//   "#4/♭5",
+//   "5",
+//   "#5/♭6",
+//   "6",
+//   "♭7",
+//   "7",
+//   "1",
+// ]

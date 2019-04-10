@@ -13,13 +13,13 @@ export const Settings = () => {
   )
 
   const {
-    setAccidentalMode,
+    setFretboardMode,
     toggleMultipleChoice,
     toggleNotes,
     toggleSettings,
   } = useActions(actions => actions.settings)
 
-  const { accidentalMode, multipleChoice, showNotes, showSettings } = useStore(
+  const { fretboardMode, multipleChoice, showNotes, showSettings } = useStore(
     state => state.settings
   )
 
@@ -49,27 +49,33 @@ export const Settings = () => {
             />
             <CycleButton
               index={() => {
-                switch (accidentalMode) {
+                switch (fretboardMode) {
                   case "naturals":
                     return 0
                   case "flats":
                     return 1
                   case "sharps":
                     return 2
+                  case "intervals":
+                    return 3
                 }
               }}
               items={[
                 {
                   label: "Natural notes only",
-                  onSelect: () => setAccidentalMode("naturals"),
+                  onSelect: () => setFretboardMode("naturals"),
                 },
                 {
                   label: "Flats",
-                  onSelect: () => setAccidentalMode("flats"),
+                  onSelect: () => setFretboardMode("flats"),
                 },
                 {
                   label: "Sharps",
-                  onSelect: () => setAccidentalMode("sharps"),
+                  onSelect: () => setFretboardMode("sharps"),
+                },
+                {
+                  label: "Intervals",
+                  onSelect: () => setFretboardMode("intervals"),
                 },
               ]}
             />

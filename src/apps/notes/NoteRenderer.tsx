@@ -8,7 +8,7 @@ import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibilit
 
 export const NoteRenderer: React.FC<NoteRendererProps> = props => {
   const { FretboardNote, noteLabel, stringIndex, noteIndex } = props
-  const { accidentalMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
+  const { fretboardMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
   const { currentNote } = useStore(state => state.notes)
   const isCurrentNote = isEqual(currentNote.position, [stringIndex, noteIndex])
 
@@ -16,7 +16,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = props => {
     switch (true) {
       case showNotes: {
         return (
-          getNoteVisibiltyForSetting(accidentalMode, noteLabel) &&
+          getNoteVisibiltyForSetting(fretboardMode, noteLabel) &&
           Boolean(noteLabel)
         ) // FIXME: remove falsy note value
       }
@@ -31,7 +31,12 @@ export const NoteRenderer: React.FC<NoteRendererProps> = props => {
   const isRoot = !showHint && showLabel && noteLabel === currentNote.note
 
   return (
-    <FretboardNote selected={isCurrentNote} visible={showLabel} isRoot={isRoot}>
+    <FretboardNote
+      selected={isCurrentNote}
+      visible={showLabel}
+      isRoot={isRoot}
+      fretboardMode={fretboardMode}
+    >
       {showLabel && <Display>{noteLabel}</Display>}
     </FretboardNote>
   )

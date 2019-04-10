@@ -36,7 +36,7 @@ export const notes = {
 }
 
 export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
-export type NoteRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
+export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
 export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
 export type NotePosition = [StringRange, NoteRange]
 

@@ -1,5 +1,5 @@
 import { Action, Thunk, thunk } from "easy-peasy"
-import { getNote, Note } from "src/utils/fretboardUtils"
+import { getNote, Note, notes } from "src/utils/fretboardUtils"
 import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
@@ -14,10 +14,12 @@ interface Interval {
 
 export interface Intervals {
   currentInterval: Interval
+  intervals: string[][]
   questions: Interval[]
   questionCount: number
 
   // Actions
+  buildIntervals: Action<Intervals, void>
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
   pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
   setInterval: Action<Intervals, Interval>
@@ -26,6 +28,7 @@ export interface Intervals {
 
 export const intervalsState: Intervals = {
   currentInterval: pickStaticInterval("basic"),
+  intervals: [],
   questions: [],
   questionCount: 4,
 
@@ -44,7 +47,6 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          // return pickStaticInterval("intermediate")
           return pickRandomInterval()
         }),
         "label"
@@ -60,6 +62,45 @@ export const intervalsState: Intervals = {
     actions.setQuestions(shuffle(intervals))
   }),
 
+  buildIntervals: state => {
+    const note = getNote({
+      accidentalMode: "flats",
+      position: [1, 1],
+    })
+
+    const fretboardNotes = notes["flats"]
+
+    const intervalMap = fretboardNotes.map((string, stringIndex) => {
+      const fretboardLength = fretboardNotes[stringIndex].length
+      const intervals: string[] = new Array(fretboardLength)
+      const noteIndex = string.findIndex(stringNote => stringNote === note.note)
+
+      // Starting at the selected note index, fill array forward with intervals
+      let i = 0
+      let fret = noteIndex
+      while (fret < fretboardLength) {
+        const intervalLabel = intervalList[i]
+        intervals[fret] = intervalLabel
+        i++
+        fret++
+      }
+
+      // Starting at selected note index, backfill array with reverse intervals
+      let k = fretboardLength
+      fret = noteIndex + 1
+      while (fret > 0) {
+        k--
+        fret--
+        const intervalLabel = intervalList[k]
+        intervals[fret] = intervalLabel
+      }
+
+      return intervals
+    })
+
+    state.intervals = intervalMap
+  },
+
   setInterval: (state, interval) => {
     state.currentInterval = interval
   },
@@ -70,7 +111,7 @@ export const intervalsState: Intervals = {
 
 // Helpers
 
-export const intervals = [
+export const intervalList = [
   "1",
   "♭2",
   "2",
@@ -83,6 +124,7 @@ export const intervals = [
   "6",
   "♭7",
   "7",
+  "1",
 ]
 
 export type IntervalLabels =

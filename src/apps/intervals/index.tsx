@@ -14,6 +14,7 @@ import { useStore } from "src/utils/hooks"
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
     store.dispatch.intervals.pickRandomInterval()
+    store.dispatch.intervals.buildIntervals()
   }, [])
 
   const { currentInterval } = useStore(state => state.intervals)

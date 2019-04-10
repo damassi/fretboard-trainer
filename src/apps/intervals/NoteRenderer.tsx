@@ -1,32 +1,44 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import React from "react"
 import { Display } from "src/components/ui/Typography"
-import { Note } from "src/utils/fretboardUtils"
-import { FretboardNoteProps } from "src/components/Fretboard/Fretboard"
+import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
 import { isEqual } from "lodash"
 import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
-
-interface NoteRendererProps {
-  Note: (props: FretboardNoteProps) => JSX.Element
-  currentNote: Note
-  note: string
-  stringIndex: number
-  noteIndex: number
-  selectedNotes: Note[]
-  visible: boolean
-}
+import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 
 export const NoteRenderer: React.FC<NoteRendererProps> = ({
-  Note,
-  currentNote,
-  selectedNotes,
-  ...props
+  FretboardNote,
+  stringIndex,
+  noteIndex,
+  noteLabel,
+  // note,
 }) => {
-  const { showHint, showNotes } = useStore(state => state.settings)
+  const { currentInterval } = useStore(state => state.intervals)
+
+  // FIXME: Initialze interval before first render
+  const currentNote = get(currentInterval, p => {
+    return p.notes.find(n => {
+      const match = isEqual([stringIndex, noteIndex], n.position)
+      return match
+    })
+  })
+
+  const { accidentalMode, showHint, showNotes } = useStore(
+    state => state.settings
+  )
 
   const getVisibility = () => {
     switch (true) {
-      case selectedNotes.some(note => isEqual(note, currentNote)):
+      case showNotes: {
+        return (
+          getNoteVisibiltyForSetting(accidentalMode, noteLabel) &&
+          Boolean(noteLabel)
+        )
+      }
+      case currentInterval &&
+        currentInterval.notes.some(note => isEqual(note, currentNote)):
         return true
     }
   }
@@ -36,24 +48,50 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     p => {
       switch (true) {
         case showNotes:
-          return props.note
+          return noteLabel
         case showHint:
-          return p.interval
-        case p.interval === "1":
-          return p.interval
+          return p!.interval
+        case p!.interval === "1":
+          return p!.interval
         default:
-          props.note
+          return ""
       }
     },
-    props.note
+    ""
+  )
+
+  const isInterval = get(currentNote, p => p!.interval !== "1")
+
+  const isRoot = get(
+    currentNote,
+    p => {
+      switch (true) {
+        case showNotes: {
+          return noteLabel === currentInterval.notes[0].note
+        }
+        case p!.interval === "1":
+          return true
+
+        default:
+          return false
+      }
+    },
+    false
   )
 
   const isVisible = getVisibility()
-  const isRoot = get(currentNote, p => p.interval === "1", false)
+  const size = showNotes ? 30 : 30
 
   return (
-    <Note selected={Boolean(currentNote)} visible={isVisible} isRoot={isRoot}>
+    <FretboardNote
+      width={size}
+      height={size}
+      selected={Boolean(currentNote)}
+      visible={isVisible}
+      isRoot={isRoot}
+      isInterval={isInterval}
+    >
       <Display>{label}</Display>
-    </Note>
+    </FretboardNote>
   )
 }

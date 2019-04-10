@@ -1,10 +1,12 @@
 import { Action, Thunk, thunk } from "easy-peasy"
-import { getNote, Note } from "src/utils/fretboardUtils"
 import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
+import { IntervalLabels, Note } from "src/utils/types"
+import { getNote } from "src/utils/fretboard/getNote"
+import { getIntervals } from "src/utils/fretboard/getIntervals"
 
-type RelativeInterval = [number, number]
+export type RelativeInterval = [number, number]
 
 interface Interval {
   notes: IntervalRange
@@ -14,10 +16,12 @@ interface Interval {
 
 export interface Intervals {
   currentInterval: Interval
+  intervals: string[][]
   questions: Interval[]
   questionCount: number
 
   // Actions
+  buildIntervals: Action<Intervals, void>
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
   pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
   setInterval: Action<Intervals, Interval>
@@ -25,7 +29,8 @@ export interface Intervals {
 }
 
 export const intervalsState: Intervals = {
-  currentInterval: pickStaticInterval("intermediate"),
+  currentInterval: pickStaticInterval("basic"),
+  intervals: [],
   questions: [],
   questionCount: 4,
 
@@ -44,7 +49,6 @@ export const intervalsState: Intervals = {
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          // return pickStaticInterval("intermediate")
           return pickRandomInterval()
         }),
         "label"
@@ -60,6 +64,10 @@ export const intervalsState: Intervals = {
     actions.setQuestions(shuffle(intervals))
   }),
 
+  buildIntervals: state => {
+    state.intervals = getIntervals()
+  },
+
   setInterval: (state, interval) => {
     state.currentInterval = interval
   },
@@ -69,37 +77,6 @@ export const intervalsState: Intervals = {
 }
 
 // Helpers
-
-export type IntervalLabels =
-  | "1"
-  | "unison"
-  | "minor 2nd"
-  | "♭2"
-  | "major 2nd"
-  | "2"
-  | "minor 3rd"
-  | "♭3"
-  | "major 3rd"
-  | "3"
-  | "perfect 4th"
-  | "4"
-  | "♭5"
-  | "dim 5th"
-  | "aug 4th"
-  | "♭4"
-  | "#5"
-  | "perfect 5th"
-  | "5"
-  | "minor 6th"
-  | "♭6"
-  | "aug 5th"
-  | "major 6th"
-  | "6"
-  | "minor 7th"
-  | "♭7"
-  | "major 7th"
-  | "7"
-  | "octave"
 
 type IntervalRange = [Note, Note]
 
@@ -359,10 +336,11 @@ export function pickRandomInterval(): Interval {
   }
 }
 
-function computeRelativeInterval(note1, note2): RelativeInterval {
+export function computeRelativeInterval(note1, note2): RelativeInterval {
   const subtract = ([string2, note2], [string1, note1]) => {
     return [string2 - string1, note2 - note1]
   }
+
   const relativeInterval = subtract(
     note2.position,
     note1.position

@@ -1,5 +1,5 @@
 import { Action } from "easy-peasy"
-import { StringRange } from "src/utils/fretboardUtils"
+import { StringRange } from "src/utils/types"
 
 export type StringFocus = 0 | StringRange
 

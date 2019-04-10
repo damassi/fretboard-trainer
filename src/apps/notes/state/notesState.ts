@@ -1,9 +1,10 @@
 import { Action, thunk, Thunk, listen, Listen } from "easy-peasy"
 import { isEqual, shuffle, times, uniqBy } from "lodash"
-import { Note, getNote } from "src/utils/fretboardUtils"
 import { StoreModel } from "src/store"
 import { notes } from "src/apps/notes/state"
 import { Howl } from "howler"
+import { getNote } from "src/utils/fretboard/getNote"
+import { Note } from "src/utils/types"
 
 export interface Fretboard {
   currentNote: Note

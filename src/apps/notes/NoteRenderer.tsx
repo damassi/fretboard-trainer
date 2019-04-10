@@ -1,38 +1,24 @@
 import React from "react"
-import { Display } from "src/components/ui/Typography"
-import { Note, containsSharpOrFlat } from "src/utils/fretboardUtils"
-import { FretboardNoteProps } from "src/components/Fretboard/Fretboard"
-import { useStore } from "src/utils/hooks"
 import { isEqual } from "lodash"
 
-interface NoteRendererProps {
-  Note: (props: FretboardNoteProps) => JSX.Element
-  currentNote: Note
-  note: string
-  stringIndex: number
-  noteIndex: number
-  visible: boolean
-}
+import { Display } from "src/components/ui/Typography"
+import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
+import { useStore } from "src/utils/hooks"
+import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 
-export const NoteRenderer: React.FC<NoteRendererProps> = ({
-  Note,
-  note,
-  stringIndex,
-  noteIndex,
-}) => {
+export const NoteRenderer: React.FC<NoteRendererProps> = props => {
+  const { FretboardNote, noteLabel, stringIndex, noteIndex } = props
   const { accidentalMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
   const { currentNote } = useStore(state => state.notes)
   const isCurrentNote = isEqual(currentNote.position, [stringIndex, noteIndex])
 
-  const isLabelVisible = () => {
+  const getVisibility = () => {
     switch (true) {
       case showNotes: {
-        if (accidentalMode === "naturals") {
-          if (containsSharpOrFlat(note)) {
-            return false
-          }
-        }
-        return true
+        return (
+          getNoteVisibiltyForSetting(accidentalMode, noteLabel) &&
+          Boolean(noteLabel)
+        ) // FIXME: remove falsy note value
       }
       case isCurrentNote && showHint:
         return true
@@ -41,13 +27,12 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     }
   }
 
-  // FIXME: remove falsy note value
-  const showLabel = isLabelVisible() && Boolean(note)
-  const isRoot = !showHint && showLabel && note === currentNote.note
+  const showLabel = getVisibility()
+  const isRoot = !showHint && showLabel && noteLabel === currentNote.note
 
   return (
-    <Note selected={isCurrentNote} visible={showLabel} isRoot={isRoot}>
-      {showLabel && <Display>{note}</Display>}
-    </Note>
+    <FretboardNote selected={isCurrentNote} visible={showLabel} isRoot={isRoot}>
+      {showLabel && <Display>{noteLabel}</Display>}
+    </FretboardNote>
   )
 }

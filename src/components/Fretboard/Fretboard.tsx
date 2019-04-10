@@ -1,11 +1,12 @@
 import React from "react"
 import styled, { css } from "styled-components"
-import { Box, Flex } from "rebass"
-
 import fretboardGraphic from "src/assets/fretboard.jpg"
-import { notes, Note as NoteProps } from "src/utils/fretboardUtils"
 import { useStore } from "src/utils/hooks"
-import { getNote } from "src/utils/fretboardUtils"
+import { Note as NoteProps, getNote, Note } from "src/utils/fretboard/getNote"
+import { fretboardNoteMap } from "src/utils/types"
+import { Box, Flex } from "rebass"
+import { AccidentalMode } from "src/apps/settings/settingsState"
+
 import {
   width,
   height,
@@ -14,17 +15,24 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
-import { AccidentalMode } from "src/apps/settings/settingsState"
+
+export interface NoteRendererProps {
+  FretboardNote: typeof FretboardNote
+  note: Note
+  noteLabel: string
+  stringIndex: number
+  noteIndex: number
+}
 
 interface FretboardProps {
   selectedNotes?: NoteProps[]
   isVisible?: (props?) => boolean
-  renderNote: (props?) => React.ReactNode
+  renderNote: (props: NoteRendererProps) => React.ReactNode
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
   const { accidentalMode } = useStore(state => state.settings)
-  const fretboard = notes[accidentalMode]
+  const fretboard = fretboardNoteMap[accidentalMode]
 
   return (
     <FretboardContainer>
@@ -50,14 +58,13 @@ export const Fretboard: React.FC<FretboardProps> = props => {
                     logNote({ stringIndex, noteIndex, accidentalMode })
                   }
                 >
-                  {// FIXME: Add type to `renderNote` callback
-                  props.renderNote({
+                  {props.renderNote({
                     ...props,
-                    Note,
+                    FretboardNote,
                     note,
                     noteLabel,
-                    stringIndex,
                     noteIndex,
+                    stringIndex,
                   })}
                 </NoteContainer>
               )
@@ -95,7 +102,7 @@ export interface FretboardNoteProps
   children: React.ReactNode
 }
 
-const Note = styled(Flex)<FretboardNoteProps>`
+const FretboardNote = styled(Flex)<FretboardNoteProps>`
   border-radius: 50%;
 
   ${props => {

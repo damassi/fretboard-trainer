@@ -2,31 +2,19 @@
 
 import React from "react"
 import { Display } from "src/components/ui/Typography"
-import { Note, getNoteVisibiltyForSetting } from "src/utils/fretboardUtils"
-import { FretboardNoteProps } from "src/components/Fretboard/Fretboard"
+import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
 import { isEqual } from "lodash"
 import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
-import { Note as NoteProps } from "src/utils/fretboardUtils"
-
-interface NoteRendererProps {
-  Note: (props: FretboardNoteProps) => JSX.Element
-  currentNote: Note
-  noteLabel: string
-  stringIndex: number
-  noteIndex: number
-  visible: boolean
-  note: NoteProps
-}
+import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 
 export const NoteRenderer: React.FC<NoteRendererProps> = ({
-  Note,
+  FretboardNote,
   stringIndex,
   noteIndex,
   noteLabel,
   // note,
 }) => {
-  // console.log(noteLabel)
   const { currentInterval } = useStore(state => state.intervals)
 
   // FIXME: Initialze interval before first render
@@ -95,7 +83,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
   const size = showNotes ? 30 : 30
 
   return (
-    <Note
+    <FretboardNote
       width={size}
       height={size}
       selected={Boolean(currentNote)}
@@ -104,6 +92,6 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
       isInterval={isInterval}
     >
       <Display>{label}</Display>
-    </Note>
+    </FretboardNote>
   )
 }

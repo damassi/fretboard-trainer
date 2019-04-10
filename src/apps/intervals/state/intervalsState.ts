@@ -1,8 +1,10 @@
 import { Action, Thunk, thunk } from "easy-peasy"
-import { getNote, Note, notes } from "src/utils/fretboardUtils"
 import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
+import { IntervalLabels } from "src/utils/types"
+import { getNote, Note } from "src/utils/fretboard/getNote"
+import { getIntervals } from "src/utils/fretboard/getIntervals"
 
 export type RelativeInterval = [number, number]
 
@@ -63,42 +65,7 @@ export const intervalsState: Intervals = {
   }),
 
   buildIntervals: state => {
-    const note = getNote({
-      accidentalMode: "flats",
-      position: [1, 1],
-    })
-
-    const fretboardNotes = notes["flats"]
-
-    const intervalMap = fretboardNotes.map((string, stringIndex) => {
-      const fretboardLength = fretboardNotes[stringIndex].length
-      const intervals: string[] = new Array(fretboardLength)
-      const noteIndex = string.findIndex(stringNote => stringNote === note.note)
-
-      // Starting at the selected note index, fill array forward with intervals
-      let i = 0
-      let fret = noteIndex
-      while (fret < fretboardLength) {
-        const intervalLabel = intervalList[i]
-        intervals[fret] = intervalLabel
-        i++
-        fret++
-      }
-
-      // Starting at selected note index, backfill array with reverse intervals
-      let k = fretboardLength
-      fret = noteIndex + 1
-      while (fret > 0) {
-        k--
-        fret--
-        const intervalLabel = intervalList[k]
-        intervals[fret] = intervalLabel
-      }
-
-      return intervals
-    })
-
-    state.intervals = intervalMap
+    state.intervals = getIntervals()
   },
 
   setInterval: (state, interval) => {
@@ -110,53 +77,6 @@ export const intervalsState: Intervals = {
 }
 
 // Helpers
-
-export const intervalList = [
-  "1",
-  "♭2",
-  "2",
-  "♭3",
-  "3",
-  "4",
-  "#4/♭5",
-  "5",
-  "#5/♭6",
-  "6",
-  "♭7",
-  "7",
-  "1",
-]
-
-export type IntervalLabels =
-  | "1"
-  | "unison"
-  | "minor 2nd"
-  | "♭2"
-  | "major 2nd"
-  | "2"
-  | "minor 3rd"
-  | "♭3"
-  | "major 3rd"
-  | "3"
-  | "perfect 4th"
-  | "4"
-  | "♭5"
-  | "dim 5th"
-  | "aug 4th"
-  | "♭4"
-  | "#5"
-  | "perfect 5th"
-  | "5"
-  | "minor 6th"
-  | "♭6"
-  | "aug 5th"
-  | "major 6th"
-  | "6"
-  | "minor 7th"
-  | "♭7"
-  | "major 7th"
-  | "7"
-  | "octave"
 
 type IntervalRange = [Note, Note]
 

@@ -7,8 +7,8 @@ import { Scoreboard } from "src/components/Scoreboard"
 
 import { Answers } from "src/apps/intervals/Answers"
 import { store } from "src/store"
-import { Settings } from "src/apps/settings/Settings"
 import { NoteRenderer } from "./NoteRenderer"
+import { IntervalsSettings } from "./IntervalsSettings"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
@@ -24,7 +24,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       <Scoreboard />
       <Fretboard renderNote={props => <NoteRenderer {...props} />} />
       <Answers />
-      <Settings />
+      <IntervalsSettings />
     </>
   )
 }

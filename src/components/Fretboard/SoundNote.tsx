@@ -9,7 +9,7 @@ export const SoundNote = () => {
     },
   } = useStore(state => state.notes)
 
-  const soundFile = `/audio/${string + 1}-${note}.mp3`
+  const soundFile = `/audio/${string}-${note}.mp3`
 
   useEffect(() => {
     const sound = new Howl({

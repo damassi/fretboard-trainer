@@ -9,17 +9,19 @@ type CycleItem = string | number | { label: string; onSelect: () => void }
 interface CycleButtonProps {
   children?: React.ReactNode
   items: CycleItem[]
-  index?: (() => number) | number
+  selectedIndex?: (() => number) | number
   onClick?: ({ item: any, index: number }) => void
 }
 
 export const CycleButton: React.FC<CycleButtonProps> = ({
   children,
   items,
-  index = 0,
+  selectedIndex = 0,
   onClick,
 }) => {
-  const startingIndex = isFunction(index) ? index() : index
+  const startingIndex = isFunction(selectedIndex)
+    ? selectedIndex()
+    : selectedIndex
   const [currIndex, setIndex] = useState(startingIndex)
 
   const getItem = () => {

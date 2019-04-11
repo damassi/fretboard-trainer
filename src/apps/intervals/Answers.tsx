@@ -14,10 +14,8 @@ export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
   const answerInputRef = useRef(null)
 
-  const {
-    questions,
-    settings: { multipleChoice },
-  } = useStore(state => state.intervals)
+  const { multipleChoice } = useStore(state => state.settings)
+  const { questions } = useStore(state => state.intervals)
 
   return (
     <Flex flexDirection="column" alignItems="center">

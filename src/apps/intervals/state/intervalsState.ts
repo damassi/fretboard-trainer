@@ -2,7 +2,7 @@ import { Action, Thunk, thunk } from "easy-peasy"
 import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
 import { IntervalMode } from "./intervalsSettingsState"
-import { IntervalLabels, Note } from "src/utils/types"
+import { IntervalLabels, Note, FretboardMode } from "src/utils/types"
 import { getNote } from "src/utils/fretboard/getNote"
 import { getIntervals } from "src/utils/fretboard/getIntervals"
 
@@ -45,11 +45,15 @@ export const intervalsState: Intervals = {
     }
   }),
 
-  pickRandomInterval: thunk(actions => {
+  pickRandomInterval: thunk((actions, _, { getState }) => {
+    const {
+      settings: { fretboardMode },
+    } = getState()
+
     const getIntervals = () => {
       return uniqBy(
         times(4, () => {
-          return pickRandomInterval()
+          return pickRandomInterval(fretboardMode)
         }),
         "label"
       )
@@ -65,7 +69,11 @@ export const intervalsState: Intervals = {
   }),
 
   buildIntervals: state => {
-    state.intervals = getIntervals()
+    state.intervals = getIntervals(
+      getNote({
+        position: [1, 0],
+      })
+    )
   },
 
   setInterval: (state, interval) => {
@@ -96,79 +104,79 @@ type IntervalRange = [Note, Note]
  */
 export const basicIntervals: Interval[] = [
   {
-    ...getInterval([[6, 1], [6, 2]]),
+    ...getInterval([[5, 1], [5, 2]]),
     label: ["minor 2nd", "♭2"],
   },
   {
-    ...getInterval([[6, 5], [5, 1]]),
+    ...getInterval([[5, 5], [5, 1]]),
     label: ["minor 2nd", "♭2"],
   },
   {
-    ...getInterval([[6, 1], [6, 3]]),
+    ...getInterval([[5, 1], [5, 3]]),
     label: ["major 2nd", "2"],
   },
   {
-    ...getInterval([[6, 5], [5, 2]]),
+    ...getInterval([[5, 5], [5, 2]]),
     label: ["major 2nd", "2"],
   },
   {
-    ...getInterval([[6, 1], [6, 4]]),
+    ...getInterval([[5, 1], [5, 4]]),
     label: ["minor 3rd", "♭3"],
   },
   {
-    ...getInterval([[6, 3], [5, 1]]),
+    ...getInterval([[5, 3], [5, 1]]),
     label: ["minor 3rd", "♭3"],
   },
   {
-    ...getInterval([[6, 1], [6, 5]]),
+    ...getInterval([[5, 1], [5, 5]]),
     label: ["major 3rd", "3"],
   },
   {
-    ...getInterval([[6, 3], [5, 2]]),
+    ...getInterval([[5, 3], [5, 2]]),
     label: ["major 3rd", "3"],
   },
   {
-    ...getInterval([[6, 1], [5, 1]]),
+    ...getInterval([[5, 1], [5, 1]]),
     label: ["perfect 4th", "4"],
   },
   {
-    ...getInterval([[6, 1], [5, 2]]),
+    ...getInterval([[5, 1], [5, 2]]),
     label: ["dim 5th", "aug 4th", "♭5"],
   },
   {
-    ...getInterval([[6, 1], [5, 3]]),
+    ...getInterval([[5, 1], [5, 3]]),
     label: ["perfect 5th", "5"],
   },
   {
-    ...getInterval([[6, 5], [5, 2]]),
+    ...getInterval([[5, 5], [5, 2]]),
     label: ["perfect 5th", "5"],
   },
   {
-    ...getInterval([[6, 1], [5, 4]]),
+    ...getInterval([[5, 1], [5, 4]]),
     label: ["minor 6th", "aug 5th", "♭6"],
   },
   {
-    ...getInterval([[6, 1], [5, 5]]),
+    ...getInterval([[5, 1], [5, 5]]),
     label: ["major 6th", "6"],
   },
   {
-    ...getInterval([[6, 3], [4, 2]]),
+    ...getInterval([[5, 3], [4, 2]]),
     label: ["major 6th", "6"],
   },
   {
-    ...getInterval([[6, 1], [4, 1]]),
+    ...getInterval([[5, 1], [4, 1]]),
     label: ["minor 7th", "♭7"],
   },
   {
-    ...getInterval([[6, 1], [4, 2]]),
+    ...getInterval([[5, 1], [4, 2]]),
     label: ["major 7th", "7"],
   },
   {
-    ...getInterval([[6, 1], [4, 3]]),
+    ...getInterval([[5, 1], [4, 3]]),
     label: ["octave"],
   },
   {
-    ...getInterval([[6, 5], [3, 2]]),
+    ...getInterval([[5, 5], [3, 2]]),
     label: ["octave"],
   },
 ]
@@ -302,8 +310,10 @@ function pickStaticInterval(mode: IntervalMode = "basic"): Interval {
  * Dynamic intervals. Mapped against static intervals by computing the relative
  * difference between two note positions in the array.
  */
-export function pickRandomInterval(): Interval {
-  const note1 = getNote()
+export function pickRandomInterval(
+  fretboardMode: FretboardMode = "flats"
+): Interval {
+  const note1 = getNote({ fretboardMode })
   const note2 = getNote()
 
   // TODO: Avoid `G` string for now until a proper heuristic is found for

@@ -13,35 +13,21 @@ export type IntervalMode = "basic" | "intermediate" | "advanced"
 
 export interface IntervalsSettings {
   intervalMode: IntervalMode
-  isMuted: boolean
-  multipleChoice: boolean
-  showSettings: boolean
+  showIntervals: boolean
 
   setIntervalMode: Action<IntervalsSettings, IntervalMode>
-  toggleMultipleChoice: Action<IntervalsSettings, void>
-  toggleMuted: Action<IntervalsSettings, void>
-  toggleSettings: Action<IntervalsSettings, void>
+  toggleShowIntervals: Action<IntervalsSettings, void>
 }
 
 export const intervalsSettingsState: IntervalsSettings = {
   intervalMode: "basic",
-  isMuted: true,
-  multipleChoice: true,
-  showSettings: true,
+  showIntervals: false,
 
   setIntervalMode: (state, intervalMode) => {
     state.intervalMode = intervalMode
   },
 
-  toggleMultipleChoice: state => {
-    state.multipleChoice = !state.multipleChoice
-  },
-
-  toggleMuted: state => {
-    state.isMuted = !state.isMuted
-  },
-
-  toggleSettings: state => {
-    state.showSettings = !state.showSettings
+  toggleShowIntervals: state => {
+    state.showIntervals = !state.showIntervals
   },
 }

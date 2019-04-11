@@ -6,6 +6,8 @@ import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
 import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 import { Note } from "src/utils/types"
+import { getIntervals } from "src/utils/fretboard/getIntervals"
+import { containsSharpOrFlat } from "src/utils/fretboard/containsSharpOrFlat"
 
 export const NoteRenderer: React.FC<NoteRendererProps> = ({
   FretboardNote,
@@ -14,6 +16,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
   noteLabel,
 }) => {
   const { currentInterval } = useStore(state => state.intervals)
+  const { showIntervals } = useStore(state => state.intervals.settings)
 
   // TODO: Figure out how to deal with value | undefined from `find`
   // @ts-ignore
@@ -42,10 +45,18 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     }
   }
 
+  const isInterval = get(currentNote, note => note.interval !== "1")
+
   const label = get(
     currentNote,
     note => {
       switch (true) {
+        case showIntervals: {
+          const intervalLabel = getIntervals(currentInterval.notes[0])[
+            stringIndex
+          ][noteIndex]
+          return intervalLabel
+        }
         case showNotes:
           return noteLabel
         case showHint:
@@ -59,17 +70,15 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     ""
   )
 
-  const isInterval = get(currentNote, note => note.interval !== "1")
-
   const isRoot = get(
     currentNote,
     note => {
       switch (true) {
         case showNotes: {
-          if (fretboardMode === "intervals") {
-            return noteLabel === "1"
+          if (showIntervals) {
+            return label === "1"
           }
-          return noteLabel === currentInterval.notes[0].note
+          return label === currentInterval.notes[0].note
         }
         case note.interval === "1":
           return true
@@ -92,6 +101,8 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
       visible={isVisible}
       isRoot={isRoot}
       isInterval={isInterval}
+      containsSharpOrFlat={containsSharpOrFlat(label)}
+      showIntervals={showIntervals}
     >
       <Display>{label}</Display>
     </FretboardNote>

@@ -1,13 +1,13 @@
 import { FretboardMode } from "../types"
-import { getIntervals } from "./getIntervals"
+// import { getIntervals } from "./getIntervals"
 
 export function getFretboard(
   fretboardMode: FretboardMode = "flats"
 ): string[][] {
-  if (fretboardMode === "intervals") {
-    const intervals = getIntervals()
-    return intervals
-  }
+  // if (fretboardMode === "intervals") {
+  //   const intervals = getIntervals()
+  //   return intervals
+  // }
 
   const fretboard = [
     ["E", "F", "", "G", "", "A", "", "B", "C", "", "D", "", "E"],

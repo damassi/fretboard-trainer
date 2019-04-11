@@ -1,18 +1,16 @@
-import { getNote } from "./getNote"
-import { intervalList } from "../types"
+import { intervalList, IntervalLabels, Note, FretboardMode } from "../types"
 import { getFretboard } from "./getFretboard"
+import { last } from "lodash"
 
-export function getIntervals() {
-  const fretboardNotes = getFretboard("flats")
-
-  const note = getNote({
-    fretboardMode: "flats",
-    position: [1, 1],
-  })
+export function getIntervals(
+  note: Note,
+  fretboardMode: FretboardMode = "flats"
+) {
+  const fretboardNotes = getFretboard(fretboardMode)
 
   const intervalMap = fretboardNotes.map((string, stringIndex) => {
     const fretboardLength = fretboardNotes[stringIndex].length
-    const intervals: string[] = new Array(fretboardLength)
+    const intervals = new Array(fretboardLength)
     const noteIndex = string.findIndex(stringNote => stringNote === note.note)
 
     let intervalIndex = 0
@@ -21,7 +19,7 @@ export function getIntervals() {
     // Starting at the selected note index, fill array forward with intervals
     while (forwardFret < fretboardLength) {
       const intervalLabel = intervalList[intervalIndex]
-      intervals[forwardFret] = intervalLabel
+      intervals[forwardFret] = last<IntervalLabels>(intervalLabel)
       intervalIndex++
       forwardFret++
     }
@@ -34,11 +32,18 @@ export function getIntervals() {
       intervalIndex--
       backwardFret--
       const intervalLabel = intervalList[intervalIndex]
-      intervals[backwardFret] = intervalLabel
+      intervals[backwardFret] = last<IntervalLabels>(intervalLabel)
     }
 
     return intervals
   })
 
   return intervalMap
+}
+
+export function getIntervalByNote(rootNote: Note, intervalNote: Note) {
+  const intervals = getIntervals(rootNote)
+  const [stringIndex, noteIndex] = intervalNote.position
+  const interval = intervals[stringIndex][noteIndex]
+  return interval
 }

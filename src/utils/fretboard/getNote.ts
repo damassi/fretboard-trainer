@@ -32,18 +32,14 @@ export function getNote(
   let note
 
   if (!position) {
-    string = stringFocus || random(1, 6)
+    string = stringFocus || random(0, 5)
     note = random(startingFret, 12)
   } else {
     string = position[0]
     note = position[1]
   }
 
-  // Use a 1-based index to follow guitar idioms. We don't subtract from `noteId`
-  // because 0 (as in [6, 0]) refers to an open string -- in this case the low `E`.
   const stringName = getString(string)
-  string--
-
   const noteName = getFretboard(fretboardMode)[string][note]
 
   // Re-run function if we return an invalid result

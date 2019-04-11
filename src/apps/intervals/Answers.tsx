@@ -1,7 +1,6 @@
 import React, { useRef } from "react"
 import styled from "styled-components"
 import { Flex, Box } from "rebass"
-import { sample } from "lodash"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
@@ -14,10 +13,8 @@ export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
   const answerInputRef = useRef(null)
 
-  const {
-    questions,
-    settings: { multipleChoice },
-  } = useStore(state => state.intervals)
+  const { multipleChoice } = useStore(state => state.settings)
+  const { questions } = useStore(state => state.intervals)
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -37,7 +34,7 @@ export const Answers = _props => {
             {questions.map((answer, index) => {
               return (
                 <Answer onClick={() => pickAnswer(answer)} key={index}>
-                  {sample(answer.label)}
+                  {answer}
                 </Answer>
               )
             })}

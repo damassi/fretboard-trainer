@@ -64,7 +64,7 @@ export const notesState: Fretboard = {
       // Play sound
       if (!isMuted) {
         const [string, note] = currentNote.position
-        const soundFile = `/audio/${string + 1}-${note}.mp3`
+        const soundFile = `/audio/${string}-${note}.mp3`
         const sound = new Howl({
           src: [soundFile],
           volume: 0.3,

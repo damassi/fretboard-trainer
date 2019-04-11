@@ -2,17 +2,17 @@ import { StringRange, GuitarString } from "../types"
 
 export function getString(stringIndex: StringRange): GuitarString {
   switch (stringIndex) {
-    case 1:
+    case 0:
       return "E"
-    case 2:
+    case 1:
       return "b"
-    case 3:
+    case 2:
       return "g"
-    case 4:
+    case 3:
       return "d"
-    case 5:
+    case 4:
       return "a"
-    case 6:
+    case 5:
       return "e"
     default:
       throw new Error("String not found.")

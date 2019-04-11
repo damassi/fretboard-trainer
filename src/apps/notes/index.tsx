@@ -4,11 +4,11 @@ import { RouteComponentProps, Link } from "@reach/router"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Settings } from "src/apps/settings/Settings"
 import { Answers } from "src/apps/notes/Answers"
 import { store } from "src/store"
 import { Fretboard } from "src/components/Fretboard/Fretboard"
 import { NoteRenderer } from "./NoteRenderer"
+import { NotesSettings } from "./NotesSettings"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
@@ -24,7 +24,7 @@ export const NotesApp: React.FC<RouteComponentProps> = () => {
       <Scoreboard />
       <Fretboard renderNote={props => <NoteRenderer {...props} />} />
       <Answers />
-      <Settings />
+      <NotesSettings />
     </>
   )
 }

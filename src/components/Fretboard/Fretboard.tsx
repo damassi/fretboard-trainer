@@ -95,12 +95,14 @@ export interface FretboardNoteProps
   extends WidthProps,
     HeightProps,
     BackgroundProps {
-  fretboardMode: FretboardMode
-  isRoot?: boolean
-  isInterval?: boolean
-  selected: boolean
-  visible?: boolean
   children: React.ReactNode
+  containsSharpOrFlat?: boolean
+  fretboardMode: FretboardMode
+  isInterval?: boolean
+  isRoot?: boolean
+  selected: boolean
+  showIntervals?: boolean
+  visible?: boolean
 }
 
 const FretboardNote = styled(Flex)<FretboardNoteProps>`
@@ -158,7 +160,7 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
   ${background};
 
   ${props => {
-    if (props.fretboardMode === "intervals") {
+    if (props.showIntervals) {
       return css`
         justify-content: center;
       `
@@ -206,7 +208,7 @@ interface NoteLookupProps {
 
 function lookupNote(props: NoteLookupProps): Note {
   const { stringIndex, noteIndex, fretboardMode } = props
-  const noteLookup: any = [stringIndex + 1, noteIndex]
+  const noteLookup: any = [stringIndex, noteIndex]
   const note = getNote({
     fretboardMode,
     position: noteLookup,

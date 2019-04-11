@@ -1,15 +1,21 @@
+import { isEqual, sample, sampleSize, uniq, uniqBy } from "lodash"
 import { Action, Thunk, thunk } from "easy-peasy"
-import { isEqual, last, sample, shuffle, uniqBy, times } from "lodash"
 import { StoreModel } from "src/store"
-import { IntervalMode } from "./intervalsSettingsState"
-import { IntervalLabels, Note } from "src/utils/types"
 import { getNote } from "src/utils/fretboard/getNote"
-import { getIntervals } from "src/utils/fretboard/getIntervals"
+import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
+import { IntervalMode } from "./intervalsSettingsState"
+
+import {
+  IntervalLabels,
+  Note,
+  FretboardMode,
+  intervalList,
+} from "src/utils/types"
 
 export type RelativeInterval = [number, number]
 
 interface Interval {
-  notes: IntervalRange
+  notes: [Note, Note]
   label: IntervalLabels[]
   relativeInterval: RelativeInterval
 }
@@ -21,7 +27,6 @@ export interface Intervals {
   questionCount: number
 
   // Actions
-  buildIntervals: Action<Intervals, void>
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
   pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
   setInterval: Action<Intervals, Interval>
@@ -29,7 +34,8 @@ export interface Intervals {
 }
 
 export const intervalsState: Intervals = {
-  currentInterval: pickStaticInterval("basic"),
+  // @ts-ignore
+  currentInterval: null,
   intervals: [],
   questions: [],
   questionCount: 4,
@@ -39,38 +45,50 @@ export const intervalsState: Intervals = {
       intervals: { currentInterval },
     } = getState() as StoreModel
 
-    const isCorrect = isEqual(selectedInterval, currentInterval)
+    const isCorrect = isEqual(selectedInterval, currentInterval.label)
+
     if (isCorrect) {
       actions.pickRandomInterval()
     }
   }),
 
-  pickRandomInterval: thunk(actions => {
-    const getIntervals = () => {
-      return uniqBy(
-        times(4, () => {
-          return pickRandomInterval()
-        }),
-        "label"
-      )
+  pickRandomInterval: thunk((actions, _, { getState }) => {
+    const {
+      settings: { fretboardMode },
+      intervals: {
+        settings: { intervalMode },
+      },
+    } = getState()
+
+    const interval = pickRandomInterval({
+      fretboardMode,
+      intervalMode,
+    })
+
+    const getQuestions = () => {
+      // Pick 3 random questions while adding the answer into the mix, and then
+      // from the answers take a random option from the array of possibilities.
+      // E.g., "flat 5, sharp 4" -> "sharp 4"
+      const questions = uniq([
+        ...sampleSize(intervalList, 3),
+        interval.label,
+      ]).map(q => sample(q))
+
+      if (questions.length < 4) {
+        return getQuestions()
+      } else {
+        return questions
+      }
     }
 
-    let intervals = getIntervals()
-    while (intervals.length < 4) {
-      intervals = getIntervals()
-    }
-
-    actions.setInterval(intervals[0])
-    actions.setQuestions(shuffle(intervals))
+    actions.setInterval(interval)
+    actions.setQuestions(getQuestions())
   }),
-
-  buildIntervals: state => {
-    state.intervals = getIntervals()
-  },
 
   setInterval: (state, interval) => {
     state.currentInterval = interval
   },
+
   setQuestions: (state, questions) => {
     state.questions = questions
   },
@@ -78,265 +96,56 @@ export const intervalsState: Intervals = {
 
 // Helpers
 
-type IntervalRange = [Note, Note]
+function pickRandomInterval(props: {
+  fretboardMode: FretboardMode
+  intervalMode?: IntervalMode
+}): Interval {
+  const { fretboardMode = "flats", intervalMode = "basic" } = props
+  const rootNote = getNote({ fretboardMode })
+  const intervalNote = getNote()
 
-/**
- * Provides a map of common intervals so that dynamic intervals can be computed
- * by comparing relative interval distances.
- *
- * The flow is as such:
- *
- * a) Pick two random notes
- * b) Subtract noteB from noteA to get the relative distance
- * c) Iterate through the basic interval map searching for equal relative distance
- * d) If found, that's the interval. Return it to display on fretboard.
- * e) If not found, recursively call function until a match is found.
- *
- * TODO: Need to account for the `g` string, and intervals _around_ it.
- */
-export const basicIntervals: Interval[] = [
-  {
-    ...getInterval([[6, 1], [6, 2]]),
-    label: ["minor 2nd", "♭2"],
-  },
-  {
-    ...getInterval([[6, 5], [5, 1]]),
-    label: ["minor 2nd", "♭2"],
-  },
-  {
-    ...getInterval([[6, 1], [6, 3]]),
-    label: ["major 2nd", "2"],
-  },
-  {
-    ...getInterval([[6, 5], [5, 2]]),
-    label: ["major 2nd", "2"],
-  },
-  {
-    ...getInterval([[6, 1], [6, 4]]),
-    label: ["minor 3rd", "♭3"],
-  },
-  {
-    ...getInterval([[6, 3], [5, 1]]),
-    label: ["minor 3rd", "♭3"],
-  },
-  {
-    ...getInterval([[6, 1], [6, 5]]),
-    label: ["major 3rd", "3"],
-  },
-  {
-    ...getInterval([[6, 3], [5, 2]]),
-    label: ["major 3rd", "3"],
-  },
-  {
-    ...getInterval([[6, 1], [5, 1]]),
-    label: ["perfect 4th", "4"],
-  },
-  {
-    ...getInterval([[6, 1], [5, 2]]),
-    label: ["dim 5th", "aug 4th", "♭5"],
-  },
-  {
-    ...getInterval([[6, 1], [5, 3]]),
-    label: ["perfect 5th", "5"],
-  },
-  {
-    ...getInterval([[6, 5], [5, 2]]),
-    label: ["perfect 5th", "5"],
-  },
-  {
-    ...getInterval([[6, 1], [5, 4]]),
-    label: ["minor 6th", "aug 5th", "♭6"],
-  },
-  {
-    ...getInterval([[6, 1], [5, 5]]),
-    label: ["major 6th", "6"],
-  },
-  {
-    ...getInterval([[6, 3], [4, 2]]),
-    label: ["major 6th", "6"],
-  },
-  {
-    ...getInterval([[6, 1], [4, 1]]),
-    label: ["minor 7th", "♭7"],
-  },
-  {
-    ...getInterval([[6, 1], [4, 2]]),
-    label: ["major 7th", "7"],
-  },
-  {
-    ...getInterval([[6, 1], [4, 3]]),
-    label: ["octave"],
-  },
-  {
-    ...getInterval([[6, 5], [3, 2]]),
-    label: ["octave"],
-  },
-]
-
-/**
- * Complex intervals incorporate the G string, which is tuned to a 3rd, vs a 4th
- * as the rest of the strings. This leads to offset behavior interval-wise.
- */
-export const complexIntervals: Interval[] = [
-  {
-    ...getInterval([[4, 3], [2, 1]]),
-    label: ["perfect 5th", "5"],
-  },
-  {
-    ...getInterval([[4, 3], [2, 2]]),
-    label: ["minor 6th", "aug 5th", "♭6"],
-  },
-  {
-    ...getInterval([[4, 3], [2, 3]]),
-    label: ["major 6th", "6"],
-  },
-  {
-    ...getInterval([[4, 3], [2, 4]]),
-    label: ["minor 7th", "♭7"],
-  },
-  {
-    ...getInterval([[4, 3], [2, 5]]),
-    label: ["major 7th", "7"],
-  },
-  {
-    ...getInterval([[4, 2], [2, 5]]),
-    label: ["octave"],
-  },
-  {
-    ...getInterval([[4, 3], [1, 1]]),
-    label: ["octave"],
-  },
-  {
-    ...getInterval([[3, 5], [2, 1]]),
-    label: ["unison"],
-  },
-  {
-    ...getInterval([[3, 4], [2, 1]]),
-    label: ["minor 2nd", "♭2"],
-  },
-  {
-    ...getInterval([[3, 5], [2, 3]]),
-    label: ["major 2nd", "2"],
-  },
-  {
-    ...getInterval([[3, 4], [2, 3]]),
-    label: ["minor 3rd", "♭3"],
-  },
-  {
-    ...getInterval([[3, 4], [2, 4]]),
-    label: ["major 3rd", "3"],
-  },
-  {
-    ...getInterval([[3, 2], [2, 3]]),
-    label: ["perfect 4th", "4"],
-  },
-  {
-    ...getInterval([[3, 2], [2, 4]]),
-    label: ["dim 5th", "aug 4th", "♭5"],
-  },
-  {
-    ...getInterval([[3, 2], [2, 5]]),
-    label: ["perfect 5th", "5"],
-  },
-  {
-    ...getInterval([[3, 5], [1, 3]]),
-    label: ["perfect 5th", "5"],
-  },
-  {
-    ...getInterval([[3, 2], [1, 1]]),
-    label: ["minor 6th", "dim 5th", "♭6"],
-  },
-  {
-    ...getInterval([[3, 2], [1, 2]]),
-    label: ["major 6th", "6"],
-  },
-  {
-    ...getInterval([[3, 2], [1, 3]]),
-    label: ["minor 7th", "♭7"],
-  },
-  {
-    ...getInterval([[3, 2], [1, 4]]),
-    label: ["major 7th", "7"],
-  },
-  {
-    ...getInterval([[3, 2], [1, 5]]),
-    label: ["octave"],
-  },
-]
-
-function getInterval([notePosition1, notePosition2]): {
-  notes: IntervalRange
-  relativeInterval: RelativeInterval
-} {
-  const note1 = getNote({
-    position: notePosition1,
-  })
-  const note2 = getNote({
-    position: notePosition2,
-  })
-  const relativeInterval = computeRelativeInterval(note1, note2)
-
-  return {
-    notes: [note1, note2],
-    relativeInterval,
-  }
-}
-
-/**
- * Static intervals for testing possibilities.
- */
-function pickStaticInterval(mode: IntervalMode = "basic"): Interval {
-  switch (mode) {
-    case "basic":
-      return sample(basicIntervals) as Interval
-    case "intermediate":
-      return sample(complexIntervals) as Interval
-    case "advanced":
-      return sample(basicIntervals) as Interval // TODO
-    default:
-      return sample(basicIntervals) as Interval
-  }
-}
-
-/**
- * Dynamic intervals. Mapped against static intervals by computing the relative
- * difference between two note positions in the array.
- */
-export function pickRandomInterval(): Interval {
-  const note1 = getNote()
-  const note2 = getNote()
-
-  // TODO: Avoid `G` string for now until a proper heuristic is found for
-  // offsetting fret distances.
-  if (note1.string === "g" || note2.string === "g") {
-    return pickRandomInterval()
+  // Rerun function if we've landed on same note
+  if (uniqBy([rootNote, intervalNote], "note").length !== 2) {
+    return pickRandomInterval(props)
   }
 
-  const relativeInterval = computeRelativeInterval(note1, note2)
+  const relativeInterval = computeRelativeInterval(rootNote, intervalNote)
+  const [stringDist, noteDist] = relativeInterval
 
-  const interval = basicIntervals.find(interval => {
-    if (isEqual(interval.relativeInterval, relativeInterval)) {
-      return true
-    } else {
-      return false
+  switch (intervalMode) {
+    /**
+     * In `basic`, these are the rules:
+     *
+     * 1) Start from the root and only permit accention, as if going up a scale.
+     * 2) Don't travel more than three strings in distance
+     * 3) Can only move three frets to the left of the root
+     * 4) Can only move four frets to the right of the root
+     */
+    case "basic": {
+      if (stringDist > 0 || stringDist < -2) {
+        return pickRandomInterval(props)
+      }
+      if (noteDist > 4 || noteDist < -3) {
+        return pickRandomInterval(props)
+      }
     }
-  })
-
-  if (!interval) {
-    return pickRandomInterval()
   }
 
-  // TODO: Add non-root relative intervals
-  note1.interval = "1"
-  note2.interval = last(interval.label)
+  const intervalLabel = getIntervalByNote(rootNote, intervalNote)
+  rootNote.interval = "1"
+  intervalNote.interval = intervalLabel
 
   return {
-    ...interval,
-    notes: [note1, note2],
+    notes: [rootNote, intervalNote],
+    relativeInterval,
+    label: intervalLabel,
   }
 }
 
-export function computeRelativeInterval(note1, note2): RelativeInterval {
+export function computeRelativeInterval(
+  note1: Note,
+  note2: Note
+): RelativeInterval {
   const subtract = ([string2, note2], [string1, note1]) => {
     return [string2 - string1, note2 - note1]
   }

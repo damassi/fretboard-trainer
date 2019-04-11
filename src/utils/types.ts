@@ -5,7 +5,7 @@ export interface Note {
   interval?: IntervalLabels
 }
 
-export type NotePosition = [StringRange, NoteRange]
+export type NotePosition = [number, number]
 
 export type ScaleNote =
   | "C"
@@ -26,7 +26,7 @@ export type ScaleNote =
   | "B♭"
   | "B"
 
-export type FretboardMode = "naturals" | "flats" | "sharps" | "intervals"
+export type FretboardMode = "naturals" | "flats" | "sharps"
 
 export type IntervalLabels =
   | "1"
@@ -63,39 +63,26 @@ export type IntervalLabels =
 
 export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
 
-export type StringRange = 1 | 2 | 3 | 4 | 5 | 6
+export type StringRange = 0 | 1 | 2 | 3 | 4 | 5
 
 export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
 
-export const intervalList: Partial<IntervalLabels>[] = [
-  "1",
-  "♭2",
-  "2",
-  "♭3",
-  "3",
-  "4",
-  "♭5",
-  "5",
-  "♭6",
-  "6",
-  "♭7",
-  "7",
-  "1",
+/**
+ * NOTE: The last index of each interval is for display on the fretboard. In
+ * the future we'll want to support more than just flats, but they fit best.
+ */
+export const intervalList: Partial<IntervalLabels>[][] = [
+  ["1"],
+  ["minor 2nd", "♭2"],
+  ["major 2nd", "2"],
+  ["minor 3rd", "♭3"],
+  ["major 3rd", "3"],
+  ["perfect 4th", "4"],
+  ["#4/♭5", "dim 5th", "aug 4th", "♭5"],
+  ["perfect 5th", "5"],
+  ["#5/♭6", "minor 6th", "aug 5th", "♭6"],
+  ["major 6th", "6"],
+  ["minor 7th", "♭7"],
+  ["major 7th", "7"],
+  ["1"],
 ]
-
-// TODO: Handle sharps and flats in design
-// export const intervalList: Partial<IntervalLabels>[] = [
-//   "1",
-//   "♭2",
-//   "2",
-//   "♭3",
-//   "3",
-//   "4",
-//   "#4/♭5",
-//   "5",
-//   "#5/♭6",
-//   "6",
-//   "♭7",
-//   "7",
-//   "1",
-// ]

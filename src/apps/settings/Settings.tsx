@@ -53,8 +53,6 @@ export const Settings: React.FC<SettingsProps> = ({ children }) => {
                     return 1
                   case "sharps":
                     return 2
-                  // case "intervals":
-                  //   return 3
                 }
               }}
               items={[
@@ -70,10 +68,6 @@ export const Settings: React.FC<SettingsProps> = ({ children }) => {
                   label: "Sharps",
                   onSelect: () => setFretboardMode("sharps"),
                 },
-                // {
-                //   label: "Intervals",
-                //   onSelect: () => setFretboardMode("intervals"),
-                // },
               ]}
             />
           </Box>

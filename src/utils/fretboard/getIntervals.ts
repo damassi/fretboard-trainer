@@ -40,3 +40,10 @@ export function getIntervals(
 
   return intervalMap
 }
+
+export function getIntervalByNote(rootNote: Note, intervalNote: Note) {
+  const intervals = getIntervals(rootNote)
+  const [stringIndex, noteIndex] = intervalNote.position
+  const interval = intervals[stringIndex][noteIndex]
+  return interval
+}

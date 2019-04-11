@@ -1,7 +1,6 @@
 import React, { useRef } from "react"
 import styled from "styled-components"
 import { Flex, Box } from "rebass"
-import { sample } from "lodash"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
@@ -35,7 +34,7 @@ export const Answers = _props => {
             {questions.map((answer, index) => {
               return (
                 <Answer onClick={() => pickAnswer(answer)} key={index}>
-                  {sample(answer.label)}
+                  {answer}
                 </Answer>
               )
             })}

@@ -17,7 +17,7 @@ export const IntervalsSettings = () => {
       >
         <optgroup label="Interval Difficulty">
           <option value="basic">Basic</option>
-          <option value="intermediate" disabled={true}>
+          <option value="intermediate" disabled>
             Intermediate
           </option>
           <option value="advanced" disabled>

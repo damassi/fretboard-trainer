@@ -5,7 +5,7 @@ import { notes as notesModel } from "src/apps/notes/state"
 import { settingsState } from "src/apps/settings/settingsState"
 import { Howl } from "howler"
 import { getNote } from "src/utils/fretboard/getNote"
-import { Note } from "src/utils/types"
+import { Note, HINT_VISIBILITY_TIME, ANSWER_COUNT } from "src/utils/types"
 
 export interface Fretboard {
   currentNote: Note
@@ -60,9 +60,9 @@ export const notesState: Fretboard = {
     )
 
     if (isCorrect) {
-      dispatch.scoreboard.showFlash("correct!")
-      setTimeout(() => dispatch.scoreboard.correctAnswer(), 10)
+      dispatch.scoreboard.correctAnswer("correct!")
 
+      // TODO: Move sound playback to <Fretboard />
       // Play sound
       if (!isMuted) {
         const [string, note] = currentNote.position
@@ -74,13 +74,12 @@ export const notesState: Fretboard = {
         sound.play()
       }
     } else {
-      dispatch.scoreboard.showFlash("incorrect!")
-      setTimeout(() => dispatch.scoreboard.incorrectAnswer(), 10)
+      dispatch.scoreboard.incorrectAnswer("incorrect!")
     }
 
     setTimeout(() => {
       actions.pickRandomNote()
-    }, 2000)
+    }, HINT_VISIBILITY_TIME)
   }),
 
   pickRandomNote: thunk((actions, _, { getState }) => {
@@ -90,8 +89,8 @@ export const notesState: Fretboard = {
       const { fretboard } = state.settings
       const { startingFret, stringFocus } = state.notes.settings
 
-      return uniqBy(
-        times(4, () => {
+      const notes = uniqBy(
+        times(ANSWER_COUNT, () => {
           return getNote({
             fretboard,
             startingFret,
@@ -100,12 +99,15 @@ export const notesState: Fretboard = {
         }),
         "note"
       )
+
+      if (notes.length < ANSWER_COUNT) {
+        return getNotes()
+      }
+
+      return notes
     }
 
-    let notes = getNotes()
-    while (notes.length < 4) {
-      notes = getNotes()
-    }
+    const notes = getNotes()
 
     actions.setNote(notes[0])
     actions.setQuestions(shuffle(notes))

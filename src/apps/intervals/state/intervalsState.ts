@@ -1,25 +1,27 @@
 import { isEqual, sample, sampleSize, shuffle, uniq, uniqBy } from "lodash"
-import { Action, Thunk, thunk } from "easy-peasy"
+import { Action, Thunk, thunk, listen, Listen } from "easy-peasy"
 import { StoreModel } from "src/store"
 import { getNote } from "src/utils/fretboard/getNote"
 import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
-import { IntervalMode } from "./intervalsSettingsState"
+import { IntervalMode, intervalsSettingsState } from "./intervalsSettingsState"
+import { settingsState } from "src/apps/settings/settingsState"
 
-import { IntervalLabels, Note, intervalList, Fretboard } from "src/utils/types"
-
-export type RelativeInterval = [number, number]
-
-interface Interval {
-  notes: [Note, Note]
-  label: IntervalLabels[]
-  relativeInterval: RelativeInterval
-}
+import {
+  Note,
+  intervalList,
+  Fretboard,
+  ANSWER_COUNT,
+  Interval,
+  RelativeInterval,
+} from "src/utils/types"
 
 export interface Intervals {
   currentInterval: Interval
   intervals: string[][]
   questions: Interval[]
-  questionCount: number
+
+  // Listeners
+  listeners: Listen<Intervals>
 
   // Actions
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
@@ -33,7 +35,24 @@ export const intervalsState: Intervals = {
   currentInterval: null,
   intervals: [],
   questions: [],
-  questionCount: 4,
+
+  // When these actions fire pick a new note, effectively resetting the
+  // fretboard state
+  listeners: listen(on => {
+    const newIntervalsActions = [
+      intervalsSettingsState.setIntervalMode,
+      settingsState.setFretboardMode,
+    ]
+
+    newIntervalsActions.forEach(action => {
+      on(
+        action,
+        thunk(actions => {
+          actions.pickRandomInterval()
+        })
+      )
+    })
+  }),
 
   pickAnswer: thunk((actions, selectedInterval, { getState }) => {
     const {
@@ -62,14 +81,14 @@ export const intervalsState: Intervals = {
 
     // Pick 3 random questions while adding the answer into the mix, and then
     // from the answers take a random option from the array of possibilities.
-    // E.g., "flat 5, sharp 4" -> "sharp 4"
+    // E.g., [flat 5, sharp 4] -> "sharp 4"
     const getQuestions = () => {
-      const takeThree = sampleSize(intervalList, 3)
+      const takeThree = sampleSize(intervalList, ANSWER_COUNT - 1)
       const questions = shuffle(
         uniq([...takeThree, [interval.label]]).map(q => sample(q))
       )
 
-      if (questions.length < 4) {
+      if (questions.length < ANSWER_COUNT) {
         return getQuestions()
       } else {
         return questions
@@ -142,6 +161,8 @@ function pickRandomInterval(props: {
   }
 
   const intervalLabel = getIntervalByNote(rootNote, intervalNote)
+
+  // TODO: Find a less imperative way to set this
   rootNote.interval = "1"
   intervalNote.interval = intervalLabel
 

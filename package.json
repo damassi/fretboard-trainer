@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
+    "@smooth-ui/core-sc": "^10.0.7",
     "@types/jest": "24.0.11",
     "@types/node": "11.11.0",
     "@types/react": "16.8.7",
@@ -68,6 +69,7 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-scripts": "2.1.8",
+    "react-spring": "^8.0.19",
     "rebass": "^3.0.1",
     "redux": "^4.0.1",
     "redux-localstorage-simple": "^2.1.6",

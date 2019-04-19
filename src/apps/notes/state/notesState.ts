@@ -12,7 +12,6 @@ export interface Fretboard {
   questions: Note[]
   questionCount: number
 
-  // Listeners
   listeners: Listen<Fretboard>
 
   // Actions
@@ -30,6 +29,8 @@ export const notesState: Fretboard = {
   questions: [],
   questionCount: 4,
 
+  // When these actions fire pick a new note, effectively resetting the
+  // fretboard state
   listeners: listen(on => {
     const newNoteActions = [
       notesModel.settings.setStartingFret,

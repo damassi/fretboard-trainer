@@ -1,6 +1,7 @@
-import { Action } from "easy-peasy"
-import { FretboardMode, Fretboard } from "src/utils/types"
+import { Action, Listen, listen, thunk } from "easy-peasy"
+import { FretboardMode, Fretboard, HINT_VISIBILITY_TIME } from "src/utils/types"
 import { getFretboard } from "src/utils/fretboard/getFretboard"
+import { scoreboard } from "src/components/Scoreboard/scoreboardState"
 
 export interface SettingsModel {
   fretboard: Fretboard
@@ -12,9 +13,12 @@ export interface SettingsModel {
   showNotes: boolean
   showSettings: boolean
 
+  listeners: Listen<SettingsModel>
+
   setFretboardMode: Action<SettingsModel, FretboardMode>
   setMultipleChoice: Action<SettingsModel, string>
   setShowNotes: Action<SettingsModel, string>
+  setHintVisibility: Action<SettingsModel, boolean>
 
   toggleHint: Action<SettingsModel, void>
   toggleIntervals: Action<SettingsModel, void>
@@ -33,6 +37,20 @@ export const settingsState: SettingsModel = {
   showNotes: false,
   showSettings: true,
 
+  // When the flash message fires, show the answer for a brief period of time
+  listeners: listen(on => {
+    on(
+      scoreboard.showFlash,
+      thunk(actions => {
+        actions.setHintVisibility(true)
+
+        setTimeout(() => {
+          actions.setHintVisibility(false)
+        }, HINT_VISIBILITY_TIME)
+      })
+    )
+  }),
+
   setFretboardMode: (state, fretboardMode) => {
     state.fretboardMode = fretboardMode
     state.fretboard = getFretboard(state.fretboardMode)
@@ -44,6 +62,10 @@ export const settingsState: SettingsModel = {
 
   setShowNotes: (state, showNotes) => {
     state.showNotes = showNotes === "true"
+  },
+
+  setHintVisibility: (state, showHint) => {
+    state.showHint = showHint
   },
 
   toggleHint: state => {

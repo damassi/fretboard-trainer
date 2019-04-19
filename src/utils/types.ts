@@ -1,3 +1,5 @@
+export const HINT_VISIBILITY_TIME = 2000
+
 export type Fretboard = ScaleNote[][]
 
 export interface Note {

@@ -1,5 +1,6 @@
 import { Action, thunk, Thunk } from "easy-peasy"
 import { StoreModel } from "src/store"
+import { HINT_VISIBILITY_TIME } from "src/utils/types"
 
 export interface ScoreboardModel {
   correctAnswers: number
@@ -7,8 +8,11 @@ export interface ScoreboardModel {
   incorrectAnswers: number
 
   // Actions
-  correctAnswer: Action<ScoreboardModel, void>
-  incorrectAnswer: Action<ScoreboardModel, void>
+  correctAnswer: Thunk<ScoreboardModel, string | void, any, StoreModel>
+  incorrectAnswer: Thunk<ScoreboardModel, string | void>
+
+  incrementScore: Action<ScoreboardModel, void>
+  decrementScore: Action<ScoreboardModel, void>
 
   showFlash: Thunk<ScoreboardModel, string, any, StoreModel>
   setFlashMessage: Action<ScoreboardModel, string>
@@ -19,11 +23,29 @@ export const scoreboard: ScoreboardModel = {
   incorrectAnswers: 0,
   flashMessage: "",
 
-  correctAnswer: state => {
+  correctAnswer: thunk((actions, flashMessage) => {
+    if (flashMessage) {
+      actions.showFlash(flashMessage)
+    }
+
+    setTimeout(() => {
+      actions.incrementScore()
+    }, 10)
+  }),
+
+  incorrectAnswer: thunk((actions, flashMessage) => {
+    if (flashMessage) {
+      actions.showFlash(flashMessage)
+    }
+
+    actions.decrementScore()
+  }),
+
+  incrementScore: state => {
     state.correctAnswers++
   },
 
-  incorrectAnswer: state => {
+  decrementScore: state => {
     state.incorrectAnswers++
   },
 
@@ -31,14 +53,11 @@ export const scoreboard: ScoreboardModel = {
     state.flashMessage = message
   },
 
-  showFlash: thunk((actions, flashMessage, { dispatch }: any) => {
+  showFlash: thunk((actions, flashMessage) => {
     actions.setFlashMessage(flashMessage)
 
-    // TODO: Move hint toggling to a listener inside of fretboardState
-    dispatch.settings.toggleHint()
     setTimeout(() => {
       actions.setFlashMessage("")
-      dispatch.settings.toggleHint()
-    }, 2000)
+    }, HINT_VISIBILITY_TIME)
   }),
 }

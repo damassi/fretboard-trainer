@@ -7,6 +7,14 @@ export interface Note {
   interval?: IntervalLabels
 }
 
+export type RelativeInterval = [number, number]
+
+export interface Interval {
+  notes: [Note, Note]
+  label: IntervalLabels[]
+  relativeInterval: RelativeInterval
+}
+
 export type NotePosition = [number, number]
 
 export type ScaleNote =
@@ -70,6 +78,10 @@ export type StringRange = 0 | 1 | 2 | 3 | 4 | 5
 export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
 
 /**
+ * Begin constants
+ */
+
+/**
  * NOTE: The last index of each interval is for display on the fretboard. In
  * the future we'll want to support more than just flats, but they fit best.
  */
@@ -88,3 +100,13 @@ export const intervalList: Partial<IntervalLabels>[][] = [
   ["major 7th", "7"],
   ["1"],
 ]
+
+/**
+ * When the FlashMessage fires, show the hint for a given moment of time
+ */
+export const HINT_VISIBILITY_TIME = 2000
+
+/**
+ * The number of answers a user can select from
+ */
+export const ANSWER_COUNT = 4

@@ -14,22 +14,3 @@ export const Boot = ({ children }) => {
     </StoreProvider>
   )
 }
-
-// TODO: Enable proper bootloader
-// export function bootApp(): Promise<{ Boot: React.FC }> {
-//   const Boot: React.FC = ({ children }) => {
-//     return (
-//       <StoreProvider store={store}>
-//         <Theme>
-//           <AppContainer>{children}</AppContainer>
-//         </Theme>
-//       </StoreProvider>
-//     )
-//   }
-
-//   return new Promise(resolve => {
-//     resolve({
-//       Boot,
-//     })
-//   })
-// }

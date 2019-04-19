@@ -63,7 +63,6 @@ export const notesState: Fretboard = {
       dispatch.scoreboard.correctAnswer("correct!")
 
       // TODO: Move sound playback to <Fretboard />
-      // Play sound
       if (!isMuted) {
         const [string, note] = currentNote.position
         const soundFile = `/audio/${string}-${note}.mp3`
@@ -107,10 +106,10 @@ export const notesState: Fretboard = {
       return notes
     }
 
-    const notes = getNotes()
+    const notes = shuffle(getNotes())
 
     actions.setNote(notes[0])
-    actions.setQuestions(shuffle(notes))
+    actions.setQuestions(notes)
   }),
 
   setNote: (state, currentNote) => {

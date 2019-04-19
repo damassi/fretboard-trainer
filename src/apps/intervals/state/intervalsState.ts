@@ -13,6 +13,7 @@ import {
   ANSWER_COUNT,
   Interval,
   RelativeInterval,
+  HINT_VISIBILITY_TIME,
 } from "src/utils/types"
 
 export interface Intervals {
@@ -36,14 +37,14 @@ export const intervalsState: Intervals = {
   intervals: [],
   questions: [],
 
-  // When these actions fire pick a new note, effectively resetting the
-  // fretboard state
   listeners: listen(on => {
     const newIntervalsActions = [
       intervalsSettingsState.setIntervalMode,
       settingsState.setFretboardMode,
     ]
 
+    // When these actions fire pick a new note, effectively resetting the
+    // fretboard state
     newIntervalsActions.forEach(action => {
       on(
         action,
@@ -54,7 +55,7 @@ export const intervalsState: Intervals = {
     })
   }),
 
-  pickAnswer: thunk((actions, selectedInterval, { getState }) => {
+  pickAnswer: thunk((actions, selectedInterval, { dispatch, getState }) => {
     const {
       intervals: { currentInterval },
     } = getState() as StoreModel
@@ -62,8 +63,14 @@ export const intervalsState: Intervals = {
     const isCorrect = isEqual(selectedInterval, currentInterval.label)
 
     if (isCorrect) {
-      actions.pickRandomInterval()
+      dispatch.scoreboard.correctAnswer("correct!")
+    } else {
+      dispatch.scoreboard.incorrectAnswer("incorrect!")
     }
+
+    setTimeout(() => {
+      actions.pickRandomInterval()
+    }, HINT_VISIBILITY_TIME)
   }),
 
   pickRandomInterval: thunk((actions, _, { getState }) => {

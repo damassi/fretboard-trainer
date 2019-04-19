@@ -33,7 +33,7 @@ export function getNote(
   let note
 
   if (!position) {
-    string = stringFocus || random(0, 5)
+    string = stringFocus > -1 ? stringFocus : random(0, 5)
     note = random(startingFret, 12)
   } else {
     string = position[0]

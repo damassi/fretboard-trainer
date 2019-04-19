@@ -1,7 +1,8 @@
 import { Action, thunk, Thunk, listen, Listen } from "easy-peasy"
 import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { StoreModel } from "src/store"
-import { notes } from "src/apps/notes/state"
+import { notes as notesModel } from "src/apps/notes/state"
+import { settingsState } from "src/apps/settings/settingsState"
 import { Howl } from "howler"
 import { getNote } from "src/utils/fretboard/getNote"
 import { Note } from "src/utils/types"
@@ -30,20 +31,20 @@ export const notesState: Fretboard = {
   questionCount: 4,
 
   listeners: listen(on => {
-    // Whenever a new starting fret has been selected reset the board
-    on(
-      notes.settings.setStartingFret,
-      thunk(actions => {
-        actions.pickRandomNote()
-      })
-    )
+    const newNoteActions = [
+      notesModel.settings.setStartingFret,
+      notesModel.settings.setStringFocus,
+      settingsState.setFretboardMode,
+    ]
 
-    on(
-      notes.settings.setStringFocus,
-      thunk(actions => {
-        actions.pickRandomNote()
-      })
-    )
+    newNoteActions.forEach(action => {
+      on(
+        action,
+        thunk(actions => {
+          actions.pickRandomNote()
+        })
+      )
+    })
   }),
 
   pickAnswer: thunk((actions, selectedNote, { getState, dispatch }) => {

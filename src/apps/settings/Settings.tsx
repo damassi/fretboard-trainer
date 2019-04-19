@@ -1,16 +1,16 @@
 import React from "react"
-import { Box } from "rebass"
+import { Flex } from "rebass"
 
-import { SettingsIcon } from "src/components/ui/SettingsIcon"
 import { useStore, useActions } from "src/utils/hooks"
-import { CycleButton } from "src/components/ui/CycleButton"
-import { SettingsContainer } from "src/components/ui/SettingsContainer"
+import { Select } from "src/components/ui/Select"
+import { Spacer } from "src/components/ui/Spacer"
+import { Join } from "src/components/ui/Join"
+import { VolumeToggle } from "src/components/ui/VolumeToggle"
+import { SettingsIcon } from "src/components/ui/SettingsIcon"
 
-interface SettingsProps {
-  children?: React.ReactNode
-}
+import { useSpring, animated } from "react-spring"
 
-export const Settings: React.FC<SettingsProps> = ({ children }) => {
+export const Settings = props => {
   const {
     setFretboardMode,
     toggleMultipleChoice,
@@ -22,62 +22,77 @@ export const Settings: React.FC<SettingsProps> = ({ children }) => {
     state => state.settings
   )
 
+  const animateProps = useSpring({
+    from: {
+      opacity: 1,
+    },
+    to: {
+      marginTop: showSettings ? 0 : -70,
+      opacity: showSettings ? 1 : 0,
+    },
+  })
+
   return (
-    <SettingsContainer>
-      <Box onClick={() => toggleSettings()}>
-        <SettingsIcon selected={showSettings} />
-      </Box>
+    <Flex
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+      my={2}
+    >
+      <animated.div style={animateProps}>
+        <Flex my={1}>
+          <Join separator={<Spacer mx={1} />}>
+            {/*
+              Additional settings can be passed as children
+            */}
+            {props.children}
 
-      {showSettings && (
-        <Box mt={2}>
-          <Box>
-            <CycleButton
-              selectedIndex={multipleChoice ? 0 : 1}
-              items={["Multiple choice", "Input mode"]}
-              onClick={toggleMultipleChoice}
-            />
-          </Box>
+            <Select
+              size="sm"
+              placeholder="Small"
+              defaultValue={multipleChoice}
+              onChange={() => toggleMultipleChoice()}
+            >
+              <optgroup label="Answer Mode">
+                <option value="one">Multiple Choice</option>
+                <option value="two">Input</option>
+              </optgroup>
+            </Select>
+            <Select
+              size="sm"
+              placeholder="Small"
+              defaultValue={showNotes}
+              onChange={() => toggleNotes()}
+            >
+              <optgroup label="Note Visibility">
+                <option value="showNotes">Show notes</option>
+                <option value="hideNotes">Hide notes</option>
+              </optgroup>
+            </Select>
+            <Select
+              size="sm"
+              placeholder="Small"
+              defaultValue={fretboardMode}
+              onChange={mode => setFretboardMode(mode)}
+            >
+              <optgroup label="Fretboard Mode">
+                <option value="naturals">Natural notes only</option>
+                <option value="flats">Flats</option>
+                <option value="sharps">Sharps</option>
+              </optgroup>
+            </Select>
+          </Join>
+        </Flex>
+      </animated.div>
 
-          <Box mt={0}>
-            <CycleButton
-              selectedIndex={showNotes ? 1 : 0}
-              items={["Show notes", "Hide notes"]}
-              onClick={toggleNotes}
-            />
-            <CycleButton
-              selectedIndex={() => {
-                switch (fretboardMode) {
-                  case "naturals":
-                    return 0
-                  case "flats":
-                    return 1
-                  case "sharps":
-                    return 2
-                }
-              }}
-              items={[
-                {
-                  label: "Natural notes only",
-                  onSelect: () => setFretboardMode("naturals"),
-                },
-                {
-                  label: "Flats",
-                  onSelect: () => setFretboardMode("flats"),
-                },
-                {
-                  label: "Sharps",
-                  onSelect: () => setFretboardMode("sharps"),
-                },
-              ]}
-            />
-          </Box>
-
-          {/* NOTE:
-             Additional settings can be passed in as children */}
-
-          {children && <Box mt={1}>{children}</Box>}
-        </Box>
-      )}
-    </SettingsContainer>
+      <Flex width="5%" justifyContent="space-between" mt={3} mb={0}>
+        <VolumeToggle />
+        <SettingsIcon
+          onClick={() => toggleSettings()}
+          selected={showSettings}
+        />
+      </Flex>
+    </Flex>
   )
 }

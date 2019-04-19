@@ -1,7 +1,9 @@
 import { Action } from "easy-peasy"
-import { FretboardMode } from "src/utils/types"
+import { FretboardMode, Fretboard } from "src/utils/types"
+import { getFretboard } from "src/utils/fretboard/getFretboard"
 
 export interface SettingsModel {
+  fretboard: Fretboard
   fretboardMode: FretboardMode
   isMuted: boolean
   multipleChoice: boolean
@@ -21,6 +23,8 @@ export interface SettingsModel {
 }
 
 export const settingsState: SettingsModel = {
+  fretboard: getFretboard("naturals"),
+
   fretboardMode: "naturals",
   isMuted: true,
   multipleChoice: true,
@@ -29,8 +33,9 @@ export const settingsState: SettingsModel = {
   showNotes: false,
   showSettings: true,
 
-  setFretboardMode: (state, payload) => {
-    state.fretboardMode = payload
+  setFretboardMode: (state, fretboardMode) => {
+    state.fretboardMode = fretboardMode
+    state.fretboard = getFretboard(state.fretboardMode)
   },
 
   toggleHint: state => {

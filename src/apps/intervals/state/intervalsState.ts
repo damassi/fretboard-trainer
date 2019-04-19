@@ -1,16 +1,11 @@
-import { isEqual, sample, sampleSize, uniq, uniqBy } from "lodash"
+import { isEqual, sample, sampleSize, shuffle, uniq, uniqBy } from "lodash"
 import { Action, Thunk, thunk } from "easy-peasy"
 import { StoreModel } from "src/store"
 import { getNote } from "src/utils/fretboard/getNote"
 import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
 import { IntervalMode } from "./intervalsSettingsState"
 
-import {
-  IntervalLabels,
-  Note,
-  FretboardMode,
-  intervalList,
-} from "src/utils/types"
+import { IntervalLabels, Note, intervalList, Fretboard } from "src/utils/types"
 
 export type RelativeInterval = [number, number]
 
@@ -54,25 +49,25 @@ export const intervalsState: Intervals = {
 
   pickRandomInterval: thunk((actions, _, { getState }) => {
     const {
-      settings: { fretboardMode },
+      settings: { fretboard },
       intervals: {
         settings: { intervalMode },
       },
     } = getState()
 
     const interval = pickRandomInterval({
-      fretboardMode,
+      fretboard,
       intervalMode,
     })
 
+    // Pick 3 random questions while adding the answer into the mix, and then
+    // from the answers take a random option from the array of possibilities.
+    // E.g., "flat 5, sharp 4" -> "sharp 4"
     const getQuestions = () => {
-      // Pick 3 random questions while adding the answer into the mix, and then
-      // from the answers take a random option from the array of possibilities.
-      // E.g., "flat 5, sharp 4" -> "sharp 4"
-      const questions = uniq([
-        ...sampleSize(intervalList, 3),
-        interval.label,
-      ]).map(q => sample(q))
+      const takeThree = sampleSize(intervalList, 3)
+      const questions = shuffle(
+        uniq([...takeThree, [interval.label]]).map(q => sample(q))
+      )
 
       if (questions.length < 4) {
         return getQuestions()
@@ -81,8 +76,9 @@ export const intervalsState: Intervals = {
       }
     }
 
+    const questions = getQuestions()
     actions.setInterval(interval)
-    actions.setQuestions(getQuestions())
+    actions.setQuestions(questions)
   }),
 
   setInterval: (state, interval) => {
@@ -97,11 +93,11 @@ export const intervalsState: Intervals = {
 // Helpers
 
 function pickRandomInterval(props: {
-  fretboardMode: FretboardMode
+  fretboard: Fretboard
   intervalMode?: IntervalMode
 }): Interval {
-  const { fretboardMode = "flats", intervalMode = "basic" } = props
-  const rootNote = getNote({ fretboardMode })
+  const { fretboard, intervalMode = "basic" } = props
+  const rootNote = getNote({ fretboard })
   const intervalNote = getNote()
 
   // Rerun function if we've landed on same note
@@ -123,6 +119,20 @@ function pickRandomInterval(props: {
      */
     case "basic": {
       if (stringDist > 0 || stringDist < -2) {
+        return pickRandomInterval(props)
+      }
+      if (noteDist > 4 || noteDist < -3) {
+        return pickRandomInterval(props)
+      }
+      break
+    }
+
+    /**
+     * In intermediate mode, permit decention, where an interval can fall *below*
+     * the root note. Other basic rules apply
+     */
+    case "intermediate": {
+      if (stringDist > 2 || stringDist < -2) {
         return pickRandomInterval(props)
       }
       if (noteDist > 4 || noteDist < -3) {

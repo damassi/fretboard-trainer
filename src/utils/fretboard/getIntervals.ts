@@ -1,12 +1,25 @@
-import { intervalList, IntervalLabels, Note, FretboardMode } from "../types"
+import {
+  intervalList,
+  IntervalLabels,
+  Note,
+  FretboardMode,
+  Fretboard,
+} from "../types"
 import { getFretboard } from "./getFretboard"
 import { last } from "lodash"
 
-export function getIntervals(
-  note: Note,
-  fretboardMode: FretboardMode = "flats"
-) {
-  const fretboardNotes = getFretboard(fretboardMode)
+interface IntervalsProps {
+  note: Note
+  fretboard?: Fretboard
+  fretboardMode?: FretboardMode
+}
+
+export function getIntervals({
+  note,
+  fretboard,
+  fretboardMode = "flats",
+}: IntervalsProps) {
+  const fretboardNotes = fretboard || getFretboard(fretboardMode)
 
   const intervalMap = fretboardNotes.map((string, stringIndex) => {
     const fretboardLength = fretboardNotes[stringIndex].length
@@ -42,7 +55,7 @@ export function getIntervals(
 }
 
 export function getIntervalByNote(rootNote: Note, intervalNote: Note) {
-  const intervals = getIntervals(rootNote)
+  const intervals = getIntervals({ note: rootNote })
   const [stringIndex, noteIndex] = intervalNote.position
   const interval = intervals[stringIndex][noteIndex]
   return interval

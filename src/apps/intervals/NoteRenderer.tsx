@@ -51,16 +51,14 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     currentNote,
     note => {
       switch (true) {
-        case showIntervals: {
-          const intervalLabel = getIntervals(currentInterval.notes[0])[
-            stringIndex
-          ][noteIndex]
+        case showHint: {
+          const intervalLabel = getIntervals({
+            note: currentInterval.notes[0],
+          })[stringIndex][noteIndex]
           return intervalLabel
         }
         case showNotes:
           return noteLabel
-        case showHint:
-          return note.interval
         case note.interval === "1":
           return note.interval
         default:
@@ -102,7 +100,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
       isRoot={isRoot}
       isInterval={isInterval}
       containsSharpOrFlat={containsSharpOrFlat(label)}
-      showIntervals={showIntervals}
+      showIntervals={showHint}
     >
       <Display>{label}</Display>
     </FretboardNote>

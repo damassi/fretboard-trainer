@@ -13,8 +13,11 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
-import { FretboardMode, Note } from "src/utils/types"
-import { getFretboard } from "src/utils/fretboard/getFretboard"
+import {
+  FretboardMode,
+  Note,
+  Fretboard as FretboardMatrix,
+} from "src/utils/types"
 
 export interface NoteRendererProps {
   FretboardNote: typeof FretboardNote
@@ -31,8 +34,7 @@ interface FretboardProps {
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
-  const { fretboardMode } = useStore(state => state.settings)
-  const fretboard = getFretboard(fretboardMode)
+  const { fretboardMode, fretboard } = useStore(state => state.settings)
 
   return (
     <FretboardContainer>
@@ -47,7 +49,7 @@ export const Fretboard: React.FC<FretboardProps> = props => {
               const note = lookupNote({
                 stringIndex,
                 noteIndex: 0,
-                fretboardMode,
+                fretboard,
               })
 
               return (
@@ -81,6 +83,7 @@ const FretboardContainer = styled(Box)`
   background-size: 100% 100%;
   height: 260px;
   position: relative;
+  z-index: 1;
 `
 
 const NoteContainer = styled(Flex)`
@@ -203,14 +206,14 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
 interface NoteLookupProps {
   stringIndex: number
   noteIndex: number
-  fretboardMode: FretboardMode
+  fretboard: FretboardMatrix
 }
 
 function lookupNote(props: NoteLookupProps): Note {
-  const { stringIndex, noteIndex, fretboardMode } = props
+  const { stringIndex, noteIndex, fretboard } = props
   const noteLookup: any = [stringIndex, noteIndex]
   const note = getNote({
-    fretboardMode,
+    fretboard,
     position: noteLookup,
   })
   return note

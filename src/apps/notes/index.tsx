@@ -23,8 +23,8 @@ export const NotesApp: React.FC<RouteComponentProps> = () => {
 
       <Scoreboard />
       <Fretboard renderNote={props => <NoteRenderer {...props} />} />
-      <Answers />
       <NotesSettings />
+      <Answers />
     </>
   )
 }

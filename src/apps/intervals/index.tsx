@@ -23,8 +23,8 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
 
       <Scoreboard />
       <Fretboard renderNote={props => <NoteRenderer {...props} />} />
-      <Answers />
       <IntervalsSettings />
+      <Answers />
     </>
   )
 }

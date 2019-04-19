@@ -2,7 +2,7 @@ import { containsSharpOrFlat } from "./containsSharpOrFlat"
 import { getString } from "./getString"
 import { isEmpty, random } from "lodash"
 import { StringFocus } from "src/apps/notes/state/notesSettingsState"
-import { NotePosition, FretboardMode, Note } from "../types"
+import { NotePosition, FretboardMode, Note, Fretboard } from "../types"
 import { getFretboard } from "./getFretboard"
 
 /**
@@ -15,6 +15,7 @@ import { getFretboard } from "./getFretboard"
  */
 export function getNote(
   props: {
+    fretboard?: Fretboard
     fretboardMode?: FretboardMode
     position?: NotePosition
     startingFret?: number
@@ -39,8 +40,10 @@ export function getNote(
     note = position[1]
   }
 
+  // If passing a complete fretboard, use that; othewise build a new fretboard.
+  const fretboard = props.fretboard || getFretboard(fretboardMode)
   const stringName = getString(string)
-  const noteName = getFretboard(fretboardMode)[string][note]
+  const noteName = fretboard[string][note]
 
   // Re-run function if we return an invalid result
   const showAccidentals = fretboardMode !== "naturals"

@@ -1,3 +1,5 @@
+export type Fretboard = ScaleNote[][]
+
 export interface Note {
   note: string
   string?: GuitarString

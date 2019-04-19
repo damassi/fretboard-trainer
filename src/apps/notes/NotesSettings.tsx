@@ -1,8 +1,8 @@
 import React from "react"
-import { Box } from "rebass"
-import { CycleButton } from "src/components/ui/CycleButton"
 import { useActions, useStore } from "src/utils/hooks"
-import { Settings } from "src/apps/settings/Settings"
+import { Select } from "src/components/ui/Select"
+import { Settings } from "../settings/Settings"
+import { StringRange } from "src/utils/types"
 
 export const NotesSettings = () => {
   const { setStartingFret, setStringFocus } = useActions(
@@ -13,32 +13,37 @@ export const NotesSettings = () => {
 
   return (
     <Settings>
-      <Box mt={1}>
-        <CycleButton
-          selectedIndex={stringFocus}
-          onClick={({ index }) => setStringFocus(index)}
-          items={[
-            "All strings",
-            "string 1",
-            "string 2",
-            "string 3",
-            "string 4",
-            "string 5",
-            "string 6",
-          ]}
-        >
-          Focus on
-        </CycleButton>
-        <CycleButton
-          selectedIndex={startingFret}
-          items={[...Array(13)].map((_, fret) => String(fret))}
-          onClick={() => {
-            setStartingFret(Number(startingFret) + 1)
-          }}
-        >
-          Start at fret
-        </CycleButton>
-      </Box>
+      <Select
+        size="sm"
+        placeholder="Small"
+        defaultValue={stringFocus}
+        onChange={index => setStringFocus(Number(index) as StringRange)}
+      >
+        <optgroup label="String Focus">
+          <option value={0}>All strings</option>
+          <option value={1}>String 1</option>
+          <option value={2}>String 2</option>
+          <option value={3}>String 3</option>
+          <option value={4}>String 4</option>
+          <option value={5}>String 5</option>
+          <option value={6}>String 6</option>
+        </optgroup>
+      </Select>
+
+      <Select
+        size="sm"
+        placeholder="Small"
+        defaultValue={startingFret}
+        onChange={fret => setStartingFret(Number(fret + 1))}
+      >
+        <optgroup label="Fret Range">
+          <option value={0}>Start at fret 0</option>
+          <option value={3}>Fret 3</option>
+          <option value={5}>Fret 5</option>
+          <option value={7}>Fret 7</option>
+          <option value={9}>Fret 9</option>
+        </optgroup>
+      </Select>
     </Settings>
   )
 }

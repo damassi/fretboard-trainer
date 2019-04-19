@@ -1,13 +1,12 @@
 import React, { useRef } from "react"
 import styled from "styled-components"
-import { Flex, Box } from "rebass"
+import { Flex } from "rebass"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
-import { OpenEyeIcon } from "src/components/ui/OpenEyeIcon"
 import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
-import { VolumeToggle } from "src/components/ui/VolumeToggle"
+import { HintButton } from "src/components/ui/HintButton"
 
 export const Answers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
@@ -19,7 +18,7 @@ export const Answers = _props => {
   return (
     <Flex flexDirection="column" alignItems="center">
       <Spacer mt={1} />
-      <VolumeToggle />
+
       <Flex
         flexWrap="wrap"
         justifyContent="center"
@@ -61,26 +60,6 @@ export const Answers = _props => {
         }}
       />
     </Flex>
-  )
-}
-
-const HintButton = props => {
-  const { showHint } = useStore(state => state.settings)
-  const { toggleHint } = useActions(actions => actions.settings)
-
-  return (
-    <Box pt={2}>
-      <OpenEyeIcon
-        onClick={() => {
-          toggleHint()
-          props.onClick(!showHint)
-        }}
-        fill={showHint ? "white" : "black60"}
-        style={{
-          transform: `scale(${showHint ? 1.3 : 1})`,
-        }}
-      />
-    </Box>
   )
 }
 

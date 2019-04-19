@@ -3,6 +3,7 @@ import { Flex, Box } from "rebass"
 import styled from "styled-components"
 import { Sans, Display } from "src/components/ui/Typography"
 import { useStore } from "src/utils/hooks"
+import { useSpring, animated } from "react-spring"
 
 export const Scoreboard = () => {
   const { correctAnswers, incorrectAnswers, flashMessage } = useStore(
@@ -22,7 +23,7 @@ export const Scoreboard = () => {
             </Display>
           </FlashMessage>
         ) : (
-          <AnswersContainer>
+          <Answers>
             <Box mr={6}>
               <Sans>Correct</Sans>
               <Display size={7}>{correctAnswers}</Display>
@@ -31,7 +32,7 @@ export const Scoreboard = () => {
               <Sans>Incorrect</Sans>
               <Display size={7}>{incorrectAnswers}</Display>
             </Box>
-          </AnswersContainer>
+          </Answers>
         )}
       </ScoreBox>
     </ScoreboardContainer>
@@ -39,55 +40,50 @@ export const Scoreboard = () => {
 }
 
 const FlashMessage = ({ children }) => {
+  const animateProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: "scale(0.7)",
+    },
+    to: {
+      opacity: 1,
+      transform: "scale(1.2)",
+    },
+    config: {
+      mass: 1,
+      tension: 388,
+      friction: 26,
+    },
+  })
   return (
-    <FlashMessageContainer>
-      <Display>{children}</Display>
-    </FlashMessageContainer>
+    <animated.div style={animateProps}>
+      <Box>
+        <Display>{children}</Display>
+      </Box>
+    </animated.div>
   )
 }
 
-const FlashMessageContainer = styled(Box)`
-  position: relative;
-
-  animation-name: bounceIn;
-  animation-duration: 0.5s;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
-
-  top: 10px;
-  opacity: 0;
-  transform: scale(0.8);
-
-  @keyframes bounceIn {
-    0% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-      transform: scale(1);
-      top: 0;
-    }
-  }
-`
-
-const AnswersContainer = styled(Flex)`
-  animation-name: fadeIn;
-  animation-duration: 0.5s;
-  animation-fill-mode: both;
-
-  opacity: 0;
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-`
+const Answers = ({ children }) => {
+  const animateProps = useSpring({
+    from: {
+      opacity: 1, // TODO: Figure out how to best animate here
+    },
+    to: {
+      opacity: 1,
+    },
+    config: {
+      mass: 1,
+      tension: 388,
+      friction: 26,
+    },
+  })
+  return (
+    <animated.div style={animateProps}>
+      <Flex>{children}</Flex>
+    </animated.div>
+  )
+}
 
 const ScoreboardContainer = styled(Flex)`
   height: 60px;

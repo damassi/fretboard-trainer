@@ -9,7 +9,13 @@ export const VolumeToggle: React.FC = () => {
   const iconColor = isMuted ? color("black60") : color("white")
 
   return (
-    <Box onClick={() => toggleMuted()} style={{ cursor: "pointer" }}>
+    <Box
+      onClick={event => {
+        event.stopPropagation()
+        toggleMuted()
+      }}
+      style={{ cursor: "pointer" }}
+    >
       {isMuted ? (
         <svg
           width="25"

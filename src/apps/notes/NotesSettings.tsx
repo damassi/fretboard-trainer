@@ -20,13 +20,13 @@ export const NotesSettings = () => {
         onChange={index => setStringFocus(Number(index) as StringRange)}
       >
         <optgroup label="String Focus">
-          <option value={0}>All strings</option>
-          <option value={1}>String 1</option>
-          <option value={2}>String 2</option>
-          <option value={3}>String 3</option>
-          <option value={4}>String 4</option>
-          <option value={5}>String 5</option>
-          <option value={6}>String 6</option>
+          <option value={-1}>All strings</option>
+          <option value={0}>String 1</option>
+          <option value={1}>String 2</option>
+          <option value={2}>String 3</option>
+          <option value={3}>String 4</option>
+          <option value={4}>String 5</option>
+          <option value={5}>String 6</option>
         </optgroup>
       </Select>
 
@@ -34,11 +34,11 @@ export const NotesSettings = () => {
         size="sm"
         placeholder="Small"
         defaultValue={startingFret}
-        onChange={fret => setStartingFret(Number(fret + 1))}
+        onChange={fret => setStartingFret(Number(fret))}
       >
         <optgroup label="Fret Range">
-          <option value={0}>Start at fret 0</option>
-          <option value={3}>Fret 3</option>
+          <option value={0}>All frets</option>
+          <option value={3}>Start at fret 3</option>
           <option value={5}>Fret 5</option>
           <option value={7}>Fret 7</option>
           <option value={9}>Fret 9</option>

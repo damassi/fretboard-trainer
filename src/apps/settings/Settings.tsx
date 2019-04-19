@@ -13,8 +13,8 @@ import { useSpring, animated } from "react-spring"
 export const Settings = props => {
   const {
     setFretboardMode,
-    toggleMultipleChoice,
-    toggleNotes,
+    setMultipleChoice,
+    setShowNotes,
     toggleSettings,
   } = useActions(actions => actions.settings)
 
@@ -29,6 +29,11 @@ export const Settings = props => {
     to: {
       marginTop: showSettings ? 0 : -70,
       opacity: showSettings ? 1 : 0,
+    },
+    config: {
+      mass: 1,
+      tension: 388,
+      friction: 36,
     },
   })
 
@@ -52,22 +57,22 @@ export const Settings = props => {
               size="sm"
               placeholder="Small"
               defaultValue={multipleChoice}
-              onChange={() => toggleMultipleChoice()}
+              onChange={bool => setMultipleChoice(bool)}
             >
               <optgroup label="Answer Mode">
-                <option value="one">Multiple Choice</option>
-                <option value="two">Input</option>
+                <option value="true">Multiple Choice</option>
+                <option value="false">Input</option>
               </optgroup>
             </Select>
             <Select
               size="sm"
               placeholder="Small"
               defaultValue={showNotes}
-              onChange={() => toggleNotes()}
+              onChange={bool => setShowNotes(bool)}
             >
               <optgroup label="Note Visibility">
-                <option value="showNotes">Show notes</option>
-                <option value="hideNotes">Hide notes</option>
+                <option value="true">Show notes</option>
+                <option value="false">Hide notes</option>
               </optgroup>
             </Select>
             <Select

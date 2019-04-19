@@ -172,7 +172,7 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
       return css`
         justify-content: flex-start;
         > div {
-          margin-left: 10px;
+          margin-left: 10.3px;
         }
       `
     }

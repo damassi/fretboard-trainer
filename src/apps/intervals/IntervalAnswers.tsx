@@ -12,15 +12,23 @@ import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
 
 export const IntervalAnswers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
-  const answerInputRef = useRef(null)
+  const answerInputRef = useRef<HTMLInputElement>(null)
 
   const { multipleChoice } = useStore(state => state.settings)
   const { questions } = useStore(state => state.intervals)
 
-  // List is a displayable array of items
+  // List is a displayable array of items. We memoize it so that a random sample
+  // isn't taken each time state is updated.
   const questionsList = useMemo(() => {
     return questions.map(answer => sample(answer))
   }, [questions])
+
+  const handleFocusInput = () => {
+    const node = answerInputRef.current
+    if (node) {
+      node.focus()
+    }
+  }
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -53,8 +61,7 @@ export const IntervalAnswers = _props => {
             })}
           </>
         ) : (
-          // Create input
-          <Answer>
+          <Answer onClick={handleFocusInput}>
             <Input
               onKeyDown={submitAnswerOnEnter(pickAnswer)}
               ref={answerInputRef}
@@ -66,10 +73,8 @@ export const IntervalAnswers = _props => {
 
       <HintButton
         onClick={showHint => {
-          // Reenable focus on the input once the user is done peeking
           if (!multipleChoice && !showHint) {
-            // @ts-ignore
-            answerInputRef.current.focus()
+            handleFocusInput()
           }
         }}
       />

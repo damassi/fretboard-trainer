@@ -74,6 +74,9 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     currentNote,
     note => {
       switch (true) {
+        case showHint: {
+          return label === "1"
+        }
         case showNotes: {
           if (showIntervals) {
             return label === "1"

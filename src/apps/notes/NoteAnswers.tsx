@@ -14,7 +14,7 @@ export const NoteAnswers = _props => {
   const { questions } = useStore(state => state.notes)
   const { multipleChoice } = useStore(state => state.settings)
 
-  const answerInputRef = useRef(null)
+  const answerInputRef = useRef<HTMLInputElement>(null)
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -42,6 +42,12 @@ export const NoteAnswers = _props => {
           // Create input
           <Answer>
             <Input
+              onClick={() => {
+                const node = answerInputRef.current
+                if (node) {
+                  node.focus()
+                }
+              }}
               onKeyDown={submitAnswerOnEnter(pickAnswer)}
               ref={answerInputRef}
               autoFocus

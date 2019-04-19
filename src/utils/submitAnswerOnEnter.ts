@@ -2,7 +2,7 @@ import { HINT_VISIBILITY_TIME } from "./types"
 
 export function submitAnswerOnEnter(onSubmit) {
   return (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // ENTER
+    // User pressed ENTER
     if (event.keyCode === 13) {
       const input = event.currentTarget
       let [note, accidental = ""] = input.value.split("")

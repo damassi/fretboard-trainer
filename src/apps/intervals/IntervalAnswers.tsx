@@ -1,23 +1,31 @@
-import React, { useRef } from "react"
+import React, { useRef, useMemo } from "react"
 import styled from "styled-components"
 import { Flex } from "rebass"
+import { sample } from "lodash"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
 import { HintButton } from "src/components/ui/HintButton"
+import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
 
-export const Answers = _props => {
-  const { pickAnswer } = useActions(actions => actions.notes)
-  const { questions } = useStore(state => state.notes)
-  const { multipleChoice } = useStore(state => state.settings)
-
+export const IntervalAnswers = _props => {
+  const { pickAnswer } = useActions(actions => actions.intervals)
   const answerInputRef = useRef(null)
+
+  const { multipleChoice } = useStore(state => state.settings)
+  const { questions } = useStore(state => state.intervals)
+
+  // List is a displayable array of items
+  const questionsList = useMemo(() => {
+    return questions.map(answer => sample(answer))
+  }, [questions])
 
   return (
     <Flex flexDirection="column" alignItems="center">
       <Spacer mt={1} />
+
       <Flex
         flexWrap="wrap"
         justifyContent="center"
@@ -29,10 +37,17 @@ export const Answers = _props => {
         */}
         {multipleChoice ? (
           <>
-            {questions.map((answer, index) => {
+            {questionsList.map((answer, index) => {
               return (
-                <Answer onClick={() => pickAnswer(answer.note)} key={index}>
-                  {answer.note}
+                <Answer
+                  onClick={() => {
+                    // When picking an answer, send back the unsampled item to
+                    // compare against.
+                    pickAnswer(questions[index])
+                  }}
+                  key={index}
+                >
+                  {answer}
                 </Answer>
               )
             })}
@@ -65,13 +80,12 @@ export const Answers = _props => {
 const Answer = styled(({ children, className, ...props }) => {
   return (
     <Flex className={className} p={3} m={1} {...props}>
-      <Display size="8">{children}</Display>
+      <Display size="6">{children}</Display>
     </Flex>
   )
 })`
   border: 1px solid #666;
   cursor: pointer;
-  width: 10%;
   align-items: center;
   justify-content: center;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
@@ -105,35 +119,3 @@ const Input = styled.input.attrs({
   text-transform: uppercase;
   width: 40px;
 `
-
-// Helpers
-
-function submitAnswerOnEnter(onSubmit) {
-  return (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // ENTER
-    if (event.keyCode === 13) {
-      const input = event.currentTarget
-      let [note, accidental = ""] = input.value.split("")
-
-      if (accidental.toLowerCase() === "b") {
-        accidental = "♭"
-      }
-      if (accidental.toLowerCase() === "#") {
-        accidental = "♯"
-      }
-
-      const answer = (note + accidental).trim()
-      onSubmit(answer)
-
-      // Disable input while submitting
-      input.disabled = true
-
-      // Reset answer after submit
-      setTimeout(() => {
-        input.disabled = false
-        input.focus()
-        input.value = ""
-      }, 2200) // FIXME: Consolidate these timings with fretboard
-    }
-  }
-}

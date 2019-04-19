@@ -5,10 +5,10 @@ import { Fretboard } from "src/components/Fretboard/Fretboard"
 import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
-import { Answers } from "src/apps/intervals/Answers"
+import { IntervalAnswers } from "src/apps/intervals/IntervalAnswers"
 import { store } from "src/store"
 import { NoteRenderer } from "./NoteRenderer"
-import { IntervalsSettings } from "./IntervalsSettings"
+import { IntervalsSettings } from "./IntervalSettings"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
@@ -24,7 +24,7 @@ export const IntervalsApp: React.FC<RouteComponentProps> = () => {
       <Scoreboard />
       <Fretboard renderNote={props => <NoteRenderer {...props} />} />
       <IntervalsSettings />
-      <Answers />
+      <IntervalAnswers />
     </>
   )
 }

@@ -7,18 +7,18 @@ import { useStore, useActions } from "src/utils/hooks"
 import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
 import { HintButton } from "src/components/ui/HintButton"
+import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
 
-export const Answers = _props => {
-  const { pickAnswer } = useActions(actions => actions.intervals)
-  const answerInputRef = useRef(null)
-
+export const NoteAnswers = _props => {
+  const { pickAnswer } = useActions(actions => actions.notes)
+  const { questions } = useStore(state => state.notes)
   const { multipleChoice } = useStore(state => state.settings)
-  const { questions } = useStore(state => state.intervals)
+
+  const answerInputRef = useRef(null)
 
   return (
     <Flex flexDirection="column" alignItems="center">
       <Spacer mt={1} />
-
       <Flex
         flexWrap="wrap"
         justifyContent="center"
@@ -32,8 +32,8 @@ export const Answers = _props => {
           <>
             {questions.map((answer, index) => {
               return (
-                <Answer onClick={() => pickAnswer(answer)} key={index}>
-                  {answer}
+                <Answer onClick={() => pickAnswer(answer.note)} key={index}>
+                  {answer.note}
                 </Answer>
               )
             })}
@@ -66,12 +66,13 @@ export const Answers = _props => {
 const Answer = styled(({ children, className, ...props }) => {
   return (
     <Flex className={className} p={3} m={1} {...props}>
-      <Display size="6">{children}</Display>
+      <Display size="8">{children}</Display>
     </Flex>
   )
 })`
   border: 1px solid #666;
   cursor: pointer;
+  width: 10%;
   align-items: center;
   justify-content: center;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
@@ -105,35 +106,3 @@ const Input = styled.input.attrs({
   text-transform: uppercase;
   width: 40px;
 `
-
-// Helpers
-
-function submitAnswerOnEnter(onSubmit) {
-  return (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // ENTER
-    if (event.keyCode === 13) {
-      const input = event.currentTarget
-      let [note, accidental = ""] = input.value.split("")
-
-      if (accidental.toLowerCase() === "b") {
-        accidental = "♭"
-      }
-      if (accidental.toLowerCase() === "#") {
-        accidental = "♯"
-      }
-
-      const answer = (note + accidental).trim()
-      onSubmit(answer)
-
-      // Disable input while submitting
-      input.disabled = true
-
-      // Reset answer after submit
-      setTimeout(() => {
-        input.disabled = false
-        input.focus()
-        input.value = ""
-      }, 2200) // FIXME: Consolidate these timings with fretboard
-    }
-  }
-}

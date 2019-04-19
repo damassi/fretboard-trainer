@@ -4,7 +4,7 @@ import { Select } from "src/components/ui/Select"
 import { Settings } from "../settings/Settings"
 import { StringRange } from "src/utils/types"
 
-export const NotesSettings = () => {
+export const NoteSettings = () => {
   const { setStartingFret, setStringFocus } = useActions(
     actions => actions.notes.settings
   )

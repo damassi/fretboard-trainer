@@ -1,10 +1,11 @@
-import { isEqual, sample, sampleSize, shuffle, uniq, uniqBy } from "lodash"
+import { isEqual, sampleSize, shuffle, uniq, uniqBy } from "lodash"
 import { Action, Thunk, thunk, listen, Listen } from "easy-peasy"
+
 import { StoreModel } from "src/store"
 import { getNote } from "src/utils/fretboard/getNote"
-import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
-import { IntervalMode, intervalsSettingsState } from "./intervalsSettingsState"
+import { IntervalMode, intervalsSettingsState } from "./intervalSettingsState"
 import { settingsState } from "src/apps/settings/settingsState"
+import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
 
 import {
   Note,
@@ -31,7 +32,7 @@ export interface Intervals {
   setQuestions: Action<Intervals, Interval[]>
 }
 
-export const intervalsState: Intervals = {
+export const intervalState: Intervals = {
   // @ts-ignore
   currentInterval: null,
   intervals: [],
@@ -86,14 +87,17 @@ export const intervalsState: Intervals = {
       intervalMode,
     })
 
+    // const rootNote = interval.notes[0]
+    // const intervals = getIntervals({ note: rootNote })
+
+    // console.log(rootNote, intervals)
+
     // Pick 3 random questions while adding the answer into the mix, and then
     // from the answers take a random option from the array of possibilities.
     // E.g., [flat 5, sharp 4] -> "sharp 4"
     const getQuestions = () => {
       const takeThree = sampleSize(intervalList, ANSWER_COUNT - 1)
-      const questions = shuffle(
-        uniq([...takeThree, [interval.label]]).map(q => sample(q))
-      )
+      const questions = shuffle(uniq([...takeThree, interval.label]))
 
       if (questions.length < ANSWER_COUNT) {
         return getQuestions()
@@ -103,6 +107,7 @@ export const intervalsState: Intervals = {
     }
 
     const questions = getQuestions()
+
     actions.setInterval(interval)
     actions.setQuestions(questions)
   }),

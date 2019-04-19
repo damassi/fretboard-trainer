@@ -1,7 +1,7 @@
 import { containsSharpOrFlat } from "./containsSharpOrFlat"
 import { getString } from "./getString"
 import { isEmpty, random } from "lodash"
-import { StringFocus } from "src/apps/notes/state/notesSettingsState"
+import { StringFocus } from "src/apps/notes/state/noteSettingsState"
 import { NotePosition, FretboardMode, Note, Fretboard } from "../types"
 import { getFretboard } from "./getFretboard"
 
@@ -26,7 +26,7 @@ export function getNote(
     fretboardMode = "flats",
     position,
     startingFret = 1,
-    stringFocus = 0,
+    stringFocus = -1, // -1 = disable string focus
   } = props
 
   let string

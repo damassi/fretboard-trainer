@@ -48,7 +48,7 @@ export const NoteAnswers = _props => {
                   node.focus()
                 }
               }}
-              onKeyDown={submitAnswerOnEnter(pickAnswer)}
+              onKeyDown={submitAnswerOnEnter(pickAnswer, "notes")}
               ref={answerInputRef}
               autoFocus
             />

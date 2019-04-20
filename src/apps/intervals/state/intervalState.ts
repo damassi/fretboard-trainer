@@ -1,4 +1,4 @@
-import { isEqual, sampleSize, shuffle, uniq, uniqBy } from "lodash"
+import { isEqual, isString, sampleSize, shuffle, uniq, uniqBy } from "lodash"
 import { Action, Thunk, thunk, listen, Listen } from "easy-peasy"
 
 import { StoreModel } from "src/store"
@@ -15,6 +15,7 @@ import {
   Interval,
   RelativeInterval,
   HINT_VISIBILITY_TIME,
+  IntervalLabels,
 } from "src/utils/types"
 
 export interface Intervals {
@@ -61,7 +62,14 @@ export const intervalState: Intervals = {
       intervals: { currentInterval },
     } = getState() as StoreModel
 
-    const isCorrect = isEqual(selectedInterval, currentInterval.label)
+    let isCorrect
+    if (isString(selectedInterval)) {
+      isCorrect = currentInterval.label.includes(
+        selectedInterval as IntervalLabels
+      )
+    } else {
+      isCorrect = isEqual(selectedInterval, currentInterval.label)
+    }
 
     if (isCorrect) {
       dispatch.scoreboard.correctAnswer("correct!")

@@ -63,7 +63,7 @@ export const IntervalAnswers = _props => {
         ) : (
           <Answer onClick={handleFocusInput}>
             <Input
-              onKeyDown={submitAnswerOnEnter(pickAnswer)}
+              onKeyDown={submitAnswerOnEnter(pickAnswer, "intervals")}
               ref={answerInputRef}
               autoFocus
             />

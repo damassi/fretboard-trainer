@@ -12,7 +12,7 @@ import { IntervalsSettings } from "./IntervalSettings"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
-    store.dispatch.intervals.pickRandomInterval()
+    store.dispatch.settings.bootLessonModule("intervals")
   }, [])
 
   return (

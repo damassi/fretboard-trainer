@@ -85,7 +85,7 @@ export const intervalState: Intervals = {
 
   pickRandomInterval: thunk((actions, _, { getState }) => {
     const {
-      settings: { fretboard, isMuted },
+      settings: { fretboard, isMuted, currentLessonModule },
       intervals: {
         settings: { intervalMode },
       },
@@ -113,8 +113,13 @@ export const intervalState: Intervals = {
     actions.setInterval(interval)
     actions.setQuestions(getQuestions())
 
-    if (!isMuted) {
-      playInterval(interval.notes)
+    // TODO: Find a better way to section off cross-module state. In this
+    // instance changing the fretboardMode in the settings will trigger a new
+    // interval (and a new note, in the notes module), simulating a reset.
+    if (currentLessonModule === "intervals") {
+      if (!isMuted) {
+        playInterval(interval.notes)
+      }
     }
   }),
 

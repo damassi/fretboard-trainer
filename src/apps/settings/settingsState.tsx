@@ -1,9 +1,13 @@
-import { Action, Listen, listen, thunk } from "easy-peasy"
+import { Action, Listen, listen, thunk, Thunk } from "easy-peasy"
 import { FretboardMode, Fretboard, HINT_VISIBILITY_TIME } from "src/utils/types"
 import { getFretboard } from "src/utils/fretboard/getFretboard"
 import { scoreboard } from "src/components/Scoreboard/scoreboardState"
+import { StoreModel } from "src/store"
+
+type LessonModule = "notes" | "intervals"
 
 export interface SettingsModel {
+  currentLessonModule: LessonModule
   fretboard: Fretboard
   fretboardMode: FretboardMode
   isMuted: boolean
@@ -15,7 +19,9 @@ export interface SettingsModel {
 
   listeners: Listen<SettingsModel>
 
+  bootLessonModule: Thunk<SettingsModel, LessonModule, any, StoreModel>
   setFretboardMode: Action<SettingsModel, FretboardMode>
+  setLessonModule: Action<SettingsModel, LessonModule>
   setMultipleChoice: Action<SettingsModel, string>
   setShowNotes: Action<SettingsModel, string>
   setHintVisibility: Action<SettingsModel, boolean>
@@ -27,6 +33,7 @@ export interface SettingsModel {
 }
 
 export const settingsState: SettingsModel = {
+  currentLessonModule: "notes",
   fretboard: getFretboard("naturals"),
 
   fretboardMode: "naturals",
@@ -51,9 +58,24 @@ export const settingsState: SettingsModel = {
     )
   }),
 
+  bootLessonModule: thunk((actions, lessonModule, { dispatch }) => {
+    actions.setLessonModule(lessonModule)
+
+    switch (lessonModule) {
+      case "notes":
+        return dispatch.notes.pickRandomNote()
+      case "intervals":
+        return dispatch.intervals.pickRandomInterval()
+    }
+  }),
+
   setFretboardMode: (state, fretboardMode) => {
     state.fretboardMode = fretboardMode
     state.fretboard = getFretboard(state.fretboardMode)
+  },
+
+  setLessonModule: (state, lessonModule) => {
+    state.currentLessonModule = lessonModule
   },
 
   setMultipleChoice: (state, multipleChoice) => {

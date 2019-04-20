@@ -167,8 +167,8 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
       return css`
         justify-content: center;
       `
-    } else {
       /* Align inner text content, ignoring accidental */
+    } else {
       return css`
         justify-content: flex-start;
         > div {

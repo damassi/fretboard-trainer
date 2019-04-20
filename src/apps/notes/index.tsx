@@ -18,7 +18,7 @@ export const NotesApp: React.FC<RouteComponentProps> = () => {
   return (
     <>
       <Link to="/intervals">
-        <Posterboard>Fretboard Trainer</Posterboard>
+        <Posterboard next="Intervals">Fretboard Trainer</Posterboard>
       </Link>
 
       <Scoreboard />

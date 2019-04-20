@@ -12,7 +12,7 @@ import { NoteSettings } from "./NoteSettings"
 
 export const NotesApp: React.FC<RouteComponentProps> = () => {
   useEffect(() => {
-    store.dispatch.notes.pickRandomNote()
+    store.dispatch.settings.bootLessonModule("notes")
   }, [])
 
   return (

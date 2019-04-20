@@ -26,7 +26,7 @@ export const notesState: Fretboard = {
     note: "c",
     position: [5, 3],
   },
-  questions: [],
+  questions: [...new Array(4)].map(getNote),
   questionCount: 4,
 
   // When these actions fire pick a new note, effectively resetting the

@@ -193,6 +193,7 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
   /* TODO: Move this animation out of CSS */
   animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};
   animation-duration: 0.5s;
+  animation-delay: 50ms;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
 

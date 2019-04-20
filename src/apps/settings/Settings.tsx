@@ -43,7 +43,8 @@ export const Settings = props => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
-      my={2}
+      mt={2}
+      mb={1}
     >
       <animated.div style={animateProps}>
         <Flex my={1}>
@@ -71,8 +72,8 @@ export const Settings = props => {
               onChange={bool => setShowNotes(bool)}
             >
               <optgroup label="Note Visibility">
-                <option value="true">Show notes</option>
                 <option value="false">Hide notes</option>
+                <option value="true">Show notes</option>
               </optgroup>
             </Select>
             <Select

@@ -1,12 +1,5 @@
-import {
-  intervalList,
-  IntervalLabels,
-  Note,
-  FretboardMode,
-  Fretboard,
-} from "../types"
+import { intervalList, Note, FretboardMode, Fretboard } from "../types"
 import { getFretboard } from "./getFretboard"
-import { last } from "lodash"
 
 interface IntervalsProps {
   note: Note
@@ -32,7 +25,7 @@ export function getIntervals({
     // Starting at the selected note index, fill array forward with intervals
     while (forwardFret < fretboardLength) {
       const intervalLabel = intervalList[intervalIndex]
-      intervals[forwardFret] = last<IntervalLabels>(intervalLabel)
+      intervals[forwardFret] = intervalLabel
       intervalIndex++
       forwardFret++
     }
@@ -45,7 +38,7 @@ export function getIntervals({
       intervalIndex--
       backwardFret--
       const intervalLabel = intervalList[intervalIndex]
-      intervals[backwardFret] = last<IntervalLabels>(intervalLabel)
+      intervals[backwardFret] = intervalLabel
     }
 
     return intervals

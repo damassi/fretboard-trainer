@@ -13,7 +13,7 @@ export interface NotesSettings {
 
 export const notesSettingsState: NotesSettings = {
   startingFret: 1,
-  stringFocus: 0, // 0 is disabled
+  stringFocus: -1, // -1 is disabled
 
   setStartingFret: (state, startingFret) => {
     // Octive

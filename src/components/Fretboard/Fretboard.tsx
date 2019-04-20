@@ -6,6 +6,12 @@ import { getNote } from "src/utils/fretboard/getNote"
 import { Box, Flex } from "rebass"
 
 import {
+  FretboardMode,
+  Note,
+  Fretboard as FretboardMatrix,
+} from "src/utils/types"
+
+import {
   width,
   height,
   WidthProps,
@@ -13,11 +19,6 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
-import {
-  FretboardMode,
-  Note,
-  Fretboard as FretboardMatrix,
-} from "src/utils/types"
 
 export interface NoteRendererProps {
   FretboardNote: typeof FretboardNote
@@ -167,12 +168,12 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
       return css`
         justify-content: center;
       `
-    } else {
       /* Align inner text content, ignoring accidental */
+    } else {
       return css`
         justify-content: flex-start;
         > div {
-          margin-left: 9px;
+          margin-left: 10.3px;
         }
       `
     }

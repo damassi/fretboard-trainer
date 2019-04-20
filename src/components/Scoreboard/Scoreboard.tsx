@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Flex, Box } from "rebass"
 import styled from "styled-components"
 import { Sans, Display } from "src/components/ui/Typography"
@@ -9,6 +9,12 @@ export const Scoreboard = () => {
   const { correctAnswers, incorrectAnswers, flashMessage } = useStore(
     state => state.scoreboard
   )
+
+  // Only fade leaderboard in and out post-mount
+  const [isMounted, toggleMounted] = useState(false)
+  useEffect(() => {
+    toggleMounted(true)
+  }, [])
 
   return (
     <ScoreboardContainer justifyContent="center" mb={4}>
@@ -23,7 +29,7 @@ export const Scoreboard = () => {
             </Display>
           </FlashMessage>
         ) : (
-          <Answers>
+          <Answers isMounted={isMounted}>
             <Box mr={6}>
               <Sans>Correct</Sans>
               <Display size={7}>{correctAnswers}</Display>
@@ -64,18 +70,18 @@ const FlashMessage = ({ children }) => {
   )
 }
 
-const Answers = ({ children }) => {
+const Answers = ({ children, isMounted }) => {
   const animateProps = useSpring({
     from: {
-      opacity: 1, // TODO: Figure out how to best animate here
+      opacity: isMounted ? 0 : 1,
     },
     to: {
       opacity: 1,
     },
     config: {
       mass: 1,
-      tension: 388,
-      friction: 26,
+      tension: 100,
+      friction: 50,
     },
   })
   return (

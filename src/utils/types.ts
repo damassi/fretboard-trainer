@@ -73,7 +73,7 @@ export type IntervalLabels =
 
 export type GuitarString = "E" | "b" | "g" | "d" | "a" | "e"
 
-export type StringRange = 0 | 1 | 2 | 3 | 4 | 5
+export type StringRange = -1 | 0 | 1 | 2 | 3 | 4 | 5
 
 export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 // prettier-ignore
 

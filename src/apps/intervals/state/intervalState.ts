@@ -95,11 +95,6 @@ export const intervalState: Intervals = {
       intervalMode,
     })
 
-    // const rootNote = interval.notes[0]
-    // const intervals = getIntervals({ note: rootNote })
-
-    // console.log(rootNote, intervals)
-
     // Pick 3 random questions while adding the answer into the mix, and then
     // from the answers take a random option from the array of possibilities.
     // E.g., [flat 5, sharp 4] -> "sharp 4"

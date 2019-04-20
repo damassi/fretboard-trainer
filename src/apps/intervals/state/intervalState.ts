@@ -17,6 +17,7 @@ import {
   HINT_VISIBILITY_TIME,
   IntervalLabels,
 } from "src/utils/types"
+import { playInterval } from "src/utils/fretboard/playNote"
 
 export interface Intervals {
   currentInterval: Interval
@@ -72,9 +73,9 @@ export const intervalState: Intervals = {
     }
 
     if (isCorrect) {
-      dispatch.scoreboard.correctAnswer("correct!")
+      dispatch.scoreboard.correctAnswer("Correct!")
     } else {
-      dispatch.scoreboard.incorrectAnswer("incorrect!")
+      dispatch.scoreboard.incorrectAnswer("Incorrect!")
     }
 
     setTimeout(() => {
@@ -113,6 +114,8 @@ export const intervalState: Intervals = {
 
     actions.setInterval(interval)
     actions.setQuestions(questions)
+
+    playInterval(interval.notes)
   }),
 
   setInterval: (state, interval) => {
@@ -162,7 +165,7 @@ function pickRandomInterval(props: {
     }
 
     /**
-     * In intermediate mode, permit decention, where an interval can fall *below*
+     * In intermediate mode, permit descention, where an interval can fall *below*
      * the root note. Other basic rules apply
      */
     case "intermediate": {

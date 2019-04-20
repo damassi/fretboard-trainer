@@ -19,6 +19,7 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
+import { playNote } from "src/utils/fretboard/playNote"
 
 export interface NoteRendererProps {
   FretboardNote: typeof FretboardNote
@@ -35,7 +36,9 @@ interface FretboardProps {
 }
 
 export const Fretboard: React.FC<FretboardProps> = props => {
-  const { fretboardMode, fretboard } = useStore(state => state.settings)
+  const { fretboardMode, fretboard, isMuted } = useStore(
+    state => state.settings
+  )
 
   return (
     <FretboardContainer>
@@ -58,7 +61,12 @@ export const Fretboard: React.FC<FretboardProps> = props => {
                   key={noteIndex}
                   style={notePosition}
                   onClick={() =>
-                    logNote({ stringIndex, noteIndex, fretboardMode })
+                    logNotePlayAudio({
+                      stringIndex,
+                      noteIndex,
+                      fretboardMode,
+                      isMuted,
+                    })
                   }
                 >
                   {props.renderNote({
@@ -167,13 +175,16 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
     if (props.showIntervals) {
       return css`
         justify-content: center;
+        > div {
+          margin-left: -1.4px;
+        }
       `
       /* Align inner text content, ignoring accidental */
     } else {
       return css`
         justify-content: flex-start;
         > div {
-          margin-left: 10.3px;
+          margin-left: 9.5px;
         }
       `
     }
@@ -220,8 +231,11 @@ function lookupNote(props: NoteLookupProps): Note {
   return note
 }
 
-function logNote(props) {
+function logNotePlayAudio(props) {
   const note = lookupNote(props)
+  if (!props.isMuted) {
+    playNote(note)
+  }
   console.warn(note)
 }
 

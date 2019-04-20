@@ -14,8 +14,14 @@ export const NoteAnswers = _props => {
   const { pickAnswer } = useActions(actions => actions.notes)
   const { questions } = useStore(state => state.notes)
   const { multipleChoice } = useStore(state => state.settings)
-
   const answerInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFocusInput = () => {
+    const node = answerInputRef.current
+    if (node) {
+      node.focus()
+    }
+  }
 
   return (
     <Flex flexDirection="column" alignItems="center">
@@ -42,14 +48,8 @@ export const NoteAnswers = _props => {
           </>
         ) : (
           // Create input
-          <Answer>
+          <Answer onClick={handleFocusInput}>
             <Input
-              onClick={() => {
-                const node = answerInputRef.current
-                if (node) {
-                  node.focus()
-                }
-              }}
               onKeyDown={submitAnswerOnEnter(pickAnswer, "notes")}
               ref={answerInputRef}
               autoFocus
@@ -62,8 +62,7 @@ export const NoteAnswers = _props => {
         onClick={showHint => {
           // Reenable focus on the input once the user is done peeking
           if (!multipleChoice && !showHint) {
-            // @ts-ignore
-            answerInputRef.current.focus()
+            handleFocusInput()
           }
         }}
       />

@@ -3,9 +3,9 @@ import { isEqual, shuffle, times, uniqBy } from "lodash"
 import { StoreModel } from "src/store"
 import { notes as notesModel } from "src/apps/notes/state"
 import { settingsState } from "src/apps/settings/settingsState"
-import { Howl } from "howler"
 import { getNote } from "src/utils/fretboard/getNote"
 import { Note, HINT_VISIBILITY_TIME, ANSWER_COUNT } from "src/utils/types"
+import { playNote } from "src/utils/fretboard/playNote"
 
 export interface Fretboard {
   currentNote: Note
@@ -61,16 +61,8 @@ export const notesState: Fretboard = {
 
     if (isCorrect) {
       dispatch.scoreboard.correctAnswer("correct!")
-
-      // TODO: Move sound playback to <Fretboard />
       if (!isMuted) {
-        const [string, note] = currentNote.position
-        const soundFile = `/audio/${string}-${note}.mp3`
-        const sound = new Howl({
-          src: [soundFile],
-          volume: 0.3,
-        })
-        sound.play()
+        playNote(currentNote)
       }
     } else {
       dispatch.scoreboard.incorrectAnswer("incorrect!")

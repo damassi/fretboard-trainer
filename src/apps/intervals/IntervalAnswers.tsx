@@ -101,7 +101,7 @@ const Answer = styled(({ children, className, ...props }) => {
     config: {
       mass: 1,
       tension: 388,
-      friction: 16,
+      friction: 26,
     },
   })
 

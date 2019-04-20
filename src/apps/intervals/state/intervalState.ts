@@ -85,7 +85,7 @@ export const intervalState: Intervals = {
 
   pickRandomInterval: thunk((actions, _, { getState }) => {
     const {
-      settings: { fretboard },
+      settings: { fretboard, isMuted },
       intervals: {
         settings: { intervalMode },
       },
@@ -110,12 +110,12 @@ export const intervalState: Intervals = {
       }
     }
 
-    const questions = getQuestions()
-
     actions.setInterval(interval)
-    actions.setQuestions(questions)
+    actions.setQuestions(getQuestions())
 
-    playInterval(interval.notes)
+    if (!isMuted) {
+      playInterval(interval.notes)
+    }
   }),
 
   setInterval: (state, interval) => {

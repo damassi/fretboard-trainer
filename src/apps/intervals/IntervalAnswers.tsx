@@ -9,6 +9,7 @@ import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
 import { HintButton } from "src/components/ui/HintButton"
 import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
+import { useSpring, animated } from "react-spring"
 
 export const IntervalAnswers = _props => {
   const { pickAnswer } = useActions(actions => actions.intervals)
@@ -39,6 +40,7 @@ export const IntervalAnswers = _props => {
         justifyContent="center"
         width="100%"
         alignItems="center"
+        style={{ minHeight: 130 }}
       >
         {/*
           Create list of selectable, multiple choice answers
@@ -83,10 +85,32 @@ export const IntervalAnswers = _props => {
 }
 
 const Answer = styled(({ children, className, ...props }) => {
+  const animateProps = useSpring({
+    from: {
+      position: "relative",
+      visibility: "hidden",
+      opacity: 0,
+      transform: "translateY(-10px)",
+    },
+    to: {
+      visibility: "visible",
+      opacity: 1,
+      transform: "translateY(0px)",
+    },
+    delay: 200,
+    config: {
+      mass: 1,
+      tension: 388,
+      friction: 16,
+    },
+  })
+
   return (
-    <Flex className={className} p={3} m={1} {...props}>
-      <Display size="6">{children}</Display>
-    </Flex>
+    <animated.div style={animateProps}>
+      <Flex className={className} p={3} m={1} {...props}>
+        <Display size="6">{children}</Display>
+      </Flex>
+    </animated.div>
   )
 })`
   border: 1px solid #666;

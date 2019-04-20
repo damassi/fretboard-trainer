@@ -38,7 +38,9 @@ export const intervalState: Intervals = {
   // @ts-ignore
   currentInterval: null,
   intervals: [],
-  questions: [],
+  // FIXME: Figure out how to type this
+  // @ts-ignore
+  questions: ["1", "2", "3", "4"],
 
   listeners: listen(on => {
     const newIntervalsActions = [
@@ -73,9 +75,9 @@ export const intervalState: Intervals = {
     }
 
     if (isCorrect) {
-      dispatch.scoreboard.correctAnswer("Correct!")
+      dispatch.scoreboard.correctAnswer("correct!")
     } else {
-      dispatch.scoreboard.incorrectAnswer("Incorrect!")
+      dispatch.scoreboard.incorrectAnswer("incorrect!")
     }
 
     setTimeout(() => {

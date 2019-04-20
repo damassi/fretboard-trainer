@@ -8,6 +8,7 @@ import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
 import { HintButton } from "src/components/ui/HintButton"
 import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
+import { useSpring, animated } from "react-spring"
 
 export const NoteAnswers = _props => {
   const { pickAnswer } = useActions(actions => actions.notes)
@@ -24,6 +25,7 @@ export const NoteAnswers = _props => {
         justifyContent="center"
         width="100%"
         alignItems="center"
+        style={{ minHeight: 130 }}
       >
         {/*
           Create list of selectable, multiple choice answers
@@ -70,15 +72,37 @@ export const NoteAnswers = _props => {
 }
 
 const Answer = styled(({ children, className, ...props }) => {
+  const animateProps = useSpring({
+    from: {
+      position: "relative",
+      visibility: "hidden",
+      opacity: 0,
+      transform: "translateY(-10px)",
+    },
+    to: {
+      visibility: "visible",
+      opacity: 1,
+      transform: "translateY(0px)",
+    },
+    delay: 200,
+    config: {
+      mass: 1,
+      tension: 388,
+      friction: 26,
+    },
+  })
+
   return (
-    <Flex className={className} p={3} m={1} {...props}>
-      <Display size="8">{children}</Display>
-    </Flex>
+    <animated.div style={animateProps}>
+      <Flex className={className} p={3} m={1} {...props}>
+        <Display size="8">{children}</Display>
+      </Flex>
+    </animated.div>
   )
 })`
   border: 1px solid #666;
   cursor: pointer;
-  width: 10%;
+  width: 80%;
   align-items: center;
   justify-content: center;
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);

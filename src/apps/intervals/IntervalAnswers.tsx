@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Flex } from "rebass"
 import { last, sample } from "lodash"
 
-import { Display } from "src/components/ui/Typography"
+import { DisplayAlt } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
 import { font, fontSize } from "src/Theme"
 import { Spacer } from "src/components/ui/Spacer"
@@ -11,7 +11,7 @@ import { HintButton } from "src/components/ui/HintButton"
 import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
 import { useSpring, animated } from "react-spring"
 
-export const IntervalAnswers = _props => {
+export const IntervalAnswers = () => {
   const answerInputRef = useRef<HTMLInputElement>(null)
   const { pickAnswer } = useActions(actions => actions.intervals)
   const { multipleChoice } = useStore(state => state.settings)
@@ -123,7 +123,9 @@ const Answer = styled(({ children, className, ...props }) => {
   return (
     <animated.div style={multipleChoice ? animateProps : {}}>
       <Flex className={className} p={3} m={1} {...props}>
-        <Display size="6">{children}</Display>
+        <DisplayAlt size="7" weight="black">
+          {children}
+        </DisplayAlt>
       </Flex>
     </animated.div>
   )
@@ -135,6 +137,7 @@ const Answer = styled(({ children, className, ...props }) => {
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
   user-select: none;
   min-width: 110px;
+  width: 130px;
 
   &:hover {
     background: white;
@@ -155,12 +158,12 @@ const Input = styled.input.attrs({
   border-radius: 4px;
   border: 0;
   color: white;
-  font-family: ${font("display")};
+  font-family: ${font("displayAlt")};
 
   ${fontSize("8")};
+  font-weight: 900;
 
   outline: none;
   text-align: center;
   text-transform: uppercase;
-  width: 40px;
 `

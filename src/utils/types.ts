@@ -1,3 +1,8 @@
+/**
+ * The lesson module current being interacted with
+ */
+export type LessonModule = "notes" | "intervals"
+
 export type Fretboard = ScaleNote[][]
 
 export interface Note {

@@ -1,14 +1,14 @@
 import React from "react"
 import { isEqual } from "lodash"
 
-import { Display } from "src/components/ui/Typography"
+import { DisplayAlt } from "src/components/ui/Typography"
 import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
 import { useStore } from "src/utils/hooks"
 import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 
-export const NoteRenderer: React.FC<NoteRendererProps> = props => {
+export const NoteRenderer: React.FC<NoteRendererProps> = React.memo(props => {
   const { FretboardNote, noteLabel, stringIndex, noteIndex } = props
-  const { fretboardMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
+  const { currentLessonModule, fretboardMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
   const { currentNote } = useStore(state => state.notes)
   const isCurrentNote = isEqual(currentNote.position, [stringIndex, noteIndex])
 
@@ -28,16 +28,21 @@ export const NoteRenderer: React.FC<NoteRendererProps> = props => {
   }
 
   const showLabel = getVisibility()
-  const isRoot = !showHint && showLabel && noteLabel === currentNote.note
+  const isRoot = showLabel && noteLabel === currentNote.note
 
   return (
     <FretboardNote
+      currentLessonModule={currentLessonModule}
+      fretboardMode={fretboardMode}
+      isRoot={isRoot}
       selected={isCurrentNote}
       visible={showLabel}
-      isRoot={isRoot}
-      fretboardMode={fretboardMode}
     >
-      {showLabel && <Display>{noteLabel}</Display>}
+      {showLabel && (
+        <DisplayAlt size="3" weight="black">
+          {noteLabel}
+        </DisplayAlt>
+      )}
     </FretboardNote>
   )
-}
+})

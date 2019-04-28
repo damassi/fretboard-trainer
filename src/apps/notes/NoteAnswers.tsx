@@ -48,7 +48,7 @@ export const NoteAnswers = _props => {
           </>
         ) : (
           // Create input
-          <Answer onClick={handleFocusInput}>
+          <Answer onClick={handleFocusInput} multipleChoice={multipleChoice}>
             <Input
               onKeyDown={submitAnswerOnEnter(pickAnswer, "notes")}
               ref={answerInputRef}
@@ -70,7 +70,7 @@ export const NoteAnswers = _props => {
   )
 }
 
-const Answer = styled(({ children, className, ...props }) => {
+const Answer = styled(({ children, className, multipleChoice, ...props }) => {
   const animateProps = useSpring({
     from: {
       position: "relative",
@@ -92,7 +92,7 @@ const Answer = styled(({ children, className, ...props }) => {
   })
 
   return (
-    <animated.div style={animateProps}>
+    <animated.div style={multipleChoice ? animateProps : {}}>
       <Flex className={className} p={3} m={1} {...props}>
         <Display size="8">{children}</Display>
       </Flex>

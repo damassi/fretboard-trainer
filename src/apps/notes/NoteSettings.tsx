@@ -5,8 +5,10 @@ import { Settings } from "../settings/Settings"
 import { StringRange } from "src/utils/types"
 
 export const NoteSettings = () => {
-  const { setStringFocus } = useActions(actions => actions.notes.settings)
-  const { stringFocus } = useStore(state => state.notes.settings)
+  const { setStringFocus, setStartingFret } = useActions(
+    actions => actions.notes.settings
+  )
+  const { stringFocus, startingFret } = useStore(state => state.notes.settings)
 
   return (
     <Settings>
@@ -27,9 +29,6 @@ export const NoteSettings = () => {
         </optgroup>
       </Select>
 
-      {/*
-        TODO: Fix weird infinite loop
-
       <Select
         size="sm"
         placeholder="Small"
@@ -41,10 +40,8 @@ export const NoteSettings = () => {
           <option value={3}>Start at fret 3</option>
           <option value={5}>Fret 5</option>
           <option value={7}>Fret 7</option>
-          <option value={9}>Fret 9</option>
         </optgroup>
       </Select>
-      */}
     </Settings>
   )
 }

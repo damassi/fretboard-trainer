@@ -165,5 +165,5 @@ const Input = styled.input.attrs({
 
   outline: none;
   text-align: center;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 `

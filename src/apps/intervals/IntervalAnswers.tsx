@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from "react"
 import styled from "styled-components"
 import { Flex } from "rebass"
-import { sample } from "lodash"
+import { last, sample } from "lodash"
 
 import { Display } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
@@ -12,16 +12,29 @@ import { submitAnswerOnEnter } from "src/utils/submitAnswerOnEnter"
 import { useSpring, animated } from "react-spring"
 
 export const IntervalAnswers = _props => {
-  const { pickAnswer } = useActions(actions => actions.intervals)
   const answerInputRef = useRef<HTMLInputElement>(null)
-
+  const { pickAnswer } = useActions(actions => actions.intervals)
   const { multipleChoice } = useStore(state => state.settings)
-  const { questions } = useStore(state => state.intervals)
+
+  const {
+    questions,
+    settings: { intervalMode },
+  } = useStore(state => state.intervals)
 
   // List is a displayable array of items. We memoize it so that a random sample
   // isn't taken each time state is updated.
   const questionsList = useMemo(() => {
-    return questions.map(answer => sample(answer))
+    return questions.map(answer => {
+      // Rather than mix all the various interval language together, stick to
+      // a simple numeric value (last item in array).
+      if (intervalMode === "basic") {
+        // FIXME: Add type
+        // @ts-ignore
+        return last(answer)
+      } else {
+        return sample(answer)
+      }
+    })
   }, [questions])
 
   const handleFocusInput = () => {

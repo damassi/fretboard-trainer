@@ -6,7 +6,6 @@ import { StringRange } from "src/utils/types"
 
 export const NoteSettings = () => {
   const { setStringFocus } = useActions(actions => actions.notes.settings)
-
   const { stringFocus } = useStore(state => state.notes.settings)
 
   return (

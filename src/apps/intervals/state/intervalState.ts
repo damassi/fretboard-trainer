@@ -165,7 +165,7 @@ function pickRandomInterval(props: {
       if (stringDist > 0 || stringDist < -2) {
         return pickRandomInterval(props)
       }
-      if (noteDist > 4 || noteDist < -3) {
+      if (noteDist > 3 || noteDist < -3) {
         return pickRandomInterval(props)
       }
       break

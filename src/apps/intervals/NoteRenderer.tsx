@@ -1,12 +1,11 @@
 import React from "react"
-import { Display } from "src/components/ui/Typography"
+import { DisplayAlt } from "src/components/ui/Typography"
 import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
 import { isEqual, last } from "lodash"
 import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
 import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
 import { Note } from "src/utils/types"
-import { getIntervals } from "src/utils/fretboard/getIntervals"
 import { containsSharpOrFlat } from "src/utils/fretboard/containsSharpOrFlat"
 
 export const NoteRenderer: React.FC<NoteRendererProps> = ({
@@ -15,8 +14,8 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
   noteIndex,
   noteLabel,
 }) => {
-  const { currentInterval } = useStore(state => state.intervals)
-  const { showIntervals } = useStore(state => state.intervals.settings)
+  const { currentLessonModule } = useStore(state => state.settings)
+  const { currentInterval, intervals } = useStore(state => state.intervals)
 
   // TODO: Figure out how to deal with value | undefined from `find`
   // @ts-ignore
@@ -51,10 +50,8 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     currentNote,
     note => {
       switch (true) {
-        case showHint: {
-          const intervalLabel = getIntervals({
-            note: currentInterval.notes[0],
-          })[stringIndex][noteIndex]
+        case showNotes || showHint: {
+          const intervalLabel = intervals[stringIndex][noteIndex]
 
           // FIXME: Figure out how to deal with `undefined return type
           return last<any>(intervalLabel)
@@ -74,14 +71,8 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     currentNote,
     note => {
       switch (true) {
-        case showHint: {
+        case showHint || showNotes: {
           return label === "1"
-        }
-        case showNotes: {
-          if (showIntervals) {
-            return label === "1"
-          }
-          return label === currentInterval.notes[0].note
         }
         case note.interval === "1":
           return true
@@ -97,17 +88,20 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   return (
     <FretboardNote
-      fretboardMode={fretboardMode}
-      width={size}
-      height={size}
-      selected={Boolean(currentNote)}
-      visible={isVisible}
-      isRoot={isRoot}
-      isInterval={isInterval}
       containsSharpOrFlat={containsSharpOrFlat(label)}
+      fretboardMode={fretboardMode}
+      height={size}
+      isInterval={isInterval}
+      isRoot={isRoot}
+      selected={Boolean(currentNote)}
       showIntervals={showHint}
+      visible={isVisible}
+      width={size}
+      currentLessonModule={currentLessonModule}
     >
-      <Display>{label}</Display>
+      <DisplayAlt size="3" weight="black">
+        {label}
+      </DisplayAlt>
     </FretboardNote>
   )
 }

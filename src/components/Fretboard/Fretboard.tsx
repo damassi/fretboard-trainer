@@ -4,11 +4,13 @@ import fretboardGraphic from "src/assets/fretboard.jpg"
 import { useStore } from "src/utils/hooks"
 import { getNote } from "src/utils/fretboard/getNote"
 import { Box, Flex } from "rebass"
+import { playNote } from "src/utils/fretboard/playNote"
 
 import {
   FretboardMode,
   Note,
   Fretboard as FretboardMatrix,
+  LessonModule,
 } from "src/utils/types"
 
 import {
@@ -19,7 +21,6 @@ import {
   background,
   BackgroundProps,
 } from "styled-system"
-import { playNote } from "src/utils/fretboard/playNote"
 
 export interface NoteRendererProps {
   FretboardNote: typeof FretboardNote
@@ -109,6 +110,7 @@ export interface FretboardNoteProps
     BackgroundProps {
   children: React.ReactNode
   containsSharpOrFlat?: boolean
+  currentLessonModule: LessonModule
   fretboardMode: FretboardMode
   isInterval?: boolean
   isRoot?: boolean
@@ -132,7 +134,7 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
         `
       case props.visible:
         return css`
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: rgba(255, 255, 255, 0.2);
         `
       default:
         return css`
@@ -161,7 +163,7 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
   position: absolute;
 
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
-  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 
   /* Default size which can be overridden via props */
   width: 30px;
@@ -171,29 +173,37 @@ const FretboardNote = styled(Flex)<FretboardNoteProps>`
 
   ${background};
 
+
   ${props => {
-    if (props.showIntervals) {
-      return css`
-        justify-content: center;
-        > div {
-          margin-left: -1.4px;
-        }
-      `
-      /* Align inner text content, ignoring accidental */
-    } else {
-      return css`
-        justify-content: flex-start;
-        > div {
-          margin-left: 9.5px;
-        }
-      `
+    switch (props.currentLessonModule) {
+      case "notes": {
+        return css`
+          justify-content: flex-start;
+
+          > div {
+            position: relative;
+            margin-left: 10px;
+            top: 1px;
+          }
+        `
+      }
+      case "intervals": {
+        return css`
+          justify-content: center;
+          > div {
+            position: relative;
+            margin-left: -1.6px;
+            top: 1px;
+          }
+        `
+      }
     }
   }}
 
   /* TODO: Move this animation out of CSS */
   animation-name: ${p => (p.visible || p.selected ? "fadeInNote" : "none")};
   animation-duration: 0.5s;
-  animation-delay: 50ms;
+  animation-delay: 200ms;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.85);
 
@@ -246,10 +256,10 @@ function logNotePlayAudio(props) {
  */
 function computeNotePosition(lastPos: number = 0) {
   return (stringIndex: number, noteIndex: number) => {
-    const base = 135
+    const base = 134
     let left = base + lastPos - (base / 12) * (noteIndex * 0.5)
     lastPos = left
-    left -= 167
+    left -= 165.5
     const top = 15 + stringIndex * 40
     return {
       left,

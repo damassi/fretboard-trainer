@@ -5,7 +5,10 @@ import { StoreModel } from "src/store"
 import { getNote } from "src/utils/fretboard/getNote"
 import { IntervalMode, intervalsSettingsState } from "./intervalSettingsState"
 import { settingsState } from "src/apps/settings/settingsState"
-import { getIntervalByNote } from "src/utils/fretboard/getIntervals"
+import {
+  getIntervalByNote,
+  getIntervals,
+} from "src/utils/fretboard/getIntervals"
 
 import {
   Note,
@@ -127,6 +130,11 @@ export const intervalState: Intervals = {
 
   setInterval: (state, interval) => {
     state.currentInterval = interval
+
+    // Calculates the intervals for the entire board
+    state.intervals = getIntervals({
+      note: interval.notes[0],
+    })
   },
 
   setQuestions: (state, questions) => {

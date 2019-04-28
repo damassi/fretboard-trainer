@@ -58,6 +58,16 @@ export const theme = {
           regular: 400,
         },
       },
+      displayAlt: {
+        fontFamily: "Exo",
+        weights: {
+          regular: 400,
+          medium: 500,
+          bold: 600,
+          xtraBold: 700,
+          black: 900,
+        },
+      },
     },
     sizes: {
       "0": {

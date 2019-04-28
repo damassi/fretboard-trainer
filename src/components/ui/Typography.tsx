@@ -9,6 +9,7 @@ import { fontSize } from "styled-system"
 export const Sans = props => buildType({ ...props, family: "sans" })
 export const Serif = props => buildType({ ...props, family: "serif" })
 export const Display = props => buildType({ ...props, family: "display" })
+export const DisplayAlt = props => buildType({ ...props, family: "displayAlt" })
 
 // Helpers
 

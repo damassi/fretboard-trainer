@@ -10,7 +10,11 @@ import { SettingsIcon } from "src/components/ui/SettingsIcon"
 
 import { useSpring, animated } from "react-spring"
 
-export const Settings = props => {
+interface SettingsProps {
+  children: React.ReactNode
+}
+
+export const Settings: React.FC<SettingsProps> = ({ children }) => {
   const {
     setFretboardMode,
     setMultipleChoice,
@@ -18,9 +22,13 @@ export const Settings = props => {
     toggleSettings,
   } = useActions(actions => actions.settings)
 
-  const { fretboardMode, multipleChoice, showNotes, showSettings } = useStore(
-    state => state.settings
-  )
+  const {
+    currentLessonModule,
+    fretboardMode,
+    multipleChoice,
+    showNotes,
+    showSettings,
+  } = useStore(state => state.settings)
 
   const animateProps = useSpring({
     from: {
@@ -37,6 +45,7 @@ export const Settings = props => {
     },
   })
 
+  // return useMemo(() => {
   return (
     <Flex
       width="100%"
@@ -52,7 +61,7 @@ export const Settings = props => {
             {/*
               Additional settings can be passed as children
             */}
-            {props.children}
+            {children}
 
             <Select
               size="sm"
@@ -72,8 +81,8 @@ export const Settings = props => {
               onChange={bool => setShowNotes(bool)}
             >
               <optgroup label="Note Visibility">
-                <option value="false">Hide notes</option>
-                <option value="true">Show notes</option>
+                <option value="false">Hide {currentLessonModule}</option>
+                <option value="true">Show {currentLessonModule}</option>
               </optgroup>
             </Select>
             <Select
@@ -101,4 +110,5 @@ export const Settings = props => {
       </Flex>
     </Flex>
   )
+  // }, [])
 }

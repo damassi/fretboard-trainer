@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { RouteComponentProps, Link } from "@reach/router"
 
 import { Fretboard } from "src/components/Fretboard/Fretboard"
@@ -6,14 +6,14 @@ import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
 import { IntervalAnswers } from "src/apps/intervals/IntervalAnswers"
-import { store } from "src/store"
 import { NoteRenderer } from "./NoteRenderer"
 import { IntervalsSettings } from "./IntervalSettings"
+import { bootLessonModule } from "src/utils/bootLessonModule"
 
 export const IntervalsApp: React.FC<RouteComponentProps> = () => {
-  useEffect(() => {
-    store.dispatch.settings.bootLessonModule("intervals")
-  }, [])
+  // TODO: Keeping this out of useEffect forces syncronous behavior, which is
+  // needed while hooks + prevent updates are worked out.
+  bootLessonModule("intervals")
 
   return (
     <>

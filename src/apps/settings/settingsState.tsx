@@ -1,10 +1,14 @@
 import { Action, Listen, listen, thunk, Thunk } from "easy-peasy"
-import { FretboardMode, Fretboard, HINT_VISIBILITY_TIME } from "src/utils/types"
 import { getFretboard } from "src/utils/fretboard/getFretboard"
 import { scoreboard } from "src/components/Scoreboard/scoreboardState"
 import { StoreModel } from "src/store"
 
-type LessonModule = "notes" | "intervals"
+import {
+  FretboardMode,
+  Fretboard,
+  HINT_VISIBILITY_TIME,
+  LessonModule,
+} from "src/utils/types"
 
 export interface SettingsModel {
   currentLessonModule: LessonModule

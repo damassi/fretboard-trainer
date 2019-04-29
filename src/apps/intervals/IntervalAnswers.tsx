@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from "react"
 import styled from "styled-components"
 import { Flex } from "rebass"
-import { last, sample } from "lodash"
+import { last } from "lodash"
 
 import { DisplayAlt } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
@@ -16,24 +16,15 @@ export const IntervalAnswers = () => {
   const { pickAnswer } = useActions(actions => actions.intervals)
   const { multipleChoice } = useStore(state => state.settings)
 
-  const {
-    questions,
-    settings: { intervalMode },
-  } = useStore(state => state.intervals)
+  const { questions } = useStore(state => state.intervals)
 
   // List is a displayable array of items. We memoize it so that a random sample
   // isn't taken each time state is updated.
   const questionsList = useMemo(() => {
     return questions.map(answer => {
-      // Rather than mix all the various interval language together, stick to
-      // a simple numeric value (last item in array).
-      if (intervalMode === "basic") {
-        // FIXME: Add type
-        // @ts-ignore
-        return last(answer)
-      } else {
-        return sample(answer)
-      }
+      // FIXME Add type... lodash is strange
+      // @ts-ignore
+      return last(answer)
     })
   }, [questions])
 

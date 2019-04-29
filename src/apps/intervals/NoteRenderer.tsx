@@ -16,6 +16,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 }) => {
   const { currentLessonModule } = useStore(state => state.settings)
   const { currentInterval, intervals } = useStore(state => state.intervals)
+  const { flashMessage } = useStore(state => state.scoreboard)
 
   // TODO: Figure out how to deal with value | undefined from `find`
   // @ts-ignore
@@ -71,7 +72,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
     currentNote,
     note => {
       switch (true) {
-        case showHint || showNotes: {
+        case (!flashMessage && showHint) || showNotes: {
           return label === "1"
         }
         case note.interval === "1":

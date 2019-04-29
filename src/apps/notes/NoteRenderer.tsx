@@ -10,6 +10,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = React.memo(props => {
   const { FretboardNote, noteLabel, stringIndex, noteIndex } = props
   const { currentLessonModule, fretboardMode, showHint, showNotes } = useStore(state => state.settings) // prettier-ignore
   const { currentNote } = useStore(state => state.notes)
+  const { flashMessage } = useStore(state => state.scoreboard)
   const isCurrentNote = isEqual(currentNote.position, [stringIndex, noteIndex])
 
   const getVisibility = () => {
@@ -28,7 +29,10 @@ export const NoteRenderer: React.FC<NoteRendererProps> = React.memo(props => {
   }
 
   const showLabel = getVisibility()
-  const isRoot = showLabel && noteLabel === currentNote.note
+
+  // If flash message is up, don't show root color
+  const isRoot =
+    !flashMessage && showNotes && showLabel && noteLabel === currentNote.note
 
   return (
     <FretboardNote

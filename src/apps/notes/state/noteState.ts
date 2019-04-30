@@ -98,7 +98,7 @@ export const notesState: Fretboard = {
       return notes
     }
 
-    const notes = shuffle(getNotes())
+    const notes = getNotes()
 
     actions.setNote(notes[0])
     actions.setQuestions(notes)
@@ -109,6 +109,6 @@ export const notesState: Fretboard = {
   },
 
   setQuestions: (state, questions) => {
-    state.questions = questions
+    state.questions = shuffle(questions)
   },
 }

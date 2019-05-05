@@ -101,20 +101,20 @@ export type NoteRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 1
  * NOTE: The last index of each interval is for display on the fretboard. In
  * the future we'll want to support more than just flats, but they fit best.
  */
-export const intervalList: Partial<IntervalLabels>[][] = [
-  ["1"],
-  ["minor 2nd", "m2"],
-  ["major 2nd", "M2"],
-  ["minor 3rd", "m3"],
-  ["major 3rd", "M3"],
-  ["perfect 4th", "4"],
-  ["#4/♭5", "dim 5th", "aug 4th", "d5"],
-  ["perfect 5th", "5"],
-  ["#5/♭6", "minor 6th", "aug 5th", "m6"],
-  ["major 6th", "M6"],
-  ["minor 7th", "m7"],
-  ["major 7th", "M7"],
-  ["1"],
+export const intervalList: Partial<IntervalLabels>[] = [
+  "1",
+  "m2",
+  "M2",
+  "m3",
+  "M3",
+  "4",
+  "d5",
+  "5",
+  "m6",
+  "M6",
+  "m7",
+  "M7",
+  "1",
 ]
 
 /**

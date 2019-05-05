@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "react-hooks"],
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -40,13 +40,18 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
+
     "no-console": [
       "error",
       {
         allow: ["warn", "error"],
       },
     ],
+
     "react/display-name": 0,
     "react/prop-types": 0,
+
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
   },
 }

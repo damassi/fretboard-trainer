@@ -1,7 +1,6 @@
-import React, { useRef, useMemo } from "react"
+import React, { useRef, useMemo, useCallback } from "react"
 import styled from "styled-components"
 import { Flex } from "rebass"
-import { last } from "lodash"
 
 import { DisplayAlt } from "src/components/ui/Typography"
 import { useStore, useActions } from "src/utils/hooks"
@@ -22,18 +21,16 @@ export const IntervalAnswers = () => {
   // isn't taken each time state is updated.
   const questionsList = useMemo(() => {
     return questions.map(answer => {
-      // FIXME Add type... lodash is strange
-      // @ts-ignore
-      return last(answer)
+      return answer
     })
   }, [questions])
 
-  const handleFocusInput = () => {
+  const handleFocusInput = useCallback(() => {
     const node = answerInputRef.current
     if (node) {
       node.focus()
     }
-  }
+  }, [])
 
   return (
     <Flex flexDirection="column" alignItems="center">

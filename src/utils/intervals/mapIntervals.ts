@@ -1,5 +1,5 @@
 import { intervalList, Note, FretboardMode, Fretboard } from "../types"
-import { getFretboard } from "./getFretboard"
+import { getFretboard } from "src/utils/fretboard/getFretboard"
 
 interface IntervalsProps {
   note: Note
@@ -7,7 +7,7 @@ interface IntervalsProps {
   fretboardMode?: FretboardMode
 }
 
-export function getIntervals({
+export function mapIntervals({
   note,
   fretboard,
   fretboardMode = "flats",
@@ -45,11 +45,4 @@ export function getIntervals({
   })
 
   return intervalMap
-}
-
-export function getIntervalByNote(rootNote: Note, intervalNote: Note) {
-  const intervals = getIntervals({ note: rootNote })
-  const [stringIndex, noteIndex] = intervalNote.position
-  const interval = intervals[stringIndex][noteIndex]
-  return interval
 }

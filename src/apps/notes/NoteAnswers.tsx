@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useCallback } from "react"
 import styled from "styled-components"
 import { Flex } from "rebass"
 
@@ -16,12 +16,12 @@ export const NoteAnswers = () => {
   const { multipleChoice } = useStore(state => state.settings)
   const answerInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFocusInput = () => {
+  const handleFocusInput = useCallback(() => {
     const node = answerInputRef.current
     if (node) {
       node.focus()
     }
-  }
+  }, [])
 
   return (
     <Flex flexDirection="column" alignItems="center">

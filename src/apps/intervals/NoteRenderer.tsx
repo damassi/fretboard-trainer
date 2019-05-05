@@ -1,7 +1,7 @@
 import React from "react"
 import { DisplayAlt } from "src/components/ui/Typography"
 import { NoteRendererProps } from "src/components/Fretboard/Fretboard"
-import { isEqual, last } from "lodash"
+import { isEqual } from "lodash"
 import { get } from "src/utils/get"
 import { useStore } from "src/utils/hooks"
 import { getNoteVisibiltyForSetting } from "src/utils/fretboard/getNoteVisibility"
@@ -53,9 +53,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
       switch (true) {
         case showNotes || showHint: {
           const intervalLabel = intervals[stringIndex][noteIndex]
-
-          // FIXME: Figure out how to deal with `undefined return type
-          return last<any>(intervalLabel)
+          return intervalLabel
         }
         case showNotes:
           return noteLabel
@@ -89,7 +87,7 @@ export const NoteRenderer: React.FC<NoteRendererProps> = ({
 
   return (
     <FretboardNote
-      containsSharpOrFlat={containsSharpOrFlat(label)}
+      containsSharpOrFlat={containsSharpOrFlat(label as string)} // FIXME: cast
       fretboardMode={fretboardMode}
       height={size}
       isInterval={isInterval}

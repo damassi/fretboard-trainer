@@ -10,8 +10,8 @@ export function getInterval(props: {
   intervalMode?: IntervalMode
   rootNote?: Note
 }): Interval {
-  const { fretboard, intervalMode = "basic", rootNote: _rootNote } = props
-  const rootNote = _rootNote || getNote({ fretboard })
+  const { intervalMode = "basic", rootNote: _rootNote } = props
+  const rootNote = _rootNote || getNote()
   const intervalNote = getNote()
 
   // Rerun function if we've landed on same note

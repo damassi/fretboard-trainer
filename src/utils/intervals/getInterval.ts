@@ -49,7 +49,7 @@ export function getInterval(props: {
       if (stringDist > 2 || stringDist < -2) {
         return getInterval(props)
       }
-      if (noteDist > 4 || noteDist < -3) {
+      if (noteDist > 3 || noteDist < -3) {
         return getInterval(props)
       }
     }

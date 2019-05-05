@@ -1,49 +1,66 @@
-import { isEqual, isString, sampleSize, shuffle, uniq, uniqBy } from "lodash"
+import { isEqual, isString, sampleSize, shuffle, uniq } from "lodash"
 import { Action, Thunk, thunk, listen, Listen } from "easy-peasy"
 
 import { StoreModel } from "src/store"
-import { getNote } from "src/utils/fretboard/getNote"
-import { IntervalMode, intervalsSettingsState } from "./intervalSettingsState"
+import { intervalsSettingsState } from "./intervalSettingsState"
 import { settingsState } from "src/apps/settings/settingsState"
-import {
-  getIntervalByNote,
-  getIntervals,
-} from "src/utils/fretboard/getIntervals"
+import { mapIntervals } from "src/utils/intervals/mapIntervals"
+import { getInterval } from "src/utils/intervals/getInterval"
+import { playInterval } from "src/utils/fretboard/playNote"
 
 import {
-  Note,
   intervalList,
-  Fretboard,
   ANSWER_COUNT,
   Interval,
-  RelativeInterval,
   HINT_VISIBILITY_TIME,
   IntervalLabels,
+  Note,
 } from "src/utils/types"
-import { playInterval } from "src/utils/fretboard/playNote"
 
 export interface Intervals {
   currentInterval: Interval
+  currentRoot: Note
   intervals: string[][]
   questions: Interval[]
+
+  /**
+   * As a form of contextual learning, if entering a root cycle only pick
+   * intervals around the root note, which helps mimic actual playing.
+   */
+  rootCycle: {
+    enabled: boolean
+    currentIndex: number
+    intervals: Intervals[]
+  }
 
   // Listeners
   listeners: Listen<Intervals>
 
   // Actions
+  maybeEnterRootCycle: Action<Intervals, void>
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
   pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
   setInterval: Action<Intervals, Interval>
   setQuestions: Action<Intervals, Interval[]>
 }
 
+const ROOT_CYCLE_COUNT = 3
+
 export const intervalState: Intervals = {
+  // FIXME: Figure out how to handle nulls in the following props
   // @ts-ignore
   currentInterval: null,
-  intervals: [],
-  // FIXME: Figure out how to type this
+  // @ts-ignore
+  currentRoot: null,
   // @ts-ignore
   questions: ["1", "2", "3", "4"],
+  intervals: [],
+
+  rootCycle: {
+    enabled: false,
+    currentIndex: 0,
+    intervals: [],
+  },
 
   listeners: listen(on => {
     const newIntervalsActions = [
@@ -63,12 +80,35 @@ export const intervalState: Intervals = {
     })
   }),
 
+  /**
+   * Checks to see if we're currently in a cycle, and if not, enter one. A
+   * "Root Cycle" is a fixed rotation around a given root note.
+   */
+  maybeEnterRootCycle: state => {
+    if (!state.rootCycle.enabled) {
+      state.rootCycle.enabled = Math.random() * 10 < 5 // 50% of the time we're in a cycle
+    } else {
+      if (state.rootCycle.currentIndex < ROOT_CYCLE_COUNT) {
+        state.rootCycle.currentIndex++
+      } else {
+        state.rootCycle.enabled = false
+        state.rootCycle.currentIndex = 0
+      }
+    }
+  },
+
+  /**
+   * Evaluates whether a user-selected answer is correct and updates the board
+   * with a new interval and updated score.
+   */
   pickAnswer: thunk((actions, selectedInterval, { dispatch, getState }) => {
     const {
       intervals: { currentInterval },
     } = getState() as StoreModel
 
     let isCorrect
+
+    // TODO: Unify this check so that the branch is unnecessary
     if (isString(selectedInterval)) {
       isCorrect = currentInterval.label.includes(
         selectedInterval as IntervalLabels
@@ -83,23 +123,51 @@ export const intervalState: Intervals = {
       dispatch.scoreboard.incorrectAnswer("incorrect!")
     }
 
+    // Trigger a new interval
     setTimeout(() => {
       actions.pickRandomInterval()
     }, HINT_VISIBILITY_TIME)
   }),
 
+  /**
+   * Picks a new root note and interval. If in a root cycle, use the current
+   * root note instead.
+   */
   pickRandomInterval: thunk((actions, _, { getState }) => {
     const {
       settings: { fretboard, isMuted, currentLessonModule },
       intervals: {
+        currentInterval,
+        currentRoot,
+        rootCycle,
         settings: { intervalMode },
       },
     } = getState()
 
-    const interval = pickRandomInterval({
-      fretboard,
-      intervalMode,
-    })
+    // If in cycle, use previous root
+    const rootNote = rootCycle.enabled ? currentRoot : undefined
+
+    // Recursive function that checks whether or not the new interval is the
+    // same as the current and if so executes again.
+    const pickInterval = (): Interval => {
+      const interval = getInterval({
+        fretboard,
+        intervalMode,
+        rootNote,
+      })
+
+      // Current and new are the same
+      const isInvalid =
+        currentInterval && isEqual(interval, currentInterval.label)
+
+      if (isInvalid) {
+        return pickInterval()
+      } else {
+        return interval
+      }
+    }
+
+    const interval = pickInterval()
 
     // Pick 3 random questions while adding the answer into the mix, and then
     // from the answers take a random option from the array of possibilities.
@@ -115,7 +183,9 @@ export const intervalState: Intervals = {
       }
     }
 
+    // Dispatch results
     actions.setInterval(interval)
+    actions.maybeEnterRootCycle()
     actions.setQuestions(getQuestions())
 
     // TODO: Find a better way to section off cross-module state. In this
@@ -128,11 +198,16 @@ export const intervalState: Intervals = {
     }
   }),
 
+  /**
+   * Sets the new interval and root note and lays out a new interval map of the
+   * fretboard, keyed off of the root.
+   */
   setInterval: (state, interval) => {
     state.currentInterval = interval
+    state.currentRoot = interval.notes[0]
 
     // Calculates the intervals for the entire board
-    state.intervals = getIntervals({
+    state.intervals = mapIntervals({
       note: interval.notes[0],
     })
   },
@@ -140,84 +215,4 @@ export const intervalState: Intervals = {
   setQuestions: (state, questions) => {
     state.questions = questions
   },
-}
-
-// Helpers
-
-function pickRandomInterval(props: {
-  fretboard: Fretboard
-  intervalMode?: IntervalMode
-}): Interval {
-  const { fretboard, intervalMode = "basic" } = props
-  const rootNote = getNote({ fretboard })
-  const intervalNote = getNote()
-
-  // Rerun function if we've landed on same note
-  if (uniqBy([rootNote, intervalNote], "note").length !== 2) {
-    return pickRandomInterval(props)
-  }
-
-  const relativeInterval = computeRelativeInterval(rootNote, intervalNote)
-  const [stringDist, noteDist] = relativeInterval
-
-  switch (intervalMode) {
-    /**
-     * In `basic`, these are the rules:
-     *
-     * 1) Start from the root and only permit accention, as if going up a scale.
-     * 2) Don't travel more than three strings in distance
-     * 3) Can only move three frets to the left of the root
-     * 4) Can only move four frets to the right of the root
-     */
-    case "basic": {
-      if (stringDist > 0 || stringDist < -2) {
-        return pickRandomInterval(props)
-      }
-      if (noteDist > 3 || noteDist < -3) {
-        return pickRandomInterval(props)
-      }
-      break
-    }
-
-    /**
-     * In intermediate mode, permit descention, where an interval can fall *below*
-     * the root note. Other basic rules apply
-     */
-    case "intermediate": {
-      if (stringDist > 2 || stringDist < -2) {
-        return pickRandomInterval(props)
-      }
-      if (noteDist > 4 || noteDist < -3) {
-        return pickRandomInterval(props)
-      }
-    }
-  }
-
-  const intervalLabel = getIntervalByNote(rootNote, intervalNote)
-
-  // TODO: Find a less imperative way to set this
-  rootNote.interval = "1"
-  intervalNote.interval = intervalLabel
-
-  return {
-    notes: [rootNote, intervalNote],
-    relativeInterval,
-    label: intervalLabel,
-  }
-}
-
-export function computeRelativeInterval(
-  note1: Note,
-  note2: Note
-): RelativeInterval {
-  const subtract = ([string2, note2], [string1, note1]) => {
-    return [string2 - string1, note2 - note1]
-  }
-
-  const relativeInterval = subtract(
-    note2.position,
-    note1.position
-  ) as RelativeInterval
-
-  return relativeInterval
 }

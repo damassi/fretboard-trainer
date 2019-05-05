@@ -28,9 +28,10 @@ export interface Intervals {
    * intervals around the root note, which helps mimic actual playing.
    */
   rootCycle: {
-    enabled: boolean
     currentIndex: number
+    enabled: boolean
     intervals: Intervals[]
+    numCycles: number
   }
 
   // Listeners
@@ -44,8 +45,6 @@ export interface Intervals {
   setQuestions: Action<Intervals, Interval[]>
 }
 
-const ROOT_CYCLE_COUNT = 3
-
 export const intervalState: Intervals = {
   // FIXME: Figure out how to handle nulls in the following props
   // @ts-ignore
@@ -57,9 +56,10 @@ export const intervalState: Intervals = {
   intervals: [],
 
   rootCycle: {
-    enabled: false,
     currentIndex: 0,
+    enabled: false,
     intervals: [],
+    numCycles: 3,
   },
 
   listeners: listen(on => {
@@ -79,23 +79,6 @@ export const intervalState: Intervals = {
       )
     })
   }),
-
-  /**
-   * Checks to see if we're currently in a cycle, and if not, enter one. A
-   * "Root Cycle" is a fixed rotation around a given root note.
-   */
-  maybeEnterRootCycle: state => {
-    if (!state.rootCycle.enabled) {
-      state.rootCycle.enabled = Math.random() * 10 < 5 // 50% of the time we're in a cycle
-    } else {
-      if (state.rootCycle.currentIndex < ROOT_CYCLE_COUNT) {
-        state.rootCycle.currentIndex++
-      } else {
-        state.rootCycle.enabled = false
-        state.rootCycle.currentIndex = 0
-      }
-    }
-  },
 
   /**
    * Evaluates whether a user-selected answer is correct and updates the board
@@ -158,7 +141,7 @@ export const intervalState: Intervals = {
 
       // Current and new are the same
       const isInvalid =
-        currentInterval && isEqual(interval, currentInterval.label)
+        currentInterval && isEqual(interval.label, currentInterval.label)
 
       if (isInvalid) {
         return pickInterval()
@@ -214,5 +197,26 @@ export const intervalState: Intervals = {
 
   setQuestions: (state, questions) => {
     state.questions = questions
+  },
+
+  /**
+   * Checks to see if we're currently in a cycle, and if not, enter one. A
+   * "Root Cycle" is a fixed rotation around a given root note.
+   */
+  maybeEnterRootCycle: state => {
+    if (!state.rootCycle.enabled) {
+      state.rootCycle.enabled = Math.random() * 10 < 5 // 50% of the time we're in a cycle
+
+      if (state.rootCycle.enabled) {
+        state.rootCycle.numCycles = Math.floor(Math.random() * 5)
+      }
+    } else {
+      if (state.rootCycle.currentIndex < state.rootCycle.numCycles) {
+        state.rootCycle.currentIndex++
+      } else {
+        state.rootCycle.enabled = false
+        state.rootCycle.currentIndex = 0
+      }
+    }
   },
 }

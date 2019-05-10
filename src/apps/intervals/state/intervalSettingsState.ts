@@ -1,8 +1,9 @@
 import { Action } from "easy-peasy"
+import { StringFocus } from "src/apps/notes/state/noteSettingsState"
 
 /**
- * Basic focuses on most common intervals; intermediate incorporates the g
- * string; advanced includes both basic and intermediate.
+ * Basic focuses on most common intervals; intermediate incorporates downward
+ * intervals; advanced includes both basic and intermediate, with offsets.
  *
  * TODO:
  * Include mode that takes a random position -- say, a 4th -- and then
@@ -15,16 +16,25 @@ export interface IntervalsSettings {
   intervalMode: IntervalMode
   showIntervals: boolean
 
+  // FIXME: Consolidate this with the notes app
+  stringFocus: StringFocus
+
   setIntervalMode: Action<IntervalsSettings, IntervalMode>
+  setStringFocus: Action<IntervalsSettings, StringFocus>
   toggleShowIntervals: Action<IntervalsSettings, void>
 }
 
 export const intervalsSettingsState: IntervalsSettings = {
   intervalMode: "basic",
   showIntervals: false,
+  stringFocus: -1, // -1 is disabled
 
   setIntervalMode: (state, intervalMode) => {
     state.intervalMode = intervalMode
+  },
+
+  setStringFocus: (state, stringFocus) => {
+    state.stringFocus = stringFocus
   },
 
   toggleShowIntervals: state => {

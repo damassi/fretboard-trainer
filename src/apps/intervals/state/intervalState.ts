@@ -38,6 +38,7 @@ export interface Intervals {
   listeners: Listen<Intervals>
 
   // Actions
+  exitRootCycle: Action<Intervals, void>
   maybeEnterRootCycle: Action<Intervals, void>
   pickAnswer: Thunk<Intervals, any, any, StoreModel>
   pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
@@ -65,6 +66,7 @@ export const intervalState: Intervals = {
   listeners: listen(on => {
     const newIntervalsActions = [
       intervalsSettingsState.setIntervalMode,
+      intervalsSettingsState.setStringFocus,
       settingsState.setFretboardMode,
     ]
 
@@ -74,6 +76,7 @@ export const intervalState: Intervals = {
       on(
         action,
         thunk(actions => {
+          actions.exitRootCycle()
           actions.pickRandomInterval()
         })
       )
@@ -123,7 +126,7 @@ export const intervalState: Intervals = {
         currentInterval,
         currentRoot,
         rootCycle,
-        settings: { intervalMode },
+        settings: { intervalMode, stringFocus },
       },
     } = getState()
 
@@ -137,6 +140,7 @@ export const intervalState: Intervals = {
         fretboard,
         intervalMode,
         rootNote,
+        stringFocus,
       })
 
       // Current and new are the same
@@ -218,5 +222,9 @@ export const intervalState: Intervals = {
         state.rootCycle.currentIndex = 0
       }
     }
+  },
+
+  exitRootCycle: state => {
+    state.rootCycle.enabled = false
   },
 }

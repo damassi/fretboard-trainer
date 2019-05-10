@@ -4,14 +4,21 @@ import { IntervalMode } from "src/apps/intervals/state/intervalSettingsState"
 import { getIntervalByNote } from "src/utils/intervals/getIntervalByNote"
 import { Fretboard, Interval, Note } from "src/utils/types"
 import { computeRelativeInterval } from "./computeRelativeInterval"
+import { StringFocus } from "src/apps/notes/state/noteSettingsState"
 
 export function getInterval(props: {
   fretboard: Fretboard
   intervalMode?: IntervalMode
   rootNote?: Note
+  stringFocus?: StringFocus
 }): Interval {
-  const { intervalMode = "basic", rootNote: _rootNote } = props
-  const rootNote = _rootNote || getNote()
+  const {
+    intervalMode = "basic",
+    rootNote: _rootNote,
+    stringFocus = -1,
+  } = props
+
+  const rootNote = _rootNote || getNote({ stringFocus })
   const intervalNote = getNote()
 
   // Rerun function if we've landed on same note

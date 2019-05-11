@@ -1,7 +1,7 @@
 /**
  * The lesson module current being interacted with
  */
-export type LessonModule = "notes" | "intervals"
+export type LessonModule = "notes" | "intervals" | "scales"
 
 export type Fretboard = ScaleNote[][]
 

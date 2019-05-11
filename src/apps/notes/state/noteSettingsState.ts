@@ -3,22 +3,22 @@ import { StringRange } from "src/utils/types"
 
 export type StringFocus = 0 | StringRange
 
-export interface NotesSettings {
+export interface NotesSettingsState {
   startingFret: number
+
+  // TODO: Consolidate this with intervals app
   stringFocus: StringFocus
 
-  setStartingFret: Action<NotesSettings, number>
-  setStringFocus: Action<NotesSettings, StringFocus>
+  setStartingFret: Action<NotesSettingsState, number>
+  setStringFocus: Action<NotesSettingsState, StringFocus>
 }
 
-export const notesSettingsState: NotesSettings = {
+export const notesSettingsState: NotesSettingsState = {
   startingFret: 1,
   stringFocus: -1, // -1 is disabled
 
   setStartingFret: (state, startingFret) => {
-    // Octive
     if (startingFret === 13) {
-      // Open string
       startingFret = 0
     }
 

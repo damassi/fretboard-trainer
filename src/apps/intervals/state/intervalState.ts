@@ -17,7 +17,7 @@ import {
   Note,
 } from "src/utils/types"
 
-export interface Intervals {
+export interface IntervalsState {
   currentInterval: Interval
   currentRoot: Note
   intervals: string[][]
@@ -30,23 +30,22 @@ export interface Intervals {
   rootCycle: {
     currentIndex: number
     enabled: boolean
-    intervals: Intervals[]
     numCycles: number
   }
 
   // Listeners
-  listeners: Listen<Intervals>
+  listeners: Listen<IntervalsState>
 
   // Actions
-  exitRootCycle: Action<Intervals, void>
-  maybeEnterRootCycle: Action<Intervals, void>
-  pickAnswer: Thunk<Intervals, any, any, StoreModel>
-  pickRandomInterval: Thunk<Intervals, void, any, StoreModel>
-  setInterval: Action<Intervals, Interval>
-  setQuestions: Action<Intervals, Interval[]>
+  exitRootCycle: Action<IntervalsState, void>
+  maybeEnterRootCycle: Action<IntervalsState, void>
+  pickAnswer: Thunk<IntervalsState, any, any, StoreModel>
+  pickRandomInterval: Thunk<IntervalsState, void, any, StoreModel>
+  setInterval: Action<IntervalsState, Interval>
+  setQuestions: Action<IntervalsState, Interval[]>
 }
 
-export const intervalState: Intervals = {
+export const intervalState: IntervalsState = {
   // FIXME: Figure out how to handle nulls in the following props
   // @ts-ignore
   currentInterval: null,
@@ -59,7 +58,6 @@ export const intervalState: Intervals = {
   rootCycle: {
     currentIndex: 0,
     enabled: false,
-    intervals: [],
     numCycles: 3,
   },
 

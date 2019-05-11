@@ -1,11 +1,11 @@
-import { intervalState, Intervals } from "./intervalState"
+import { intervalState, IntervalsState } from "./intervalState"
 import {
   intervalsSettingsState,
-  IntervalsSettings,
+  IntervalsSettingsState,
 } from "./intervalSettingsState"
 
-export interface IntervalsModel extends Intervals {
-  settings: IntervalsSettings
+export interface IntervalsModel extends IntervalsState {
+  settings: IntervalsSettingsState
 }
 
 export const intervals: IntervalsModel = {

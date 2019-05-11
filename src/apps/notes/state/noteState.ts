@@ -7,21 +7,21 @@ import { getNote } from "src/utils/fretboard/getNote"
 import { Note, HINT_VISIBILITY_TIME, ANSWER_COUNT } from "src/utils/types"
 import { playNote } from "src/utils/fretboard/playNote"
 
-export interface Fretboard {
+export interface NotesState {
   currentNote: Note
   questions: Note[]
   questionCount: number
 
-  listeners: Listen<Fretboard>
+  listeners: Listen<NotesState>
 
   // Actions
-  setQuestions: Action<Fretboard, Note[]>
-  pickAnswer: Thunk<Fretboard, string, any, StoreModel>
-  pickRandomNote: Thunk<Fretboard, void>
-  setNote: Action<Fretboard, Note>
+  setQuestions: Action<NotesState, Note[]>
+  pickAnswer: Thunk<NotesState, string, any, StoreModel>
+  pickRandomNote: Thunk<NotesState, void>
+  setNote: Action<NotesState, Note>
 }
 
-export const notesState: Fretboard = {
+export const notesState: NotesState = {
   currentNote: {
     note: "c",
     position: [5, 3],

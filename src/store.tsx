@@ -4,6 +4,7 @@ import { save, load } from "redux-localstorage-simple"
 
 import { notes, NotesModel } from "src/apps/notes/state"
 import { intervals, IntervalsModel } from "./apps/intervals/state"
+import { scales, ScalesModel } from "./apps/scales/state"
 
 import {
   settingsState as settings,
@@ -17,7 +18,12 @@ import {
 
 const STORAGE_SETTINGS = {
   namespace: "fretboard-trainer",
-  states: ["settings", "notes.settings", "intervals.settings"],
+  states: [
+    "settings",
+    "notes.settings",
+    "intervals.settings",
+    "scales.settings",
+  ],
 }
 
 // Define modules
@@ -26,6 +32,7 @@ export interface StoreModel {
   intervals: IntervalsModel
   scoreboard: ScoreboardModel
   settings: SettingsModel
+  scales: ScalesModel
 }
 
 // Build store
@@ -35,6 +42,7 @@ export const store = createStore<StoreModel, EasyPeasyConfig>(
     intervals,
     scoreboard,
     settings,
+    scales,
   },
   {
     middleware: [

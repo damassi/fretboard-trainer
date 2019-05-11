@@ -6,7 +6,7 @@ import { Posterboard } from "src/components/Posterboard"
 import { Scoreboard } from "src/components/Scoreboard"
 
 import { IntervalAnswers } from "src/apps/intervals/IntervalAnswers"
-import { NoteRenderer } from "./NoteRenderer"
+import { NoteRenderer } from "./IntervalNoteRenderer"
 import { IntervalsSettings } from "./IntervalSettings"
 import { bootLessonModule } from "src/utils/bootLessonModule"
 import { useActions } from "src/utils/hooks"

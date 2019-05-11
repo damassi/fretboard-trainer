@@ -12,19 +12,19 @@ import { StringFocus } from "src/apps/notes/state/noteSettingsState"
  */
 export type IntervalMode = "basic" | "intermediate" | "advanced"
 
-export interface IntervalsSettings {
+export interface IntervalsSettingsState {
   intervalMode: IntervalMode
   showIntervals: boolean
 
   // FIXME: Consolidate this with the notes app
   stringFocus: StringFocus
 
-  setIntervalMode: Action<IntervalsSettings, IntervalMode>
-  setStringFocus: Action<IntervalsSettings, StringFocus>
-  toggleShowIntervals: Action<IntervalsSettings, void>
+  setIntervalMode: Action<IntervalsSettingsState, IntervalMode>
+  setStringFocus: Action<IntervalsSettingsState, StringFocus>
+  toggleShowIntervals: Action<IntervalsSettingsState, void>
 }
 
-export const intervalsSettingsState: IntervalsSettings = {
+export const intervalsSettingsState: IntervalsSettingsState = {
   intervalMode: "basic",
   showIntervals: false,
   stringFocus: -1, // -1 is disabled

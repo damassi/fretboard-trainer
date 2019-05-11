@@ -1,8 +1,8 @@
-import { notesState, Fretboard } from "./noteState"
-import { notesSettingsState, NotesSettings } from "./noteSettingsState"
+import { notesState, NotesState } from "./noteState"
+import { notesSettingsState, NotesSettingsState } from "./noteSettingsState"
 
-export interface NotesModel extends Fretboard {
-  settings: NotesSettings
+export interface NotesModel extends NotesState {
+  settings: NotesSettingsState
 }
 
 export const notes: NotesModel = {
